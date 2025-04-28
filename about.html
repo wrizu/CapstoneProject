@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+
+    <title>Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto';
+        }
+
+        .header {
+            background: linear-gradient(to right, #a1f0ff, #00d4b3);
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            color: black;
+            margin: 0;
+        }
+
+        .toolbar {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .toolbar a {
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .toolbar a:hover {
+            background-color: #00e0e0;
+        }
+
+        .content {
+            padding: 0;
+            margin: 0;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .side-by-side {
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .side-by-side img {
+            width: 49%;
+            border-radius: 10px;
+        }
+
+        .full-screen-image img {
+            width: 100vw;
+            height: auto;
+            display: block;
+        }
+
+        .single-left {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        .single-left img {
+            width: 40%;
+            border-radius: 10px;
+        }
+
+        .header img.left-logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 60px;
+        }
+
+        .header img.right-logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            height: 60px;
+        }
+
+        .heading h1 {
+            position: absolute;
+            top: 125px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+        }
+
+        .heading p {
+            position: absolute;
+            top: 175px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            font-weight: 400;
+            font-size: 20px;
+            line-height: 1.6;
+            text-align: center;
+            width: 80%;
+        }
+
+        .image-below-heading {
+            display: flex;
+            justify-content: center;
+            margin-top: 39px;
+        }
+
+        .image-below-heading img {
+            width: 80%;
+            max-width: 810px;
+            border-radius: 10px;
+        }
+        .logo{
+            display: flex;
+            justify-content: center;
+            margin-top: 145px;
+        }
+        .logo img{
+            width: 80%;
+            max-width: 200px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>About</h1>
+        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png">
+        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png">
+    </div>
+
+    <div class="toolbar">
+        <a href="about.html">About</a>
+        <a href="website.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="database.html">Database</a>
+        <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
+    </div>
+
+    <div class="heading">
+        <h1>Who are EDG?</h1>
+        <p>Edward Gaming (EDG) was founded in September 2013 by SanShao, BingGui, and Edward Zhu. EDG is a Chinese ran E-sports orginization competing in many esports such as 
+            VALORANT, League of Legends, Hearthstone, and Clash Royale. The VALORANT team won the biggest tournament of the year "Champions 2024" and thats what this website is about.</p>
+    </div>
+    <div class="logo">
+        <a href="https://en.wikipedia.org/wiki/Edward_Gaming" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Edward_Gaming_logo.png/250px-Edward_Gaming_logo.png" alt="Team Logo">
+        </a>
+    </div>
+    <div class="image-below-heading">
+        <img src="https://cdn.sanity.io/images/ncavvykf/siege/cbc03630a009e8ab1858c42a7c1840470363eb39-2048x1366.jpg?rect=0,107,2048,1153&w=810&h=456&auto=format" alt="EDG Team Photo">
+    </div>
+</body>
+</html>

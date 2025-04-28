@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+
+
+    <title>Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto';
+        }
+
+        .header {
+            background: linear-gradient(to right, #a1f0ff, #70e0d0, #00d4b3);
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            color: black;
+            margin: 0;
+        }
+
+        .toolbar {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .toolbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .toolbar a:hover {
+            background-color: #00e0e0;
+        }
+
+        .content {
+            padding: 0;
+            margin: 0;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .side-by-side {
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .side-by-side img {
+            width: 49%;
+            border-radius: 10px;
+        }
+
+        .full-screen-image img {
+            width: 100vw;
+            height: auto;
+            display: block;
+        }
+
+        .single-left {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        .single-left img {
+            width: 40%;
+            border-radius: 10px;
+        }
+
+        .header img.left-logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 60px;
+        }
+
+        .header img.right-logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png">
+        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png">
+        <h1>Dashboard</h1>
+    </div>
+
+    <div class="toolbar">
+        <a href="about.html">About</a>
+        <a href="website.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="database.html">Database</a>
+        <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
+    </div>
+
+    <div class="content">
+        <!-- First two images side-by-side -->
+        <div class="row side-by-side">
+            <img src="https://i.ibb.co/3yPDWtWL/Screenshot-2025-04-16-192218.png" alt="Image 1">
+            <img src="https://i.ibb.co/xKXHt8VX/first-bloods.png" alt="Image 2">
+        </div>
+
+        <!-- Third image full screen width -->
+        <div class="row full-screen-image">
+            <img src="https://i.ibb.co/Q3H5Q0nG/Screenshot-2025-04-23-124105.png" alt="Full Width Image">
+        </div>
+
+        <!-- Fourth image aligned left -->
+        <div class="row single-left">
+            <img src="https://i.ibb.co/7xy4YJFf/Screenshot-2025-04-16-192137.png" alt="Left Aligned Image">
+        </div>
+    </div>
+</body>
+</html>
