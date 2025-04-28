@@ -5,7 +5,7 @@ const app = express();
 
 // Initialize the Xata client with the VALORANT database
 const xata = new Client({
-    apiKey: process.env.XATA_API_KEY,  // Ensure the API key is set in your environment variables
+    apiKey: xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1,  // Ensure the API key is set in your environment variables
     database: 'VALORANT'              // Use the correct database name
 });
 
