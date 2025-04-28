@@ -6,7 +6,7 @@ const app = express();
 // Initialize the Xata client with the VALORANT database URL
 const xata = new Client({
     apiKey: xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1,  // Ensure the API key is set in your environment variables
-    databaseURL: https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT:main // Use the full database URL from the .env file
+    databaseURL: https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT // Use the full database URL from the .env file
 });
 
 // Middleware to parse JSON request bodies
