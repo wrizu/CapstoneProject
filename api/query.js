@@ -1,13 +1,14 @@
+const { XataClient } = require('@xata.io/client');
+require('dotenv').config();
+
+const xata = new XataClient({
+  apiKey: process.env.XATA_API_KEY,
+  databaseURL: process.env.DATABASE_URL
+});
 require('dotenv').config();
 const express = require('express');
 const { Client } = require('@xata.io/client');
 const app = express();
-
-// Initialize the Xata client with the VALORANT database URL
-const xata = new Client({
-    apiKey: process.env.XATA_API_KEY,  // Ensure the API key is set in your environment variables
-   databaseURL: process.env.DATABASE_URL // Use the full database URL from the .env file
-});
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
