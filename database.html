@@ -148,16 +148,6 @@
         <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
     </div>
 
-    <!-- Query Section -->
-    <div class="query-section">
-        <h2>Query the Database:</h2>
-        <textarea id="sql-query" placeholder="Enter your SQL query here"></textarea>
-        <button onclick="submitQuery()">Submit Query</button>
-    </div>
-
-    <!-- Query Results -->
-    <div id="query-results" class="query-results"></div>
-
     <!-- CSV Tables -->
     <div class="players_stats">
         <h2>players_stats.csv</h2>
@@ -173,69 +163,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <script>
-        function loadTableData() {
-            console.log('Loading table data...');
-            // Query players_stats
-            fetch('/api/query', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ query: 'SELECT * FROM players_stats LIMIT 10' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('players_stats data:', data);
-                displayTableData('players-table', data);
-            })
-            .catch(error => {
-                console.error('Error fetching players_stats:', error);
-            });
+        function loadCSV(file, targetId) {
+            Papa.parse(file, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const data = results.data.slice(0, 10); // Limit to 10 rows
+                    const headers = Object.keys(data[0]);
 
-            // Query maps_scores
-            fetch('/api/query', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ query: 'SELECT * FROM maps_scores LIMIT 10' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('maps_scores data:', data);
-                displayTableData('maps-table', data);
-            })
-            .catch(error => {
-                console.error('Error fetching maps_scores:', error);
+                    let html = '<table>';
+                    html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+                    data.forEach(row => {
+                        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+                    });
+                    html += '</table>';
+
+                    document.getElementById(targetId).innerHTML = html;
+                }
             });
         }
 
-        function displayTableData(targetId, data) {
-            console.log(`Displaying data in table: ${targetId}`);
-            const resultContainer = document.getElementById(targetId);
-
-            if (data.error) {
-                resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
-                return;
-            }
-
-            if (data.length === 0) {
-                resultContainer.innerHTML = "<p>No results found.</p>";
-                return;
-            }
-
-            const headers = Object.keys(data[0]);
-            let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-            data.forEach(row => {
-                html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
-            });
-            html += '</table>';
-
-            resultContainer.innerHTML = html;
-        }
-
-        // Call this function when the page loads
-        window.onload = loadTableData;
+        // Call loadCSV function on page load for both CSV files
+        window.onload = function() {
+            loadCSV('players_stats.csv', 'players-table');
+            loadCSV('maps_scores.csv', 'maps-table');
+        };
     </script>
 </body>
 </html>
