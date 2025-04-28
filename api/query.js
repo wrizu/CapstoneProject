@@ -1,12 +1,17 @@
-require('dotenv').config(); // Ensure .env file is loaded
-const { XataApiClient } = require('@xata.io/client');
-const express = require('express');
+import 'dotenv/config';  // Load environment variables from .env file
+import XataClient from '@xata.io/client';
+import express from 'express';
+
 const app = express();
 
+// Log environment variables to ensure they are being loaded
+console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
+console.log('DATABASE_URL:', process.env.DATABASE_URL);  // Should log your database URL
+
 // Initialize Xata client
-const xata = new XataApiClient({
-  apiKey: process.env.XATA_API_KEY, // Make sure XATA_API_KEY is in your .env file
-  databaseURL: process.env.DATABASE_URL // Make sure DATABASE_URL is in your .env file
+const xata = new XataClient({
+  apiKey: process.env.XATA_API_KEY,  // Make sure XATA_API_KEY is in your .env file
+  databaseURL: process.env.DATABASE_URL  // Make sure DATABASE_URL is in your .env file
 });
 
 // Middleware to parse JSON request bodies
