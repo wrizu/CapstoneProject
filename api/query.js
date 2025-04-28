@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const { Client } = require('@xata.io/client');
 const app = express();
