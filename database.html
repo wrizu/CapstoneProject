@@ -244,6 +244,66 @@
 
             resultContainer.innerHTML = html;
         }
+        function loadTableData() {
+    // Query players_stats
+    fetch('/api/query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: 'SELECT * FROM players_stats LIMIT 10' }) // Change the query as needed
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayTableData('players-table', data);
+    })
+    .catch(error => {
+        console.error('Error fetching players_stats:', error);
+    });
+
+    // Query maps_scores
+    fetch('/api/query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: 'SELECT * FROM maps_scores LIMIT 10' }) // Change the query as needed
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayTableData('maps-table', data);
+    })
+    .catch(error => {
+        console.error('Error fetching maps_scores:', error);
+    });
+}
+
+// Function to render the table data
+function displayTableData(targetId, data) {
+    const resultContainer = document.getElementById(targetId);
+
+    if (data.error) {
+        resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
+        return;
+    }
+
+    if (data.length === 0) {
+        resultContainer.innerHTML = "<p>No results found.</p>";
+        return;
+    }
+
+    const headers = Object.keys(data[0]);
+    let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+    data.forEach(row => {
+        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+    });
+    html += '</table>';
+
+    resultContainer.innerHTML = html;
+}
+
+// Call this function when the page loads
+window.onload = loadTableData;
     </script>
 </body>
 </html>
