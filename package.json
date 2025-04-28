@@ -1,8 +1,4 @@
 {
-  "name": "capstone-project",         // Project name (you can change this)
-  "version": "1.0.0",                // Project version
-  "description": "A brief description of your project",  // Optional description
-  "main": "query.js",               // Main entry file for your project
   "dependencies": {
     "@xata.io/client": "^0.30.1",
     "dotenv": "^16.5.0",
@@ -10,11 +6,6 @@
   },
   "scripts": {
     "build": "echo 'No build step needed for Node.js apps'",
-    "start": "node server.js"        // Make sure you have a `server.js` or entry file for your app
-  },
-  "author": "Your Name",             // Optional author name
-  "license": "MIT",                  // Optional license
-  "engines": {
-    "node": ">=14.0.0"               // Optional: specify Node.js version requirement
+    "start": "node server.js"
   }
 }
