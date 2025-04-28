@@ -1,7 +1,7 @@
 import { Client } from '@xata.io/client'
 
 const xata = new Client({
-  apiKey: xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1
+  apiKey: 'xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1'
 ,
   databaseURL: 'https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT',
 })
