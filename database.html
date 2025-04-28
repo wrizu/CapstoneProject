@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -175,55 +173,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <script>
-        function loadCSV(file, targetId) {
-            Papa.parse(file, {
-                download: true,
-                header: true,
-                complete: function(results) {
-                    const data = results.data.slice(0, 10); // Limit to 10 rows
-                    const headers = Object.keys(data[0]);
-
-                    let html = '<table>';
-                    html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-                    data.forEach(row => {
-                        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
-                    });
-                    html += '</table>';
-
-                    document.getElementById(targetId).innerHTML = html;
-                }
-            });
-        }
-
-        loadCSV('players_stats.csv', 'players-table');
-        loadCSV('maps_scores.csv', 'maps-table');
-
-        function submitQuery() {
-            const query = document.getElementById('sql-query').value.trim();
-            if (!query) {
-                alert("Please enter a SQL query.");
-                return;
-            }
-
-            fetch('http://localhost:3000/execute-query', {
+        function loadTableData() {
+            // Query players_stats
+            fetch('/api/query', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ query })
+                body: JSON.stringify({ query: 'SELECT * FROM players_stats LIMIT 10' })
             })
             .then(response => response.json())
             .then(data => {
-                displayResults(data);
+                displayTableData('players-table', data);
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert("Error connecting to the server or database.");
+                console.error('Error fetching players_stats:', error);
+            });
+
+            // Query maps_scores
+            fetch('/api/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: 'SELECT * FROM maps_scores LIMIT 10' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayTableData('maps-table', data);
+            })
+            .catch(error => {
+                console.error('Error fetching maps_scores:', error);
             });
         }
 
-        function displayResults(data) {
-            const resultContainer = document.getElementById('query-results');
+        function displayTableData(targetId, data) {
+            const resultContainer = document.getElementById(targetId);
 
             if (data.error) {
                 resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
@@ -244,66 +229,9 @@
 
             resultContainer.innerHTML = html;
         }
-        function loadTableData() {
-    // Query players_stats
-    fetch('/api/query', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ query: 'SELECT * FROM players_stats LIMIT 10' }) // Change the query as needed
-    })
-    .then(response => response.json())
-    .then(data => {
-        displayTableData('players-table', data);
-    })
-    .catch(error => {
-        console.error('Error fetching players_stats:', error);
-    });
 
-    // Query maps_scores
-    fetch('/api/query', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ query: 'SELECT * FROM maps_scores LIMIT 10' }) // Change the query as needed
-    })
-    .then(response => response.json())
-    .then(data => {
-        displayTableData('maps-table', data);
-    })
-    .catch(error => {
-        console.error('Error fetching maps_scores:', error);
-    });
-}
-
-// Function to render the table data
-function displayTableData(targetId, data) {
-    const resultContainer = document.getElementById(targetId);
-
-    if (data.error) {
-        resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
-        return;
-    }
-
-    if (data.length === 0) {
-        resultContainer.innerHTML = "<p>No results found.</p>";
-        return;
-    }
-
-    const headers = Object.keys(data[0]);
-    let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-    data.forEach(row => {
-        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
-    });
-    html += '</table>';
-
-    resultContainer.innerHTML = html;
-}
-
-// Call this function when the page loads
-window.onload = loadTableData;
+        // Call this function when the page loads
+        window.onload = loadTableData;
     </script>
 </body>
 </html>
