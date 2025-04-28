@@ -1,6 +1,7 @@
-require('dotenv').config(); // Ensure .env file is loaded
-const { XataClient } = require('@xata.io/client');
-const express = require('express');
+import 'dotenv/config';  // Load environment variables from .env file
+import XataClient from '@xata.io/client';
+import express from 'express';
+
 const app = express();
 
 // Initialize Xata client
