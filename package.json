@@ -6,6 +6,10 @@
   },
   "scripts": {
     "build": "echo 'No build step needed for Node.js apps'",
-    "start": "node query.js"
+    "start": "node query.js",
+    "dev": "node query.js"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
