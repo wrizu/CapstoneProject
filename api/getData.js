@@ -1,8 +1,9 @@
 import { Client } from '@xata.io/client'
 
 const xata = new Client({
-  apiKey: process.env.XATA_API_KEY,
-  databaseURL: process.env.XATA_DB_URL,
+  apiKey: xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1
+,
+  databaseURL: https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT:main,
 })
 
 export default async function handler(req, res) {
