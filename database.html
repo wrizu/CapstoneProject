@@ -58,17 +58,6 @@
             background-color: #00e0e0;
         }
 
-        .players_stats, .maps_scores {
-            text-align: center;
-            margin-top: -20px;
-            padding-bottom: 20px;
-        }
-
-        .players_stats h2, .maps_scores h2 {
-            margin-bottom: 10px;
-            margin-top: 10px;
-        }
-
         .query-section {
             padding: 20px;
             text-align: center;
@@ -112,23 +101,19 @@
             text-align: center;
         }
 
-        .query-results table,
-        .players_stats table,
-        .maps_scores table {
+        .query-results table {
             border-collapse: collapse;
             margin: auto;
             width: 100%;
         }
 
-        .query-results th, .query-results td,
-        .players_stats th, .players_stats td,
-        .maps_scores th, .maps_scores td {
+        .query-results th, .query-results td {
             border: 1px solid #aaa;
             padding: 8px;
             text-align: left;
         }
 
-        .query-results th, .players_stats th, .maps_scores th {
+        .query-results th {
             background-color: #f4f4f4;
         }
     </style>
@@ -148,46 +133,66 @@
         <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
     </div>
 
-    <!-- CSV Tables -->
-    <div class="players_stats">
-        <h2>players_stats.csv</h2>
-        <div id="players-table"></div>
+    <!-- Query Section -->
+    <div class="query-section">
+        <h2>Query the Database:</h2>
+        <textarea id="sql-query" placeholder="Enter your SQL query here"></textarea>
+        <button onclick="submitQuery()">Submit Query</button>
     </div>
 
-    <div class="maps_scores">
-        <h2>maps_scores.csv</h2>
-        <div id="maps-table"></div>
-    </div>
+    <!-- Query Results -->
+    <div id="query-results" class="query-results"></div>
 
     <!-- Load PapaParse -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <script>
-        function loadCSV(file, targetId) {
-            Papa.parse(file, {
-                download: true,
-                header: true,
-                complete: function(results) {
-                    const data = results.data.slice(0, 10); // Limit to 10 rows
-                    const headers = Object.keys(data[0]);
+        function submitQuery() {
+            const query = document.getElementById('sql-query').value.trim();
+            if (!query) {
+                alert("Please enter a SQL query.");
+                return;
+            }
 
-                    let html = '<table>';
-                    html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-                    data.forEach(row => {
-                        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
-                    });
-                    html += '</table>';
-
-                    document.getElementById(targetId).innerHTML = html;
-                }
+            fetch('http://localhost:3000/api/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Error connecting to the server or database.");
             });
         }
 
-        // Call loadCSV function on page load for both CSV files
-        window.onload = function() {
-            loadCSV('players_stats.csv', 'players-table');
-            loadCSV('maps_scores.csv', 'maps-table');
-        };
+        function displayResults(data) {
+            const resultContainer = document.getElementById('query-results');
+
+            if (data.error) {
+                resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                resultContainer.innerHTML = "<p>No results found.</p>";
+                return;
+            }
+
+            const headers = Object.keys(data[0]);
+            let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+            data.forEach(row => {
+                html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+            });
+            html += '</table>';
+
+            resultContainer.innerHTML = html;
+        }
     </script>
 </body>
 </html>
