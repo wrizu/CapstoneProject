@@ -6,6 +6,6 @@
   },
   "scripts": {
     "build": "echo 'No build step needed for Node.js apps'",
-    "start": "node server.js"
+    "start": "node query.js"
   }
 }
