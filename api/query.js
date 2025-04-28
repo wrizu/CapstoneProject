@@ -16,8 +16,15 @@ app.use(express.json());
 app.post('/api/query', async (req, res) => {
     const { query } = req.body;
 
+    // Log the incoming query for debugging purposes
+    console.log('Received query:', query);
+
     try {
-        // Example of querying a table. In real use, you would validate and use the incoming query
+        if (!query) {
+            return res.status(400).json({ error: 'Query is required' });
+        }
+
+        // Handle different queries for players_stats and maps_scores
         if (query.includes('players_stats')) {
             const result = await xata.db.players_stats.query().limit(10).all();  // Adjust based on your setup
             res.json(result);
@@ -25,7 +32,7 @@ app.post('/api/query', async (req, res) => {
             const result = await xata.db.maps_scores.query().limit(10).all();
             res.json(result);
         } else {
-            res.status(400).json({ error: 'Invalid table' });
+            res.status(400).json({ error: 'Invalid table in query' });
         }
     } catch (error) {
         console.error('Database query error:', error);
