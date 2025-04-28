@@ -6,6 +6,6 @@
   },
   "scripts": {
     "build": "echo 'No build step needed for Node.js apps'",
-    "start": "node api/query.js"  // Adjust if your entry file is different
+    "start": "node server.js"
   }
 }
