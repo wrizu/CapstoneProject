@@ -48,18 +48,10 @@ app.post('/api/query', async (req, res) => {
       normalized === "select distinct player from players_stats;"
     ) {
       const allPlayers = await xata.db.players_stats.getAll();
-      const uniquePlayers = [
-        ...new Set(
-          allPlayers
-            .map(row => row.player)
-            .filter(player => player !== null && player !== undefined)
-        )
-      ];
+      const uniquePlayers = [...new Set(allPlayers.map(row => row.Player))];
       return res.json(uniquePlayers);
     } else {
-      return res.status(400).json({
-        error: 'Only "SELECT * FROM players_stats" and "SELECT DISTINCT player FROM players_stats" queries are supported.'
-      });
+      return res.status(400).json({ error: 'Only "SELECT * FROM players_stats" and "SELECT DISTINCT player FROM players_stats" queries are supported.' });
     }
   } catch (error) {
     console.error("Query error:", error);
