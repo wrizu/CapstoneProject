@@ -1,23 +1,32 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import { XataApiClient } from '@xata.io/client';
-import dotenv from 'dotenv';
-import fetch from 'node-fetch';
-
-dotenv.config({ path: './process.env' });  // Ensure you load your environment variables
+const express = require('express');
+const bodyParser = require('body-parser');
+const { XataApiClient } = require('@xata.io/client');
+const path = require('path');
+const fetch = require('node-fetch');
+require('dotenv').config({ path: './process.env' });
 
 const app = express();
-const PORT = process.env.PORT || 5432;  // Make sure your port is correctly set
+const PORT = process.env.PORT || 5432;
 
 // Initialize the Xata client
 const xata = new XataApiClient({
-    apiKey: process.env.XATA_API_KEY,  // Make sure this is set in your environment
-    databaseURL: process.env.XATA_DATABASE_URL,  // This should be set in your environment
-    fetch: fetch, // Pass the fetch method here
+    apiKey: process.env.XATA_API_KEY,
+    databaseURL: process.env.XATA_DATABASE_URL,
+    fetch: fetch,
 });
 
-// Middleware to parse JSON bodies
-app.use(bodyParser.json());
+app.use(bodyParser.json());  // Middleware to parse JSON bodies
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle GET request for favicon.ico to avoid 404 errors
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
+// Handle GET request for testing
+app.get('/api/query', (req, res) => {
+    res.json({ message: "GET request received. You can send a POST request to query the database." });
+});
 
 // Handle POST request to query the database
 app.post('/api/query', async (req, res) => {
@@ -28,28 +37,21 @@ app.post('/api/query', async (req, res) => {
     }
 
     try {
-        // Example query logic based on Xata's API structure
-        if (query.toLowerCase().includes("select")) {
-            // Assuming the table is 'players_stats'
-            const results = await xata.db.players_stats.select("*").getMany();
-            
-            // Check if there are results
-            if (!results || results.length === 0) {
-                return res.json({ message: 'No results found' });
-            }
+        // Execute the query using the Xata client
+        const results = await xata.db.query(query).exec();
 
-            // Send back the results as a response
-            res.json(results);
-        } else {
-            res.status(400).json({ error: 'Invalid query format. Only SELECT queries are allowed.' });
+        // Check if there are results
+        if (!results || results.length === 0) {
+            return res.json({ message: 'No results found' });
         }
+
+        // Send back the results as a response
+        res.json(results);
     } catch (error) {
         console.error("Error executing query:", error);
         res.status(500).json({ error: 'Failed to execute query', details: error.message });
     }
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`🚀 Server connected and running on port ${PORT}`);
-});
+// Vercel requires the `app` to be exported as the request handler
+module.exports = app;  // Exporting app to ensure Vercel can use it
