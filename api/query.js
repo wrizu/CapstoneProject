@@ -1,14 +1,11 @@
-
-
 import dotenv from 'dotenv'; 
 dotenv.config(); // Load environment variables from .env file
 import { XataApiClient } from '@xata.io/client'; 
-
 import express from 'express';
 
 const app = express();
 
-// Initialize the Xata client
+// Initialize the Xata client with the API key and database URL from environment variables
 const xata = new XataApiClient({
   apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
@@ -21,7 +18,7 @@ console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API 
 app.use(express.json());
 
 // Example route to interact with Xata API for VALORANT database
-app.post('xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1', async (req, res) => {
+app.post('/api/query', async (req, res) => {
   const { query } = req.body;
   const apiKey = process.env.XATA_API_KEY; // Get API Key from environment variables
 
