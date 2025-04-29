@@ -24,7 +24,7 @@ const xata = new XataApiClient({
 app.use(express.json());
 
 // Example route to interact with Xata API for VALORANT database
-app.post('https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT:main', async (req, res) => {
+app.post('/api/query', async (req, res) => {
   const { query } = req.body;
   const apiKey = process.env.XATA_API_KEY; // Get API Key from environment variables
 
