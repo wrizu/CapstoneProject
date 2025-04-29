@@ -17,6 +17,7 @@ const xata = new XataApiClient({
   apiKey: process.env.XATA_API_KEY
   ,
   databaseURL: process.env.XATA_DATABASE_URL,
+  fetch: fetch 
 });
 
 // Middleware to parse JSON request bodies
