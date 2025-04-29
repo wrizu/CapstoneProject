@@ -1,3 +1,5 @@
+// query.js
+
 import dotenv from 'dotenv'; 
 dotenv.config(); // Load environment variables from .env file
 import fetch from 'node-fetch';  // Use node-fetch to make requests
@@ -13,7 +15,7 @@ app.use(express.json());
 
 // Example route to interact with Xata API for VALORANT database
 app.post('/api/query', async (req, res) => {
-  const { query } = req.body;
+  const { query } = req.body;  // Extract query from the request body
   const apiKey = process.env.XATA_API_KEY; // Get API Key from environment variables
 
   if (!apiKey) {
