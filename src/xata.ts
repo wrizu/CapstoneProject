@@ -458,21 +458,20 @@ export type DatabaseSchema = {
 const DatabaseClient = buildClient();
 
 const defaultOptions = {
-  databaseURL:
-    "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT",
+  databaseURL: process.env.DATABASE_URL,
 };
 
-export class XataClient extends DatabaseClient<DatabaseSchema> {
+export class XataApiClient extends DatabaseClient<DatabaseSchema> {
   constructor(options?: BaseClientOptions) {
     super({ ...defaultOptions, ...options }, tables);
   }
 }
 
-let instance: XataClient | undefined = undefined;
+let instance: XataApiClient | undefined = undefined;
 
 export const getXataClient = () => {
   if (instance) return instance;
 
-  instance = new XataClient();
+  instance = new XataApiClient();
   return instance;
 };
