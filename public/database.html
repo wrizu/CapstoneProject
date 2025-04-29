@@ -142,8 +142,31 @@
 
     <!-- Query Results -->
     <div id="query-results" class="query-results"></div>
-
+    <h2>EDward Gaming Players</h2>
+    <ul id="edg-players"></ul>
     <script>
+        async function fetchEDGPlayers() {
+  const res = await fetch('/api/query', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: "SELECT Player FROM players_stats WHERE Team = 'EDward Gaming'" })
+  });
+
+  const players = await res.json();
+  const list = document.getElementById("edg-players");
+
+  if (Array.isArray(players)) {
+    players.forEach(player => {
+      const li = document.createElement("li");
+      li.textContent = player;
+      list.appendChild(li);
+    });
+  } else {
+    list.innerHTML = `<li>Error: ${players.error || "Unknown error"}</li>`;
+  }
+}
+
+window.onload = fetchEDGPlayers;
         function submitQuery() {
             const query = document.getElementById('sql-query').value.trim();
             console.log("SQL Query:", query);

@@ -50,8 +50,19 @@ app.post('/api/query', async (req, res) => {
       const allPlayers = await xata.db.players_stats.getAll();
       const uniquePlayers = [...new Set(allPlayers.map(row => row.Player))];
       return res.json(uniquePlayers);
+    } else if (
+      normalized === "select player from players_stats where team = 'edward gaming'" ||
+      normalized === "select player from players_stats where team = 'edward gaming';"
+    ) {
+      const edgPlayers = await xata.db.players_stats
+        .filter({ Team: 'EDward Gaming' })
+        .select(['Player'])
+        .getAll();
+      return res.json(edgPlayers.map(row => row.Player));
     } else {
-      return res.status(400).json({ error: 'Only "SELECT * FROM players_stats" and "SELECT DISTINCT player FROM players_stats" queries are supported.' });
+      return res.status(400).json({
+        error: 'Unsupported query. Allowed: basic SELECTs on players_stats.'
+      });
     }
   } catch (error) {
     console.error("Query error:", error);
