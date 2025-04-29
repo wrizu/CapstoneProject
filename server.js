@@ -4,6 +4,8 @@ import { XataApiClient } from '@xata.io/client';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fetch from 'node-fetch'
+import dotenv from 'dotenv';
+dotenv.config({ path: './process.env' });
 
 // To get the current directory in ES modules
 const __filename = fileURLToPath(import.meta.url);
