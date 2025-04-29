@@ -1,9 +1,17 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import path from 'path';
+
 const app = express();
-const PORT = process.env.PORT || 5432;  // Make sure your port is correctly set
+const PORT = process.env.PORT || 5432;  // Ensure your port is correctly set
 
 app.use(bodyParser.json());  // Middleware to parse JSON bodies
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle GET request for favicon.ico to avoid 404 errors
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // Handle GET request for testing
 app.get('/api/query', (req, res) => {
