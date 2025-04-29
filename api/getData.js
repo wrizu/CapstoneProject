@@ -1,7 +1,8 @@
 import { getXataClient } from './src/xata.js';// adjust path if needed
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config({ path: path.resolve('./api/.env') });
+dotenv.config({ path: path.resolve(__dirname, '../process.env') });
 
 const xata = getXataClient({ apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
