@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { XataApiClient } = require('@xata.io/client');
+const { getXataClient } = require('./src/xata.ts');;
 const path = require('path');
 const fetch = require('node-fetch');
 require('dotenv').config({ path: './process.env' });
@@ -9,11 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5432;
 
 // Initialize the Xata client
-const xata = new XataApiClient({
-    apiKey: process.env.XATA_API_KEY,
-    databaseURL: process.env.XATA_DATABASE_URL,
-    fetch: fetch,
-});
+const xata = getXataClient();
 
 app.use(bodyParser.json());  // Middleware to parse JSON bodies
 
