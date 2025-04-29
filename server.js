@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5432;
 const xata = new XataClient({
   apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
-  branch: 'main'
+  
 });
 
 app.use(bodyParser.json());
