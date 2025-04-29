@@ -157,9 +157,9 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: query }),
+                body: JSON.stringify({ query: query }),  // Ensure the query is sent as JSON
             })
-            .then(response => response.json())
+            .then(response => response.json())  // Parse the response as JSON
             .then(data => {
                 console.log("Query Results:", data);
                 // Display the results on the page
