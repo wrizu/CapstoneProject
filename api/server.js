@@ -35,13 +35,13 @@ app.get('/', (req, res) => {
 // POST endpoint to fetch filtered rows from 'player_stats' table
 app.post('/api/query', async (req, res) => {
   try {
-    const { map, agent, player } = req.body;
+    const { tournament, agent, player } = req.body;
 
     // Build filter object dynamically based on provided fields
     const filters = [];
-    if (map) filters.push({ column: 'Map', operator: '=', value: map });
-    if (agent) filters.push({ column: 'Agents', operator: '=', value: agent });
-    if (player) filters.push({ column: 'Player', operator: '=', value: player });
+    if (tournament) filters.push({ column: 'Tournament', operator: 'equals', value: tournament });
+    if (agent) filters.push({ column: 'Agents', operator: 'equals', value: agent }); // Use 'equals' for exact match
+    if (player) filters.push({ column: 'Player', operator: 'equals', value: player });
 
     // Create a Xata-style filter object
     const where = {};
@@ -49,6 +49,7 @@ app.post('/api/query', async (req, res) => {
       where[filter.column] = filter.value;
     }
 
+    // Query Xata database using the dynamic filters
     const data = await xata.db.players_stats.filter(where).getAll();
 
     res.status(200).json(data);
@@ -62,3 +63,6 @@ app.post('/api/query', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+// For Vercel, export your app so the server can use it
+export default app;

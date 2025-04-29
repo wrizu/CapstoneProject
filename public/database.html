@@ -8,7 +8,6 @@
     href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet"
   />
-
   <title>Database</title>
   <style>
     body {
@@ -72,23 +71,19 @@
       align-items: center;
     }
 
-    .query-section textarea {
-      width: 80%;
-      padding: 10px;
-      font-size: 16px;
-      margin-top: 10px;
-      height: 150px;
-      resize: none;
-    }
-
+    .query-section input,
     .query-section button {
       padding: 10px 20px;
       font-size: 16px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .query-section button {
       background-color: #333;
       color: white;
       border: none;
       cursor: pointer;
-      margin-top: 10px;
     }
 
     .query-section button:hover {
@@ -168,8 +163,10 @@
 
   <!-- Query Section -->
   <div class="query-section">
-    <h2>Query the Database:</h2>
-    <textarea id="sql-query" placeholder="Enter your SQL query here"></textarea>
+    <h2>Filter the Database:</h2>
+    <input type="text" id="Tournament" placeholder="Enter Tournament (e.g., VALOLRANT Champions 2024)">
+    <input type="text" id="Agents" placeholder="Enter Agent (e.g., jett)">
+    <input type="text" id="Player" placeholder="Enter Player Name">
     <button onclick="submitQuery()">Submit Query</button>
   </div>
 
@@ -214,19 +211,29 @@
     loadCSV('players_stats.csv', 'players-table');
     loadCSV('maps_scores.csv', 'maps-table');
 
-    // Submit SQL query to your server
+    // Submit query to your server with filters
     async function submitQuery() {
-      const query = document.getElementById('sql-query').value.trim();
-      if (!query) {
-        alert('Please enter a SQL statement.');
+      const tournament = document.getElementById('Tournament') ? document.getElementById('Tournament').value.trim() : '';
+      const agent = document.getElementById('Agents') ? document.getElementById('Agents').value.trim() : '';
+
+      const player = document.getElementById('Player') ? document.getElementById('Player').value.trim() : '';
+
+      // Only proceed if at least one value is provided
+      if (!tournament && !agent && !player) {
+        alert('Please enter at least one filter (Map, Agent, or Player).');
         return;
       }
+
+      const filters = {};
+      if (tournament) filters.tournament = tournament;
+      if (agent) filters.agent = agent;
+      if (player) filters.player = player;
 
       try {
         const response = await fetch('/api/query', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ statement: query })
+          body: JSON.stringify(filters),
         });
         const data = await response.json();
         if (!response.ok) {
