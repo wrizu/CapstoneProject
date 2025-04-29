@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { XataClient } from '@xata.io/client';
+import { XataApiClient } from '@xata.io/client';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 5432;  // Ensure your port is correctly set
 
 // Initialize the Xata client
-const xata = new XataClient({
+const xata = new XataApiClient({
     apiKey: process.env.XATA_API_KEY,  // Make sure this is set in your environment
     databaseURL: process.env.XATA_DATABASE_URL,  // This should be set in your environment
 });
