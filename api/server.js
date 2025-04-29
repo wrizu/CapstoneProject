@@ -2,13 +2,14 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { getXataClient } from './api/src/xata.js'; // Import Xata client generator
+import { getXataClient } from './src/xata.js'; // Import Xata client generator
+
+// Initialize __dirname and __filename
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../process.env') });
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5432;

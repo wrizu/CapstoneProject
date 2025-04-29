@@ -1,4 +1,4 @@
-import { getXataClient } from './api/xata.js'; // adjust path if needed
+import { getXataClient } from './src/xata.js';// adjust path if needed
 import dotenv from 'dotenv';
 
 dotenv.config({ path: path.resolve('./api/.env') });
