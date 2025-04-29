@@ -4,7 +4,7 @@ import express from 'express';
 import { XataApiClient } from '@xata.io/client';
 
 // Load environment variables from .env file
-dotenv.config();
+dotenv.config({path: '/workspaces/CapstoneProject/process.env'});
 
 const app = express();
 const port = process.env.PORT || 3000;
