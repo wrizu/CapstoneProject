@@ -1,6 +1,7 @@
 {
-  "databaseURL": "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT",
+  "databaseURL": "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/valorant",
   "codegen": {
-    "output": "src/xata.ts"
+    "output": "src/xata.js",
+    "moduleType": "cjs"
   }
 }

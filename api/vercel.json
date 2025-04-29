@@ -1,12 +1,12 @@
 {
-  "version": "2",
+  "version": 2,
   "builds": [
     {
       "src": "api/server.js",
       "use": "@vercel/node"
     },
     {
-      "src": "api/getdata.js",
+      "src": "api/getData.js",
       "use": "@vercel/node"
     }
   ]

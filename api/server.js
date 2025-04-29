@@ -1,45 +1,74 @@
-const express = require('express');
-const fs = require('fs');
+import express from 'express';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { XataApiClient } from '@xata.io/client';
+import { getXataClient } from './xata.js';
+
+dotenv.config({ path: './process.env' });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Function to perform the aggregation (AVG KD per Agent)
-function aggregateData() {
-    // Read data from JSON file
-    const data = JSON.parse(fs.readFileSync('players_stats.json', 'utf8'));
+// Middleware to parse JSON body
+app.use(express.json());
 
-    // Create a dictionary to store KD sums and counts per agent
-    const agentsData = {};
+// Serve static files (frontend)
+app.use(express.static(path.join(__dirname, '../public')));
 
-    // Loop through each player's data and aggregate
-    data.forEach(player => {
-        if (!agentsData[player.Agents]) {
-            agentsData[player.Agents] = { totalKD: 0, count: 0 };
-        }
-        agentsData[player.Agents].totalKD += player.KD;
-        agentsData[player.Agents].count += 1;
-    });
+// Xata setup
+const xata = new getXataClient({
+    apiKey: process.env.XATA_API_KEY,
+    databaseURL: process.env.XATA_DATABASE_URL,
+    branch: 'main'
+  });
 
-    // Now calculate the average KD for each agent
-    const result = [];
-    for (const agent in agentsData) {
-        const avgKd = agentsData[agent].totalKD / agentsData[agent].count;
-        result.push({ Agents: agent, avg_kd: avgKd });
-    }
-
-    // Sort by avg_kd in descending order
-    result.sort((a, b) => b.avg_kd - a.avg_kd);
-
-    return result;
-}
-
-// Define route to get aggregated data
-app.get('/complex-query', (req, res) => {
-    const results = aggregateData();
-    res.json(results);
+// Serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// GET request with query parameters
+app.get('/api/query', async (req, res) => {
+  try {
+    const { Map, Agent, Rank } = req.query;
+
+    const filter = {
+      ...(Map && { Map }),
+      ...(Agent && { Agent }),
+      ...(Rank && { Rank })
+    };
+
+    const results = await xata.db.valorant.filter(filter).getAll();
+    res.status(200).json(results);
+  } catch (error) {
+    console.error('GET query error:', error);
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+});
+
+// POST request with body parameters
+app.post('/api/query', async (req, res) => {
+  try {
+    const { Map, Agent, Rank } = req.body;
+
+    const filter = {
+      ...(Map && { Map }),
+      ...(Agent && { Agent }),
+      ...(Rank && { Rank })
+    };
+
+    const results = await xata.db.valorant.filter(filter).getAll();
+    res.status(200).json(results);
+  } catch (error) {
+    console.error('POST query error:', error);
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
