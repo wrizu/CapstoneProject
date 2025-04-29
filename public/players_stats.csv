@@ -1,4 +1,4 @@
-Tournament,Stage,Match Type,Player,Teams,Agents,Rounds Played,Rating,Average Combat Score,Kills:Deaths,"Kill, Assist, Trade, Survive %",Average Damage Per Round,Kills Per Round,Assists Per Round,First Kills Per Round,First Deaths Per Round,Headshot %,Clutch Success %,Clutches (won/played),Maximum Kills in a Single Map,Kills,Deaths,Assists,First Kills,First Deaths
+Tournament,Stage,Match Type,Player,Teams,Agents,Rounds Played,Rating,Average Combat Score,KD,"Kill, Assist, Trade, Survive %",Average Damage Per Round,Kills Per Round,Assists Per Round,First Kills Per Round,First Deaths Per Round,Headshot %,Clutch Success %,Clutches (won/played),Maximum Kills in a Single Map,Kills,Deaths,Assists,First Kills,First Deaths
 Valorant Champions 2024,Playoffs,Upper Quarterfinals,Boo,Team Heretics,astra,26,0.75,138,0.58,73%,92,0.42,0.54,0.04,0.08,21%,22%,9-Feb,11,11,19,14,1,2
 Valorant Champions 2024,Playoffs,Upper Quarterfinals,Boo,Team Heretics,fade,16,1.1,185,1.38,81%,122,0.69,0.19,0.13,0,21%,,,11,11,8,3,2,0
 Valorant Champions 2024,Playoffs,Upper Quarterfinals,Boo,Team Heretics,"astra, fade",42,0.88,162,0.81,76%,104,0.52,0.4,0.07,0.05,21%,22%,9-Feb,11,22,27,17,3,2

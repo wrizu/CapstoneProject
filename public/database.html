@@ -10,6 +10,25 @@
   />
   <title>Database</title>
   <style>
+    .autocomplete-dropdown {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .autocomplete-item {
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .autocomplete-item:hover {
+      background-color: #f0f0f0;
+    }
+
     body {
       margin: 0;
       font-family: 'Montserrat', sans-serif;
@@ -65,7 +84,7 @@
       padding: 20px;
       text-align: center;
       background-color: #f4f4f4;
-      margin-top: 20px;
+      margin-top: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -91,7 +110,7 @@
     }
 
     .query-results {
-      margin: 30px auto;
+      margin: 20px auto;
       width: 90%;
       text-align: center;
     }
@@ -111,28 +130,6 @@
 
     .query-results th {
       background-color: #f4f4f4;
-    }
-
-    .csv-tables {
-      margin-top: 40px;
-    }
-
-    .csv-tables .table-container {
-      margin: 20px 0;
-      text-align: center;
-    }
-
-    .csv-tables table {
-      width: 80%;
-      margin: 0 auto;
-      border-collapse: collapse;
-    }
-
-    .csv-tables th,
-    .csv-tables td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
     }
   </style>
 </head>
@@ -157,39 +154,22 @@
     <a
       href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large"
       target="_blank"
-      >Full Bracket</a
-    >
+    >Full Bracket</a>
   </div>
 
-  <!-- Query Section -->
   <div class="query-section">
     <h2>Filter the Database:</h2>
-    <input type="text" id="Tournament" placeholder="Enter Tournament (e.g., VALOLRANT Champions 2024)">
-    <input type="text" id="Agents" placeholder="Enter Agent (e.g., jett)">
-    <input type="text" id="Player" placeholder="Enter Player Name">
+    <input type="text" id="Tournament" placeholder="Enter Tournament (e.g., VALORANT Champions 2024)">
+    <input type="text" id="Agents" placeholder="Enter Agent (e.g., Jett)">
+    <input type="text" id="Player" placeholder="Enter Player Name" oninput="autocomplete(event)">
+    <input type="text" id="Teams" placeholder="Enter Team Name" oninput="autocomplete(event)">
+    <input type="text" id="KD" placeholder="Enter KD comparison (e.g., > 1.5)">
     <button onclick="submitQuery()">Submit Query</button>
   </div>
 
-  <!-- Query Results -->
   <div id="query-results" class="query-results"></div>
 
-  <!-- CSV Tables Section -->
-  <div class="csv-tables">
-    <div class="table-container">
-      <h2>players_stats.csv</h2>
-      <div id="players-table"></div>
-    </div>
-
-    <div class="table-container">
-      <h2>maps_scores.csv</h2>
-      <div id="maps-table"></div>
-    </div>
-  </div>
-
-  <!-- Load PapaParse -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
-    // Load first 10 rows of each CSV
     function loadCSV(file, targetId) {
       Papa.parse(file, {
         download: true,
@@ -207,28 +187,38 @@
         }
       });
     }
-
+  
     loadCSV('players_stats.csv', 'players-table');
     loadCSV('maps_scores.csv', 'maps-table');
-
-    // Submit query to your server with filters
+  
     async function submitQuery() {
-      const tournament = document.getElementById('Tournament') ? document.getElementById('Tournament').value.trim() : '';
-      const agent = document.getElementById('Agents') ? document.getElementById('Agents').value.trim() : '';
-
-      const player = document.getElementById('Player') ? document.getElementById('Player').value.trim() : '';
-
-      // Only proceed if at least one value is provided
-      if (!tournament && !agent && !player) {
-        alert('Please enter at least one filter (Map, Agent, or Player).');
+      const tournament = document.getElementById('Tournament')?.value.trim();
+      const agent = document.getElementById('Agents')?.value.trim();
+      const player = document.getElementById('Player')?.value.trim();
+      const teams = document.getElementById('Teams')?.value.trim();
+      const kd = document.getElementById('KD')?.value.trim();
+  
+      if (!tournament && !agent && !player && !teams && !kd) {
+        alert('Please enter at least one filter (Tournament, Agent, Player, Teams, or KD).');
         return;
       }
-
+  
       const filters = {};
       if (tournament) filters.tournament = tournament;
       if (agent) filters.agent = agent;
       if (player) filters.player = player;
-
+      if (teams) filters.teams = teams;
+  
+      if (kd) {
+        const validPattern = /^([><=]=?|=)?\s*(\d+(\.\d+)?)$/;
+        const match = kd.match(validPattern);
+        if (!match) {
+          alert('Invalid KD format. Use >, <, >=, <=, or = followed by a number (e.g., > 1.5).');
+          return;
+        }
+        filters.kd = match[1] ? match[1] + match[2] : match[2]; // Preserve operator
+      }
+  
       try {
         const response = await fetch('/api/query', {
           method: 'POST',
@@ -236,9 +226,7 @@
           body: JSON.stringify(filters),
         });
         const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data?.error || 'Unknown error');
-        }
+        if (!response.ok) throw new Error(data?.error || 'Unknown error');
         displayResults(data);
       } catch (err) {
         console.error(err);
@@ -247,41 +235,19 @@
         `;
       }
     }
-
-    // Render results (objects or strings)
+  
     function displayResults(data) {
       const container = document.getElementById('query-results');
-
+  
       if (!Array.isArray(data) || !data.length) {
         container.innerHTML = '<p>No results found.</p>';
         return;
       }
-
-      // Distinct-values endpoint returns array of strings
-      if (typeof data[0] === 'string') {
-        let html = '<table><tr><th>Value</th></tr>';
-        data.forEach(v => {
-          html += `<tr><td>${v}</td></tr>`;
-        });
-        html += '</table>';
-        container.innerHTML = html;
-        return;
-      }
-
-      // Generic object rows
-      const rows = data.filter(r => r && typeof r === 'object');
-      if (!rows.length) {
-        container.innerHTML = '<p>No valid rows.</p>';
-        return;
-      }
-
-      const headers = Object.keys(rows[0]);
+  
+      const headers = Object.keys(data[0]);
       let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-      rows.forEach(row => {
-        html +=
-          '<tr>' +
-          headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') +
-          '</tr>';
+      data.forEach(row => {
+        html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
       });
       html += '</table>';
       container.innerHTML = html;

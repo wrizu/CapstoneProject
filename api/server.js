@@ -2,60 +2,72 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { getXataClient } from './src/xata.js'; // Correct import
+import { Pool } from 'pg';
 
 // Setup __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables from root
+// Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../process.env') });
 
 const app = express();
-const PORT = process.env.PORT || 5432;
+const PORT = process.env.PORT || 3000;
 
-// Initialize the Xata client using getXataClient function
-const xata = getXataClient({
-  apiKey: process.env.XATA_API_KEY,
-  databaseURL: process.env.XATA_DATABASE_URL,
-  branch: 'main',
+// Set up PostgreSQL connection pool using Xata credentials
+const pool = new Pool({
+  connectionString: process.env.PG_CONNECTION_STRING,
+  ssl: { rejectUnauthorized: false }  // Required by Xata
 });
 
-// Middleware to parse JSON
+// Middleware
 app.use(express.json());
-
-// Serve frontend static files
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Serve the index.html file
+// Serve index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// POST endpoint to fetch filtered rows from 'player_stats' table
+// POST /api/query for filtering player stats
 app.post('/api/query', async (req, res) => {
+  const { tournament, agent, player, teams, kd } = req.body;
+
   try {
-    const { tournament, agent, player } = req.body;
+    let baseQuery = `SELECT * FROM players_stats WHERE 1=1`;
+    const values = [];
+    let i = 1;
 
-    // Build filter object dynamically based on provided fields
-    const filters = [];
-    if (tournament) filters.push({ column: 'Tournament', operator: 'equals', value: tournament });
-    if (agent) filters.push({ column: 'Agents', operator: 'equals', value: agent }); // Use 'equals' for exact match
-    if (player) filters.push({ column: 'Player', operator: 'equals', value: player });
-
-    // Create a Xata-style filter object
-    const where = {};
-    for (const filter of filters) {
-      where[filter.column] = filter.value;
+    if (tournament) {
+      baseQuery += ` AND "Tournament" = $${i++}`;
+      values.push(tournament);
+    }
+    if (agent) {
+      baseQuery += ` AND "Agents" = $${i++}`;
+      values.push(agent);
+    }
+    if (player) {
+      baseQuery += ` AND "Player" = $${i++}`;
+      values.push(player);
+    }
+    if (teams) {
+      baseQuery += ` AND "Teams" = $${i++}`;
+      values.push(teams);
+    }
+    if (kd) {
+      const operator = kd.match(/^[><=]=?|/)[0];
+      const number = parseFloat(kd.replace(/^[><=]=?\s*/, ''));
+      if (operator && !isNaN(number)) {
+        baseQuery += ` AND "KD" ${operator} $${i++}`;
+        values.push(number);
+      }
     }
 
-    // Query Xata database using the dynamic filters
-    const data = await xata.db.players_stats.filter(where).getAll();
-
-    res.status(200).json(data);
+    const result = await pool.query(baseQuery, values);
+    res.json(result.rows);
   } catch (error) {
-    console.error('Xata API query error:', error);
-    res.status(500).json({ error: 'Server error while executing query' });
+    console.error('PostgreSQL query error:', error);
+    res.status(500).json({ error: 'Database query failed' });
   }
 });
 
@@ -63,6 +75,3 @@ app.post('/api/query', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-
-// For Vercel, export your app so the server can use it
-export default app;
