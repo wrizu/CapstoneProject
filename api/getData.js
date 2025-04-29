@@ -1,4 +1,5 @@
-import { XataApiClient } from '@xata.io/client'
+import { XataApiClient } from '@xata.io/client';
+import { getXataClient } from './xata';
 
 const xata = new XataApiClient({
   apiKey: process.env.XATA_API_KEY
