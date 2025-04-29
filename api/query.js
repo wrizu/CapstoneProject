@@ -22,7 +22,7 @@ console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API 
 app.use(express.json());
 
 // Example route to interact with Xata API for VALORANT database
-app.post('/api/query', async (req, res) => {
+app.post('xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1', async (req, res) => {
   const { query } = req.body;
   const apiKey = process.env.XATA_API_KEY; // Get API Key from environment variables
 
