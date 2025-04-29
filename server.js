@@ -2,6 +2,7 @@ import { XataApiClient } from '@xata.io/client';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 dotenv.config({ path: './process.env' });  // Load environment variables from './process.env'
+import { getXataClient } from 'src/xata.ts'
 
 // Initialize the Xata client with configuration from the .env file
 const xata = new XataApiClient({

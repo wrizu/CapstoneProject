@@ -459,7 +459,7 @@ const DatabaseClient = buildClient();
 
 const defaultOptions = {
   databaseURL:
-    "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT",
+    "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/valorant",
 };
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {
