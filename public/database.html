@@ -148,28 +148,28 @@
 
     <script>
         function submitQuery() {
-            const query = document.getElementById('sql-query').value.trim();
-            if (!query) {
-                alert("Please enter a SQL query.");
-                return;
-            }
+    const query = document.getElementById('sql-query').value;
+    console.log("SQL Query:", query);
 
-            fetch('http://localhost:3000/api/query', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ query })
-            })
-            .then(response => response.json())
-            .then(data => {
-                displayResults(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Error connecting to the server or database.");
-            });
-        }
+    // Here you would send the query to your backend or API.
+    // For example:
+    fetch('/api/query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: query }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Query Results:", data);
+        // You can process and display the results here
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
+
 
         function displayResults(data) {
             const resultContainer = document.getElementById('query-results');
