@@ -133,6 +133,12 @@
         <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
     </div>
 
+    <!-- EDward Gaming Player Section -->
+    <div class="query-section" style="margin-top: 40px;">
+        <h2>EDward Gaming Players</h2>
+        <ul id="edg-players" style="list-style: none; padding: 0;"></ul>
+    </div>
+
     <!-- Query Section -->
     <div class="query-section">
         <h2>Query the Database:</h2>
@@ -142,31 +148,33 @@
 
     <!-- Query Results -->
     <div id="query-results" class="query-results"></div>
-    <h2>EDward Gaming Players</h2>
-    <ul id="edg-players"></ul>
+    
     <script>
         async function fetchEDGPlayers() {
-  const res = await fetch('/api/query', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: "SELECT Player FROM players_stats WHERE Team = 'EDward Gaming'" })
-  });
+            const res = await fetch('/api/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: "SELECT Player FROM players_stats WHERE Team = 'EDward Gaming'" })
+            });
 
-  const players = await res.json();
-  const list = document.getElementById("edg-players");
+            const players = await res.json();
+            const list = document.getElementById("edg-players");
+            list.innerHTML = '';
 
-  if (Array.isArray(players)) {
-    players.forEach(player => {
-      const li = document.createElement("li");
-      li.textContent = player;
-      list.appendChild(li);
-    });
-  } else {
-    list.innerHTML = `<li>Error: ${players.error || "Unknown error"}</li>`;
-  }
-}
+            if (Array.isArray(players)) {
+                players.forEach(player => {
+                    const li = document.createElement("li");
+                    li.textContent = player;
+                    li.style.marginBottom = '6px';
+                    list.appendChild(li);
+                });
+            } else {
+                list.innerHTML = `<li style=\"color:red;\">Error: ${players.error || "Unknown error"}</li>`;
+            }
+        }
 
-window.onload = fetchEDGPlayers;
+        window.onload = fetchEDGPlayers;
+
         function submitQuery() {
             const query = document.getElementById('sql-query').value.trim();
             console.log("SQL Query:", query);
@@ -194,44 +202,42 @@ window.onload = fetchEDGPlayers;
         }
 
         function displayResults(data) {
-    const resultContainer = document.getElementById('query-results');
+            const resultContainer = document.getElementById('query-results');
 
-    if (data.error) {
-        resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
-        return;
-    }
+            if (data.error) {
+                resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
+                return;
+            }
 
-    if (!data || data.length === 0 || data.every(row => row === null)) {
-        resultContainer.innerHTML = "<p>No results found.</p>";
-        return;
-    }
+            if (!data || data.length === 0 || data.every(row => row === null)) {
+                resultContainer.innerHTML = "<p>No results found.</p>";
+                return;
+            }
 
-    // Handle array of strings
-    if (typeof data[0] === 'string') {
-        let html = '<table><tr><th>Value</th></tr>';
-        data.forEach(item => {
-            html += `<tr><td>${item}</td></tr>`;
-        });
-        html += '</table>';
-        resultContainer.innerHTML = html;
-        return;
-    }
+            if (typeof data[0] === 'string') {
+                let html = '<table><tr><th>Value</th></tr>';
+                data.forEach(item => {
+                    html += `<tr><td>${item}</td></tr>`;
+                });
+                html += '</table>';
+                resultContainer.innerHTML = html;
+                return;
+            }
 
-    // Filter out null rows before rendering
-    const cleanData = data.filter(row => row !== null && typeof row === 'object');
-    if (cleanData.length === 0) {
-        resultContainer.innerHTML = "<p>No valid data found.</p>";
-        return;
-    }
+            const cleanData = data.filter(row => row !== null && typeof row === 'object');
+            if (cleanData.length === 0) {
+                resultContainer.innerHTML = "<p>No valid data found.</p>";
+                return;
+            }
 
-    const headers = Object.keys(cleanData[0]);
-    let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-    cleanData.forEach(row => {
-        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
-    });
-    html += '</table>';
-    resultContainer.innerHTML = html;
-}
+            const headers = Object.keys(cleanData[0]);
+            let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+            cleanData.forEach(row => {
+                html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+            });
+            html += '</table>';
+            resultContainer.innerHTML = html;
+        }
     </script>
 </body>
 </html>
