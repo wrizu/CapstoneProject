@@ -1,4 +1,5 @@
-import 'dotenv/config';  // Load environment variables from .env file
+import dotenv from 'dotenv'; 
+dotenv.config(); // Load environment variables from .env file
 import fetch from 'node-fetch';  // Use node-fetch to make requests
 import express from 'express';
 
