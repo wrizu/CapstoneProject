@@ -1,7 +1,8 @@
-import dotenv from 'dotenv'; 
+import dotenv from 'dotenv';
 import fetch from 'node-fetch';  // Use node-fetch to make requests
-import { XataApiClient } from '@xata.io/client'; 
+import { XataApiClient } from '@xata.io/client';
 
+// Load environment variables from the .env file
 dotenv.config({ path: './process.env' });
 
 // Initialize the Xata client
@@ -32,4 +33,8 @@ export default async function handler(req, res) {
     console.error('Error fetching from Xata:', error);
     res.status(500).json({ error: 'Failed to fetch data' });
   }
+
+  // Confirmation message that the server is connected
+  const port = process.env.PORT || 3000;  // Default to 3000 if no port is provided
+  console.log(`Server connected and running on port ${port}`);
 }
