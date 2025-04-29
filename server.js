@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './process.env' }); 
+require('dotenv').config({ path: './process.env' });
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,7 +8,7 @@ const { getXataClient, XataClient } = require('./src/xata.js');
 const app = express();
 const PORT = process.env.PORT || 5432;
 
-// Explicitly create Xata client with env vars (optional, only if needed)
+// Initialize Xata client with env variables
 const xata = new XataClient({
   apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
@@ -18,12 +18,15 @@ const xata = new XataClient({
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Avoid favicon errors
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
+// Health check
 app.get('/api/query', (req, res) => {
   res.json({ message: "GET request received. Use POST with a SQL query." });
 });
 
+// Query handling
 app.post('/api/query', async (req, res) => {
   const { query } = req.body;
 
@@ -33,16 +36,22 @@ app.post('/api/query', async (req, res) => {
 
   try {
     const normalized = query.trim().toLowerCase();
-    if (normalized === "select * from players_stats;" || normalized === "select * from players_stats" || normalized === "select distinct player from players_stats") {
+
+    if (
+      normalized === "select * from players_stats" ||
+      normalized === "select * from players_stats;"
+    ) {
       const results = await xata.db.players_stats.getAll();
-
-      if (!results || results.length === 0) {
-        return res.json({ message: 'No results found' });
-      }
-
       return res.json(results);
+    } else if (
+      normalized === "select distinct player from players_stats" ||
+      normalized === "select distinct player from players_stats;"
+    ) {
+      const allPlayers = await xata.db.players_stats.getAll();
+      const uniquePlayers = [...new Set(allPlayers.map(row => row.player))];
+      return res.json(uniquePlayers);
     } else {
-      return res.status(400).json({ error: 'Only "SELECT * FROM players_stats" queries are supported.' });
+      return res.status(400).json({ error: 'Only "SELECT * FROM players_stats" and "SELECT DISTINCT player FROM players_stats" queries are supported.' });
     }
   } catch (error) {
     console.error("Query error:", error);
@@ -53,6 +62,7 @@ app.post('/api/query', async (req, res) => {
 // Export for Vercel
 module.exports = app;
 
+// Start server locally
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
