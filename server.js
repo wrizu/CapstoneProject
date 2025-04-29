@@ -37,16 +37,21 @@ app.post('/api/query', async (req, res) => {
     }
 
     try {
-        // Execute the query using the Xata client
-        const results = await xata.db.query(query).exec();
+        // Example query logic based on Xata's API structure
+        if (query.toLowerCase().includes("select")) {
+            // Make sure to replace 'players_stats' with the actual table name if needed
+            const results = await xata.db.players_stats.select("*").getMany();
 
-        // Check if there are results
-        if (!results || results.length === 0) {
-            return res.json({ message: 'No results found' });
+            // Check if there are results
+            if (!results || results.length === 0) {
+                return res.json({ message: 'No results found' });
+            }
+
+            // Send back the results as a response
+            res.json(results);
+        } else {
+            res.status(400).json({ error: 'Invalid query format. Only SELECT queries are allowed.' });
         }
-
-        // Send back the results as a response
-        res.json(results);
     } catch (error) {
         console.error("Error executing query:", error);
         res.status(500).json({ error: 'Failed to execute query', details: error.message });
@@ -55,3 +60,10 @@ app.post('/api/query', async (req, res) => {
 
 // Vercel requires the `app` to be exported as the request handler
 module.exports = app;  // Exporting app to ensure Vercel can use it
+
+// Optional: Listen on a port for local testing
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+    });
+}
