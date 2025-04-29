@@ -1,9 +1,10 @@
+require('dotenv').config({ path: './process.env' });
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const path = require('path');
 const fetch = require('node-fetch');
-require('dotenv').config({ path: './process.env' });
+
 const { getXataClient } = require('./src/xata.js'); // Use the .js version now
 
 const app = express();
