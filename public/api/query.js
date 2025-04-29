@@ -6,7 +6,7 @@ const app = express();
 
 // Log environment variables to ensure they are being loaded
 console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
-console.log('DATABASE_URL:', process.env.DATABASE_URL);  // Should log your database URL
+console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log your database URL
 
 // Initialize Xata client
 const xata = new XataApiClient({
