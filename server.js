@@ -35,10 +35,10 @@ export default async function handler(req, res) {
             res.status(500).json({ error: 'Failed to execute query', details: error.message });
         }
 
-    // Handle GET request for testing or to fetch all records
+    // Handle GET request for testing or to fetch all records from the correct table
     } else if (req.method === 'GET') {
         try {
-            // Replace 'users' with your actual table name in Xata
+            // Replace 'players_stats' with the correct table name from Xata
             const records = await xata.db.players_stats.select('*').exec();
 
             if (!records || records.length === 0) {
