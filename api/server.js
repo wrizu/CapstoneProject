@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { getXataClient } from '../api/src/xata,js'; // Correct import
+import { getXataClient } from './src/xata.js'; // Correct import
 
 // Setup __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 5432;
 // Initialize the Xata client using getXataClient function
 const xata = getXataClient({
   apiKey: process.env.XATA_API_KEY,   // Your Xata API key
-  databaseURL: process.env.XATA_API_URL,  // The URL of your Xata database
-  branch: process.env.XATA_BRANCH || 'main',  // Default to 'main' branch if not set
+  databaseURL: process.env.XATA_DATABASE_URL,  // The URL of your Xata database
+  branch: 'main',  // Default to 'main' branch if not set
 });
 
 // Middleware to parse JSON
