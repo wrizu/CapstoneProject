@@ -181,30 +181,37 @@
         loadCSV('players_stats.csv', 'players-table');
         loadCSV('maps_scores.csv', 'maps-table');
         function submitQuery() {
-            const query = document.getElementById('sql-query').value.trim();
-            console.log("SQL Query:", query);
+    const query = document.getElementById('sql-query').value.trim();
+    console.log("SQL Query:", query);
 
-            if (!query) {
-                alert("Please enter a query.");
-                return;
-            }
+    if (!query) {
+        alert("Please enter a query.");
+        return;
+    }
 
-            fetch('/api/query', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query: query }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Query Results:", data);
-                displayResults(data);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
+    fetch('/api/query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: query }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        return response.json();  // Parse the response as JSON
+    })
+    .then(data => {
+        console.log("Query Results:", data);
+        displayResults(data);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        const resultContainer = document.getElementById('query-results');
+        resultContainer.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+    });
+}
 
         function displayResults(data) {
             const resultContainer = document.getElementById('query-results');
