@@ -1,5 +1,5 @@
 import 'dotenv/config';  // Load environment variables from .env file
-import { XataClient } from '@xata.io/client';  // Correctly import XataClient
+import { XataApiClient } from '@xata.io/client';  // Correctly import XataClient
 import express from 'express';
 
 const app = express();
@@ -9,7 +9,7 @@ console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API 
 console.log('DATABASE_URL:', process.env.DATABASE_URL);  // Should log your database URL
 
 // Initialize Xata client
-const xata = new XataClient({
+const xata = new XataApiClient({
   apiKey: process.env.XATA_API_KEY,  // Make sure XATA_API_KEY is in your .env file
   databaseURL: process.env.DATABASE_URL  // Make sure DATABASE_URL is in your .env file
 });
