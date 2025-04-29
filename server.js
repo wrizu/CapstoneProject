@@ -12,24 +12,24 @@ const xata = new XataApiClient({
   fetch: fetch,
 });
 
-// Log message to confirm server connection when initialized
-console.log('🚀 Server connected and running');
-
-// This will be the API route triggered by requests to /api/query
+// Handle requests to /api/query
 export default async function handler(req, res) {
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
   // Log environment variables to ensure they are being loaded correctly
   console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
   console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log your database URL
 
+  // Check if the request method is POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
   try {
+    // Log when the server is connected
+    console.log('Server connected and running on port 5432');
+
     // Query data from the 'valorant' table (you can change the query as needed)
     const results = await xata.db.valorant.getMany();
-    
+
     // Send the results back as a response
     res.status(200).json(results);
   } catch (error) {
