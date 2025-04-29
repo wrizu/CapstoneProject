@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { XataApiClient } from '@xata.io/client';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fetch from 'node-fetch'
 
 // To get the current directory in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 5432;  // Ensure your port is correctly set
 const xata = new XataApiClient({
     apiKey: process.env.XATA_API_KEY,  // Make sure this is set in your environment
     databaseURL: process.env.XATA_DATABASE_URL,  // This should be set in your environment
+    fetch: fetch,
 });
 
 app.use(bodyParser.json());  // Middleware to parse JSON bodies
