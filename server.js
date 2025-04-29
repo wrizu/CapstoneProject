@@ -1,59 +1,56 @@
-import { XataApiClient } from '@xata.io/client';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-dotenv.config({ path: './process.env' });  // Load environment variables from './process.env'
-import { getXataClient } from '/workspaces/CapstoneProject/src'
+const express = require('express');
+const bodyParser = require('body-parser');
+const { XataApiClient } = require('@xata.io/client');
+const path = require('path');
+const fetch = require('node-fetch');
+require('dotenv').config({ path: './process.env' });
 
-// Initialize the Xata client with configuration from the .env file
+const app = express();
+const PORT = process.env.PORT || 5432;
+
+// Initialize the Xata client
 const xata = new XataApiClient({
-    apiKey: process.env.XATA_API_KEY,  // Ensure the XATA_API_KEY is in your environment variables
-    databaseURL: process.env.XATA_DATABASE_URL,  // Ensure the XATA_DATABASE_URL is in your environment variables
-    fetch: fetch,  // Use fetch for making HTTP requests
+    apiKey: process.env.XATA_API_KEY,
+    databaseURL: process.env.XATA_DATABASE_URL,
+    fetch: fetch,
 });
 
-export default async function handler(req, res) {
-    // Handle POST request to query the database
-    if (req.method === 'POST') {
-        const { query } = req.body;  // Get the query from the request body
+app.use(bodyParser.json());  // Middleware to parse JSON bodies
 
-        if (!query) {
-            return res.status(400).json({ error: 'No query provided' });
-        }
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
 
-        try {
-            // Execute the query using the Xata client
-            const results = await xata.db.query(query).exec();
+// Handle GET request for favicon.ico to avoid 404 errors
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-            // Check if there are results
-            if (!results || results.length === 0) {
-                return res.json({ message: 'No results found' });
-            }
+// Handle GET request for testing
+app.get('/api/query', (req, res) => {
+    res.json({ message: "GET request received. You can send a POST request to query the database." });
+});
 
-            // Send back the results as a response
-            res.json(results);
-        } catch (error) {
-            console.error("Error executing query:", error);
-            res.status(500).json({ error: 'Failed to execute query', details: error.message });
-        }
+// Handle POST request to query the database
+app.post('/api/query', async (req, res) => {
+    const { query } = req.body;
 
-    // Handle GET request for testing or to fetch all records from the correct table
-    } else if (req.method === 'GET') {
-        try {
-            // Replace 'players_stats' with the correct table name from Xata
-            const records = await xata.db.players_stats.select('*').exec();
-
-            if (!records || records.length === 0) {
-                return res.json({ message: 'No records found' });
-            }
-
-            // Send back the records as a response
-            res.json(records);
-        } catch (error) {
-            console.error("Error fetching records:", error);
-            res.status(500).json({ error: 'Failed to fetch records', details: error.message });
-        }
-    } else {
-        // Handle unsupported methods (e.g., PUT, DELETE)
-        res.status(405).json({ message: 'Method Not Allowed' });
+    if (!query) {
+        return res.status(400).json({ error: 'No query provided' });
     }
-}
+
+    try {
+        const results = await xata.db.query(query).exec();
+
+        if (!results || results.length === 0) {
+            return res.json({ message: 'No results found' });
+        }
+
+        res.json(results);
+    } catch (error) {
+        console.error("Error executing query:", error);
+        res.status(500).json({ error: 'Failed to execute query', details: error.message });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`🚀 Server connected and running on port ${PORT}`);
+});
