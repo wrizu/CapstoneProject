@@ -3,8 +3,8 @@
 import dotenv from 'dotenv'; 
 dotenv.config(); // Load environment variables from .env file
 import { XataApiClient } from '@xata.io/client'; 
-import { getXataClient } from './xata';
-import {getXataUser} from './xata';
+import { getXataClient } from './.xata';
+import {getXataUser} from './.xata';
 import express from 'express';
 
 const app = express();
