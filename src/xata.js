@@ -443,6 +443,8 @@ const tables = [
 const DatabaseClient = (0, client_1.buildClient)();
 const defaultOptions = {
   databaseURL: process.env.XATA_DATABASE_URL,
+  apiKey: process.env.XATA_API_KEY,
+  branch: 'main'
 };
 /** @typedef { import('./types').DatabaseSchema } DatabaseSchema */
 /** @extends DatabaseClient<DatabaseSchema> */
