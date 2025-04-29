@@ -157,7 +157,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: query }),  // Ensure the query is sent as JSON
+                body: JSON.stringify({ query: query })  // Send the query as JSON
             })
             .then(response => response.json())  // Parse the response as JSON
             .then(data => {
@@ -167,13 +167,14 @@
             })
             .catch(error => {
                 console.error("Error:", error);
+                document.getElementById('query-results').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
             });
         }
 
         function displayResults(data) {
             const resultContainer = document.getElementById('query-results');
 
-            // Check for any errors
+            // Check for any errors in the response
             if (data.error) {
                 resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
                 return;
@@ -185,7 +186,7 @@
                 return;
             }
 
-            // Process and display results in a table
+            // Process and display results in a table format
             const headers = Object.keys(data[0]);
             let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
             data.forEach(row => {

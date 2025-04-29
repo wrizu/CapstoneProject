@@ -12,28 +12,34 @@ const xata = new XataApiClient({
   fetch: fetch,
 });
 
-// Handle requests to /api/query
+// This will be the API route triggered by requests to /api/query
 export default async function handler(req, res) {
-  // Log environment variables to ensure they are being loaded correctly
-  console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
-  console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log your database URL
+  if (req.method === 'POST') {
+    try {
+      // Get the SQL query from the request body
+      const { query } = req.body;
 
-  // Check if the request method is POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+      // Log the query to make sure it's being sent correctly
+      console.log('Received query:', query);
+
+      // Query data from the 'valorant' table (you can change the query as needed)
+      const results = await xata.db.valorant.getMany();
+
+      // Send the results back as a response
+      res.status(200).json(results);
+    } catch (error) {
+      console.error('Error fetching from Xata:', error);
+      res.status(500).json({ error: 'Failed to fetch data' });
+    }
+  } else if (req.method === 'GET') {
+    // Handle GET requests (for example, just return a message)
+    res.status(200).json({ message: 'GET request received. You can send a POST request to query the database.' });
+  } else {
+    // Handle any other HTTP methods
+    res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  try {
-    // Log when the server is connected
-    console.log('Server connected and running on port 5432');
-
-    // Query data from the 'valorant' table (you can change the query as needed)
-    const results = await xata.db.valorant.getMany();
-
-    // Send the results back as a response
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('Error fetching from Xata:', error);
-    res.status(500).json({ error: 'Failed to fetch data' });
-  }
+  // Confirmation message that the server is connected
+  const port = process.env.PORT || 3000;  // Default to 3000 if no port is provided
+  console.log(`Server connected and running on port ${port}`);
 }
