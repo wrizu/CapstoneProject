@@ -37,7 +37,6 @@ app.post('/api/query', async (req, res) => {
       return res.status(400).json({ error: 'Only SELECT queries are supported.' });
     }
 
-    // Basic parser to support specific SELECT queries from players_stats
     const regex = /^select\s+(distinct\s+)?([\w\*,\s]+)\s+from\s+players_stats(?:\s+where\s+(.*))?;?$/i;
     const match = query.trim().match(regex);
 
@@ -53,9 +52,16 @@ app.post('/api/query', async (req, res) => {
     if (whereClause) {
       const whereMatch = whereClause.match(/^(\w+)\s*=\s*'([^']+)'$/);
       if (!whereMatch) {
-        return res.status(400).json({ error: 'Only simple equality WHERE clauses are supported (e.g., Team = \'EDward Gaming\').' });
+        return res.status(400).json({ error: 'Only simple equality WHERE clauses are supported (e.g., Teams = \'EDward Gaming\').' });
       }
       const [_, field, value] = whereMatch;
+      
+      // Check if the field exists in the schema
+      const validFields = ['Player', 'Teams']; // Added Teams to valid fields
+      if (!validFields.includes(field)) {
+        return res.status(400).json({ error: `Invalid field name in WHERE clause: ${field}` });
+      }
+
       filterObj[field] = value;
     }
 
