@@ -1,7 +1,7 @@
 import { XataApiClient } from '@xata.io/client';
 import { getXataClient } from './xata';
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: './process.env' });
 const xata = new XataApiClient({
   apiKey: process.env.XATA_API_KEY
 ,

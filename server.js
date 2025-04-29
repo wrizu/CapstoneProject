@@ -1,9 +1,13 @@
 import dotenv from 'dotenv';
-import fetch from 'node-fetch';  // Use node-fetch to make requests
+import fetch from 'node-fetch'; // Used for making API requests
+import express from 'express';
 import { XataApiClient } from '@xata.io/client';
 
-// Load environment variables from the .env file
-dotenv.config({ path: './process.env' });
+// Load environment variables from .env file
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 // Initialize the Xata client
 const xata = new XataApiClient({
@@ -12,29 +16,27 @@ const xata = new XataApiClient({
   fetch: fetch,
 });
 
-// This will be the API route triggered by requests to /api/query
-export default async function handler(req, res) {
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
-  // Log environment variables to ensure they are being loaded correctly
-  console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
-  console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log your database URL
-
+// POST endpoint to query the database
+app.post('/api/query', async (req, res) => {
+  console.log('POST /api/query called');
   try {
-    // Query data from the 'valorant' table (you can change the query as needed)
-    const results = await xata.db.valorant.getMany();
-    
-    // Send the results back as a response
+    const results = await xata.db.valorant.getMany(); // Change 'valorant' to your table name if needed
     res.status(200).json(results);
   } catch (error) {
-    console.error('Error fetching from Xata:', error);
-    res.status(500).json({ error: 'Failed to fetch data' });
+    console.error('❌ Error fetching from Xata:', error);
+    res.status(500).json({ error: 'Failed to fetch data from Xata' });
   }
+});
 
-  // Confirmation message that the server is connected
-  const port = process.env.PORT || 3000;  // Default to 3000 if no port is provided
-  console.log(`Server connected and running on port ${port}`);
-}
+// Simple GET endpoint to verify server is running
+app.get('/', (req, res) => {
+  res.send('✅ Server is running. Use POST /api/query to access the database.');
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`🚀 Server connected and running on port ${port}`);
+});
