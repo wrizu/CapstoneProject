@@ -16,9 +16,9 @@ const PORT = process.env.PORT || 5432;
 
 // Initialize the Xata client using getXataClient function
 const xata = getXataClient({
-  apiKey: process.env.XATA_API_KEY,   // Your Xata API key
-  databaseURL: process.env.XATA_DATABASE_URL,  // The URL of your Xata database
-  branch: 'main',  // Default to 'main' branch if not set
+  apiKey: process.env.XATA_API_KEY,
+  databaseURL: process.env.XATA_DATABASE_URL,
+  branch: 'main',
 });
 
 // Middleware to parse JSON
@@ -32,22 +32,29 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// POST endpoint to execute raw SQL queries via Xata's SQL API
+// POST endpoint to fetch filtered rows from 'player_stats' table
 app.post('/api/query', async (req, res) => {
   try {
-    const { statement } = req.body;
+    const { map, agent, player } = req.body;
 
-    if (!statement || typeof statement !== 'string') {
-      return res.status(400).json({ error: 'Missing or invalid SQL statement.' });
+    // Build filter object dynamically based on provided fields
+    const filters = [];
+    if (map) filters.push({ column: 'Map', operator: '=', value: map });
+    if (agent) filters.push({ column: 'Agents', operator: '=', value: agent });
+    if (player) filters.push({ column: 'Player', operator: '=', value: player });
+
+    // Create a Xata-style filter object
+    const where = {};
+    for (const filter of filters) {
+      where[filter.column] = filter.value;
     }
 
-    // Use Xata client to execute the SQL query
-    const data = await xata.db.query(statement).execute();
+    const data = await xata.db.players_stats.filter(where).getAll();
 
     res.status(200).json(data);
   } catch (error) {
-    console.error('SQL API query error:', error);
-    res.status(500).json({ error: 'Server error while executing SQL' });
+    console.error('Xata API query error:', error);
+    res.status(500).json({ error: 'Server error while executing query' });
   }
 });
 
