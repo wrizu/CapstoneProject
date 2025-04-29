@@ -2,17 +2,24 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { getXataClient } from './src/xata.js'; // Import Xata client generator
+import { getXataClient } from '../api/src/xata,js'; // Correct import
 
-// Initialize __dirname and __filename
+// Setup __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables
+// Load environment variables from root
 dotenv.config({ path: path.resolve(__dirname, '../process.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5432;
+
+// Initialize the Xata client using getXataClient function
+const xata = getXataClient({
+  apiKey: process.env.XATA_API_KEY,   // Your Xata API key
+  databaseURL: process.env.XATA_API_URL,  // The URL of your Xata database
+  branch: process.env.XATA_BRANCH || 'main',  // Default to 'main' branch if not set
+});
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -20,57 +27,27 @@ app.use(express.json());
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Initialize Xata client from env vars
-const xata = getXataClient({
-  apiKey: process.env.XATA_API_KEY,
-  databaseURL: process.env.XATA_DATABASE_URL,
-  branch: 'main',
-});
-
-// Serve index.html as fallback
+// Serve the index.html file
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// GET query endpoint
-app.get('/api/query', async (req, res) => {
-  try {
-    const { Agents, Rating, Teams, Player, KD } = req.query;
-
-    const filter = {
-      ...(Agents && { Agents }),
-      ...(Rating && { Rating }),
-      ...(Teams && { Teams }),
-      ...(Player && { Player }),
-      ...(KD && { KD }),
-    };
-
-    const results = await xata.db.players_stats.filter(filter).getAll();
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('GET query error:', error);
-    res.status(500).json({ error: 'Failed to fetch data' });
-  }
-});
-
-// POST query endpoint
+// POST endpoint to execute raw SQL queries via Xata's SQL API
 app.post('/api/query', async (req, res) => {
   try {
-    const { Agents, Rating, Teams, Player, KD } = req.body;
+    const { statement } = req.body;
 
-    const filter = {
-      ...(Agents && { Agents }),
-      ...(Rating && { Rating }),
-      ...(Teams && { Teams }),
-      ...(Player && { Player }),
-      ...(KD && { KD }),
-    };
+    if (!statement || typeof statement !== 'string') {
+      return res.status(400).json({ error: 'Missing or invalid SQL statement.' });
+    }
 
-    const results = await xata.db.players_stats.filter(filter).getAll();
-    res.status(200).json(results);
+    // Use Xata client to execute the SQL query
+    const data = await xata.db.query(statement).execute();
+
+    res.status(200).json(data);
   } catch (error) {
-    console.error('POST query error:', error);
-    res.status(500).json({ error: 'Failed to fetch data' });
+    console.error('SQL API query error:', error);
+    res.status(500).json({ error: 'Server error while executing SQL' });
   }
 });
 
