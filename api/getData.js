@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load environment variables from the project root
-dotenv.config({ path: path.resolve(__dirname, '../../process.env') }); // assumes this file is in /api or /api/src
+dotenv.config({ path: path.resolve(__dirname, '../process.env') });
 
 const xata = getXataClient({
   apiKey: process.env.XATA_API_KEY,
