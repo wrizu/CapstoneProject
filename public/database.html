@@ -148,42 +148,44 @@
 
     <script>
         function submitQuery() {
-    const query = document.getElementById('sql-query').value;
-    console.log("SQL Query:", query);
+            const query = document.getElementById('sql-query').value;
+            console.log("SQL Query:", query);
 
-    // Here you would send the query to your backend or API.
-    // For example:
-    fetch('/api/query', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: query }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Query Results:", data);
-        // You can process and display the results here
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    });
-}
-
+            // Send the query to the backend API
+            fetch('/api/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: query }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Query Results:", data);
+                // Display the results on the page
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
 
         function displayResults(data) {
             const resultContainer = document.getElementById('query-results');
 
+            // Check for any errors
             if (data.error) {
                 resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
                 return;
             }
 
+            // Check if no results were returned
             if (data.length === 0) {
                 resultContainer.innerHTML = "<p>No results found.</p>";
                 return;
             }
 
+            // Process and display results in a table
             const headers = Object.keys(data[0]);
             let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
             data.forEach(row => {
