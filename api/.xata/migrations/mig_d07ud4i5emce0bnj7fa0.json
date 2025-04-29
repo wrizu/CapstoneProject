@@ -1,0 +1,207 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d07ud4i5emce0bnj7fa0",
+    "operations": [
+      {
+        "create_table": {
+          "name": "players_stats",
+          "columns": [
+            {
+              "name": "Tournament",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Stage",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Match_Type",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Player",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Teams",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Agents",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Rounds_Played",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Rating",
+              "type": "real",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Average_Combat_Score",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "KD",
+              "type": "real",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Kill_Assist_Trade_Survive_Percentage",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Average_Damage_Per_Round",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Kills_Per_Round",
+              "type": "real",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Assists_Per_Round",
+              "type": "real",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "First_Kills_Per_Round",
+              "type": "real",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "First_Deaths_Per_Round",
+              "type": "real",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Headshot_Percentage",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Clutch_Success",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Clutches_won_played",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Maximum_Kills_in_a_Single_Map",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Kills",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Deaths",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Assists",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "First_Kills",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "First_Deaths",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+                "name": "players_stats_xata_id_length_xata_id",
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()"
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0"
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()"
+            },
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()"
+            }
+          ]
+        }
+      },
+      {
+        "sql": {
+          "up": "ALTER TABLE \"players_stats\" REPLICA IDENTITY FULL",
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"players_stats\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d07ud4i5emce0bnj7fa0",
+  "parent": "mig_d07ucgn1875465e5co00",
+  "schema": "public",
+  "startedAt": "2025-04-28T20:35:31.479036Z"
+}
