@@ -13,7 +13,7 @@ console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log
 
 // Initialize the Xata client
 const xata = new XataApiClient({
-  apiKey: xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1
+  apiKey: process.env.XATA_API_KEY
   ,
   databaseURL: 'https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT:main',
 });
