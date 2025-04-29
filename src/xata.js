@@ -1,25 +1,25 @@
-// xata.js
 import { buildClient } from "@xata.io/client";
 import dotenv from "dotenv";
-dotenv.config(); // Load env variables from .env or process.env
+dotenv.config({path: '/workspaces/CapstoneProject/src/process.env'}); // Load environment variables from .env
+
+// Define the default options for the Xata client
+const defaultOptions = {
+  databaseURL: process.env.XATA_DATABASE_URL, // Ensure this is set in your .env file
+  apiKey: process.env.XATA_API_KEY,  // Ensure this is set in your .env file
+  branch: "main"  // Set to the correct branch (e.g., "main")
+};
 
 /** @typedef { import('./types').SchemaTables } SchemaTables */
 const tables = [/* your tables array stays the same */];
 
-/** @type { import('@xata.io/client').ClientConstructor<{}> } */
-const DatabaseClient = buildClient();
-
-const defaultOptions = {
-  databaseURL: process.env.XATA_DATABASE_URL,
-  apiKey: process.env.XATA_API_KEY,
-  branch: "main"
-};
+// Initialize the DatabaseClient with defaultOptions
+const DatabaseClient = buildClient(defaultOptions);
 
 /** @typedef { import('./types').DatabaseSchema } DatabaseSchema */
 /** @extends DatabaseClient<DatabaseSchema> */
 export class XataClient extends DatabaseClient {
   constructor(options = {}) {
-    super({ ...defaultOptions, ...options }, tables);
+    super({ ...defaultOptions, ...options }, tables);  // Ensure options are spread correctly
   }
 }
 
