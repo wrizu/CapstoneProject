@@ -11,7 +11,8 @@ const DatabaseClient = buildClient();
 
 const defaultOptions = {
   databaseURL: process.env.XATA_DATABASE_URL,
-  apiKey: process.env.XATA_API_KEY
+  apiKey: process.env.XATA_API_KEY,
+  branch: "main"
 };
 
 /** @typedef { import('./types').DatabaseSchema } DatabaseSchema */
