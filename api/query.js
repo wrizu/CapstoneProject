@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'; 
 dotenv.config({ path: './process.env' });
+import fetch from 'node-fetch';
 
 import { XataApiClient } from '@xata.io/client'; 
 
