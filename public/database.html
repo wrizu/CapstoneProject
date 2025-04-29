@@ -171,38 +171,44 @@
         }
 
         function displayResults(data) {
-            const resultContainer = document.getElementById('query-results');
+    const resultContainer = document.getElementById('query-results');
 
-            if (data.error) {
-                resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
-                return;
-            }
+    if (data.error) {
+        resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
+        return;
+    }
 
-            if (!data || data.length === 0) {
-                resultContainer.innerHTML = "<p>No results found.</p>";
-                return;
-            }
+    if (!data || data.length === 0 || data.every(row => row === null)) {
+        resultContainer.innerHTML = "<p>No results found.</p>";
+        return;
+    }
 
-            // Handle array of strings (e.g., DISTINCT query)
-            if (typeof data[0] === 'string') {
-                let html = '<table><tr><th>Value</th></tr>';
-                data.forEach(item => {
-                    html += `<tr><td>${item}</td></tr>`;
-                });
-                html += '</table>';
-                resultContainer.innerHTML = html;
-                return;
-            }
+    // Handle array of strings
+    if (typeof data[0] === 'string') {
+        let html = '<table><tr><th>Value</th></tr>';
+        data.forEach(item => {
+            html += `<tr><td>${item}</td></tr>`;
+        });
+        html += '</table>';
+        resultContainer.innerHTML = html;
+        return;
+    }
 
-            // Handle array of objects
-            const headers = Object.keys(data[0]);
-            let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-            data.forEach(row => {
-                html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
-            });
-            html += '</table>';
-            resultContainer.innerHTML = html;
-        }
+    // Filter out null rows before rendering
+    const cleanData = data.filter(row => row !== null && typeof row === 'object');
+    if (cleanData.length === 0) {
+        resultContainer.innerHTML = "<p>No valid data found.</p>";
+        return;
+    }
+
+    const headers = Object.keys(cleanData[0]);
+    let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+    cleanData.forEach(row => {
+        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+    });
+    html += '</table>';
+    resultContainer.innerHTML = html;
+}
     </script>
 </body>
 </html>
