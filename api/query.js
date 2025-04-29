@@ -1,51 +1,35 @@
 import dotenv from 'dotenv'; 
-dotenv.config({ path: './process.env' });
-import fetch from 'node-fetch';
-
+import fetch from 'node-fetch';  // Use node-fetch to make requests
 import { XataApiClient } from '@xata.io/client'; 
 
-import express from 'express';
-
-const app = express();
-
-// Log environment variables to ensure they are being loaded
-console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
-console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log your database URL
+dotenv.config({ path: './process.env' });
 
 // Initialize the Xata client
 const xata = new XataApiClient({
-  apiKey: process.env.XATA_API_KEY
-  ,
+  apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
-  fetch: fetch 
+  fetch: fetch,
 });
 
-// Middleware to parse JSON request bodies
-app.use(express.json());
-
-// Example route to interact with Xata API for VALORANT database
-app.post('/api/query', async (req, res) => {
-  const { query } = req.body;
-  const apiKey = process.env.XATA_API_KEY; // Get API Key from environment variables
-
-  if (!apiKey) {
-    return res.status(400).json({ error: 'API Key is missing from environment variables' });
+// This will be the API route triggered by requests to /api/query
+export default async function handler(req, res) {
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
+
+  // Log environment variables to ensure they are being loaded correctly
+  console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
+  console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log your database URL
 
   try {
-    // Query data from the 'valorant' table
-    const results = await xata.db.valorant.getMany();  // Fetch all records from the 'valorant' table
-
-    // Send back the data as response
+    // Query data from the 'valorant' table (you can change the query as needed)
+    const results = await xata.db.valorant.getMany();
+    
+    // Send the results back as a response
     res.status(200).json(results);
   } catch (error) {
-    console.error('Error making request to Xata API:', error);
-    res.status(500).json({ error: 'Failed to fetch data from Xata API' });
+    console.error('Error fetching from Xata:', error);
+    res.status(500).json({ error: 'Failed to fetch data' });
   }
-});
-
-// Start the server
-const port = process.env.PORT || 5432;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+}
