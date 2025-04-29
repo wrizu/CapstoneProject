@@ -1,9 +1,16 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import { XataClient } from '@xata.io/client';
 import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 5432;  // Ensure your port is correctly set
+
+// Initialize the Xata client
+const xata = new XataClient({
+    apiKey: process.env.XATA_API_KEY,  // Make sure this is set in your environment
+    databaseURL: process.env.XATA_DATABASE_URL,  // This should be set in your environment
+});
 
 app.use(bodyParser.json());  // Middleware to parse JSON bodies
 
@@ -19,17 +26,28 @@ app.get('/api/query', (req, res) => {
 });
 
 // Handle POST request to query the database
-app.post('/api/query', (req, res) => {
+app.post('/api/query', async (req, res) => {
     const { query } = req.body;  // Get the query from the request body
 
     if (!query) {
         return res.status(400).json({ error: 'No query provided' });
     }
 
-    // Example: Execute the query against your database here
-    // For now, we will just return the query for testing purposes
-    // (replace this with actual DB logic)
-    res.json({ success: true, query: query });  // Send back the query as a response
+    try {
+        // Execute the query using the Xata client
+        const results = await xata.db.query(query).exec();
+
+        // Check if there are results
+        if (!results || results.length === 0) {
+            return res.json({ message: 'No results found' });
+        }
+
+        // Send back the results as a response
+        res.json(results);
+    } catch (error) {
+        console.error("Error executing query:", error);
+        res.status(500).json({ error: 'Failed to execute query', details: error.message });
+    }
 });
 
 // Start the server
