@@ -439,8 +439,7 @@ const tables = [
 /** @type { import('@xata.io/client').ClientConstructor<{}> } */
 const DatabaseClient = buildClient();
 const defaultOptions = {
-  databaseURL:
-    "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/valoranhttps://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/valorant:main",
+  databaseURL: process.env.XATA_DATABASE_URL,
 };
 /** @typedef { import('./types').DatabaseSchema } DatabaseSchema */
 /** @extends DatabaseClient<DatabaseSchema> */
