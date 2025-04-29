@@ -148,29 +148,32 @@
 
     <script>
         function submitQuery() {
-            const query = document.getElementById('sql-query').value;
-            console.log("SQL Query:", query);
+    const query = document.getElementById('sql-query').value.trim();
+    console.log("SQL Query:", query);
 
-            // Send the query to the backend API
-            fetch('/api/query', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query: query })  // Send the query as JSON
-            })
-            .then(response => response.json())  // Parse the response as JSON
-            .then(data => {
-                console.log("Query Results:", data);
-                // Display the results on the page
-                displayResults(data);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                document.getElementById('query-results').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-            });
-        }
+    if (!query) {
+        alert("Please enter a query.");
+        return; // Prevent sending empty query
+    }
 
+    // Send the query to the backend API
+    fetch('/api/query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: query }),  // Ensure the query is sent as JSON
+    })
+    .then(response => response.json())  // Parse the response as JSON
+    .then(data => {
+        console.log("Query Results:", data);
+        // Display the results on the page
+        displayResults(data);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
         function displayResults(data) {
             const resultContainer = document.getElementById('query-results');
 
