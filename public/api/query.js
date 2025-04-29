@@ -11,7 +11,7 @@ console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log
 // Initialize Xata client
 const xata = new XataApiClient({
   apiKey: process.env.XATA_API_KEY,  // Make sure XATA_API_KEY is in your .env file
-  databaseURL: process.env.DATABASE_URL  // Make sure DATABASE_URL is in your .env file
+  databaseURL: process.env.XATA_DATABASE_URL  // Make sure DATABASE_URL is in your .env file
 });
 
 // Middleware to parse JSON request bodies
