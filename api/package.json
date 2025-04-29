@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@xata.io/client": "^0.30.1",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "scripts": {
+    "build": "echo 'No build step needed for Node.js apps'",
+    "start": "node query.js",
+    "dev": "node query.js"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "type": "module"
+}
