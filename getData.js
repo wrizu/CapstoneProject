@@ -3,9 +3,9 @@ import { getXataClient } from './xata';
 import dotenv from 'dotenv';
 dotenv.config({ path: './process.env' });
 const xata = new XataApiClient({
-  apiKey: process.env.XATA_API_KEY
-,
+  apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
+  branch: 'main'
 })
 
 export default async function handler(req, res) {
