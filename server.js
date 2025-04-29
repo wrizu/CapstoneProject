@@ -33,7 +33,7 @@ app.post('/api/query', async (req, res) => {
 
   try {
     const normalized = query.trim().toLowerCase();
-    if (normalized === "select * from players_stats;" || normalized === "select * from players_stats") {
+    if (normalized === "select * from players_stats;" || normalized === "select * from players_stats" || normalized === "select distinct player from players_stats") {
       const results = await xata.db.players_stats.getAll();
 
       if (!results || results.length === 0) {
