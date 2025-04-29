@@ -30,19 +30,22 @@ app.get('/api/query', (req, res) => {
 
 // Handle POST request to query the database
 app.post('/api/query', async (req, res) => {
-    const { query } = req.body;
+    const { query } = req.body;  // Get the query from the request body
 
     if (!query) {
         return res.status(400).json({ error: 'No query provided' });
     }
 
     try {
+        // Execute the query using the Xata client
         const results = await xata.db.query(query).exec();
 
+        // Check if there are results
         if (!results || results.length === 0) {
             return res.json({ message: 'No results found' });
         }
 
+        // Send back the results as a response
         res.json(results);
     } catch (error) {
         console.error("Error executing query:", error);
@@ -50,7 +53,5 @@ app.post('/api/query', async (req, res) => {
     }
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`🚀 Server connected and running on port ${PORT}`);
-});
+// Vercel requires the `app` to be exported as the request handler
+module.exports = app;  // Exporting app to ensure Vercel can use it
