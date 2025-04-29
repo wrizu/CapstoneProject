@@ -3,7 +3,7 @@
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap%22%20rel=%22stylesheet" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>My Website</title>
 
     <style>
@@ -159,18 +159,23 @@
         .coach-role a:hover {
             text-decoration: underline;
         }
-        .logo {
-    display: flex;
-    justify-content: right;
-    margin-top: 160px; /* Increased from 80px to 160px */
+
+        .logo-wrapper {
+    width: 66.66%;
+    margin: -500px auto 30px auto;
+    height: auto; /* moved up */
 }
 
-.logo img {
-    width: 80%;
-    max-width: 200px;
-    border-radius: 10px;
-    margin-top: 0; /* Keep this at 0 to avoid double spacing */
-}
+        .logo {
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -249,11 +254,7 @@
             </div>
         </div>
     </div>
-    <div class="logo">
-        <a href="https://en.wikipedia.org/wiki/Edward_Gaming" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Edward_Gaming_logo.png/250px-Edward_Gaming_logo.png" alt="Team Logo">
-        </a>
-    </div>
+
     <div class="coach-section">
         <h2>Coach</h2>
         <div class="coach-container">
@@ -265,6 +266,14 @@
                     <div><a href="https://liquipedia.net/valorant/Muggle" target="_blank">Muggle's VLR</a></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="logo-wrapper">
+        <div class="logo">
+            <a href="https://en.wikipedia.org/wiki/Edward_Gaming" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Edward_Gaming_logo.png/250px-Edward_Gaming_logo.png" alt="Team Logo">
+            </a>
         </div>
     </div>
 </body>
