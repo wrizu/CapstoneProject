@@ -38,8 +38,8 @@ export default async function handler(req, res) {
     // Handle GET request for testing or to fetch all records
     } else if (req.method === 'GET') {
         try {
-            // Example: Fetch all records from a table (replace 'TableName' with your actual table name)
-            const records = await xata.db.TableName.select('*').exec();
+            // Replace 'users' with your actual table name in Xata
+            const records = await xata.db.valorant.select('*').exec();
 
             if (!records || records.length === 0) {
                 return res.json({ message: 'No records found' });
