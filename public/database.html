@@ -244,6 +244,34 @@
             html += '</table>';
             resultContainer.innerHTML = html;
         }
+        function fetchResults() {
+            fetch('/complex-query')  // Make a GET request to the server
+                .then(response => response.json())  // Parse the response as JSON
+                .then(data => {
+                    // Get the container to display the results
+                    const resultContainer = document.getElementById('results');
+                    resultContainer.innerHTML = '';  // Clear any previous results
+
+                    // Loop through the results and create a table row for each entry
+                    data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        const tdAgent = document.createElement('td');
+                        tdAgent.textContent = row.Agents;
+                        const tdAvgKd = document.createElement('td');
+                        tdAvgKd.textContent = row.avg_kd.toFixed(2);  // Format the avg_kd
+
+                        tr.appendChild(tdAgent);
+                        tr.appendChild(tdAvgKd);
+                        resultContainer.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        // Call the fetch function on page load
+        window.onload = fetchResults;
     </script>
 </body>
 </html>
