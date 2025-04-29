@@ -13,8 +13,9 @@ console.log('XATA_DATABASE_URL:', process.env.XATA_DATABASE_URL);  // Should log
 
 // Initialize the Xata client
 const xata = new XataApiClient({
-  apiKey: process.env.XATA_API_KEY,
-  databaseURL: process.env.XATA_DATABASE_URL,
+  apiKey: xau_Lt9h0yiw4vlawsDh6G2oTAEDPERQdH0I1
+  ,
+  databaseURL: 'https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/VALORANT:main',
 });
 
 // Middleware to parse JSON request bodies
