@@ -440,7 +440,7 @@ const tables = [
 const DatabaseClient = buildClient();
 const defaultOptions = {
   databaseURL:
-    "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/valorant",
+    "https://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/valoranhttps://Jack-Burkhalter-s-workspace-v15me3.us-east-1.xata.sh/db/valorant:main",
 };
 /** @typedef { import('./types').DatabaseSchema } DatabaseSchema */
 /** @extends DatabaseClient<DatabaseSchema> */
