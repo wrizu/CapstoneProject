@@ -143,9 +143,6 @@
     <!-- Query Results -->
     <div id="query-results" class="query-results"></div>
 
-    <!-- Load PapaParse -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
     <script>
         function submitQuery() {
             const query = document.getElementById('sql-query').value.trim();
@@ -153,21 +150,19 @@
 
             if (!query) {
                 alert("Please enter a query.");
-                return; // Prevent sending empty query
+                return;
             }
 
-            // Send the query to the backend API
             fetch('/api/query', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: query }),  // Ensure the query is sent as JSON
+                body: JSON.stringify({ query: query }),
             })
-            .then(response => response.json())  // Parse the response as JSON
+            .then(response => response.json())
             .then(data => {
                 console.log("Query Results:", data);
-                // Display the results on the page
                 displayResults(data);
             })
             .catch(error => {
@@ -178,26 +173,34 @@
         function displayResults(data) {
             const resultContainer = document.getElementById('query-results');
 
-            // Check for any errors in the response
             if (data.error) {
                 resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
                 return;
             }
 
-            // Check if no results were returned
-            if (data.length === 0) {
+            if (!data || data.length === 0) {
                 resultContainer.innerHTML = "<p>No results found.</p>";
                 return;
             }
 
-            // Process and display results in a table format
+            // Handle array of strings (e.g., DISTINCT query)
+            if (typeof data[0] === 'string') {
+                let html = '<table><tr><th>Value</th></tr>';
+                data.forEach(item => {
+                    html += `<tr><td>${item}</td></tr>`;
+                });
+                html += '</table>';
+                resultContainer.innerHTML = html;
+                return;
+            }
+
+            // Handle array of objects
             const headers = Object.keys(data[0]);
             let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
             data.forEach(row => {
                 html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
             });
             html += '</table>';
-
             resultContainer.innerHTML = html;
         }
     </script>
