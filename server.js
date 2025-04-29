@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     } else if (req.method === 'GET') {
         try {
             // Replace 'users' with your actual table name in Xata
-            const records = await xata.db.valorant.select('*').exec();
+            const records = await xata.db.players_stats.select('*').exec();
 
             if (!records || records.length === 0) {
                 return res.json({ message: 'No records found' });
