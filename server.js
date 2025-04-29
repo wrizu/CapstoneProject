@@ -3,8 +3,10 @@ import bodyParser from 'body-parser';
 import { XataApiClient } from '@xata.io/client';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fetch from 'node-fetch'
+import fetch from 'node-fetch';
 import dotenv from 'dotenv';
+
+// Load environment variables from .env file
 dotenv.config({ path: './process.env' });
 
 // To get the current directory in ES modules
@@ -21,7 +23,8 @@ const xata = new XataApiClient({
     fetch: fetch,
 });
 
-app.use(bodyParser.json());  // Middleware to parse JSON bodies
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
