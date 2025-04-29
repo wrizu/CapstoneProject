@@ -1,6 +1,6 @@
 import { buildClient } from "@xata.io/client";
 import dotenv from "dotenv";
-dotenv.config({path: '/workspaces/CapstoneProject/src/process.env'}); // Load environment variables from .env
+dotenv.config({path: '/workspaces/CapstoneProject/src/process.env'}); 
 
 // Define the default options for the Xata client
 const defaultOptions = {
@@ -12,14 +12,15 @@ const defaultOptions = {
 /** @typedef { import('./types').SchemaTables } SchemaTables */
 const tables = [/* your tables array stays the same */];
 
-// Initialize the DatabaseClient with defaultOptions
+/** @typedef { import('./types').DatabaseSchema } DatabaseSchema */
+
+// Initialize the DatabaseClient correctly
 const DatabaseClient = buildClient(defaultOptions);
 
-/** @typedef { import('./types').DatabaseSchema } DatabaseSchema */
-/** @extends DatabaseClient<DatabaseSchema> */
+// Create a custom client extending the base DatabaseClient
 export class XataClient extends DatabaseClient {
   constructor(options = {}) {
-    super({ ...defaultOptions, ...options }, tables);  // Ensure options are spread correctly
+    super({ ...defaultOptions, ...options });
   }
 }
 
