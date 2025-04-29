@@ -1,15 +1,19 @@
 {
-  "name": "capstone-project",
-  "version": "1.0.0",
-  "type": "module",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "@xata.io/client": "^0.0.0-next.v93343b9646f57a1e5c51c35eccf0767c2bb80baa",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "node-fetch": "^3.3.2"
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/query",
+      "dest": "/server.js"
+    }
+  ],
+  "env": {
+    "XATA_API_KEY": "@xata_api_key",
+    "XATA_DATABASE_URL": "@xata_database_url"
   }
 }
