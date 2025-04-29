@@ -2,6 +2,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { XataClient } from '@xata.io/client';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// To get the current directory in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5432;  // Ensure your port is correctly set
