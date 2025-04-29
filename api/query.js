@@ -1,5 +1,5 @@
 import 'dotenv/config';  // Load environment variables from .env file
-import { XataClient } from '@xata.io/client';
+import { XataClient } from '@xata.io/client';  // Correctly import XataClient
 import express from 'express';
 
 const app = express();
