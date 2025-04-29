@@ -1,11 +1,17 @@
-// query.js
+
 
 import dotenv from 'dotenv'; 
 dotenv.config(); // Load environment variables from .env file
-import fetch from 'node-fetch';  // Use node-fetch to make requests
+import { XataApiClient } from '@xata.io/client';  // Import Xata client
 import express from 'express';
 
 const app = express();
+
+// Initialize the Xata client
+const xata = new XataApiClient({
+  apiKey: process.env.XATA_API_KEY,
+  databaseURL: process.env.XATA_DATABASE_URL,
+});
 
 // Log environment variables to ensure they are being loaded
 console.log('XATA_API_KEY:', process.env.XATA_API_KEY);  // Should log your API key
@@ -15,7 +21,7 @@ app.use(express.json());
 
 // Example route to interact with Xata API for VALORANT database
 app.post('/api/query', async (req, res) => {
-  const { query } = req.body;  // Extract query from the request body
+  const { query } = req.body;
   const apiKey = process.env.XATA_API_KEY; // Get API Key from environment variables
 
   if (!apiKey) {
@@ -23,28 +29,11 @@ app.post('/api/query', async (req, res) => {
   }
 
   try {
-    // Define the Xata API endpoint for your database (use your specific database URL here)
-    const xataDatabaseUrl = 'https://xata.io/workspaces/Jack-Burkhalter-s-workspace-v15me3/dbs/VALORANT/branches/main';
-
-    // Make the authenticated request to Xata API for your database
-    const response = await fetch(xataDatabaseUrl, {
-      method: 'GET', // Assuming you want to GET data
-      headers: {
-        Authorization: `Bearer ${apiKey}`,  // Pass the API Key in the Authorization header
-        'Content-Type': 'application/json'
-      }
-    });
-
-    // Check if the request was successful
-    if (!response.ok) {
-      throw new Error('Failed to fetch data from Xata API');
-    }
-
-    // Parse the response
-    const data = await response.json();
+    // Query data from the 'valorant' table
+    const results = await xata.db.valorant.getMany();  // Fetch all records from the 'valorant' table
 
     // Send back the data as response
-    res.json(data);
+    res.status(200).json(results);
   } catch (error) {
     console.error('Error making request to Xata API:', error);
     res.status(500).json({ error: 'Failed to fetch data from Xata API' });
