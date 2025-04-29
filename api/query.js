@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'; 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config({ path: './process.env' });
 
 import { XataApiClient } from '@xata.io/client'; 
 
