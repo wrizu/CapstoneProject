@@ -2,47 +2,49 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { XataApiClient } from '@xata.io/client';
-import { getXataClient } from './xata.js';
+import { getXataClient } from './src/xata.js'; // Import Xata client generator
 
-dotenv.config({ path: './process.env' });
+// Load environment variables
+dotenv.config({ path: path.resolve('./api/.env') });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5432;
 
-// Middleware to parse JSON body
+// Middleware to parse JSON
 app.use(express.json());
 
-// Serve static files (frontend)
+// Serve frontend static files
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Xata setup
-const xata = new getXataClient({
-    apiKey: process.env.XATA_API_KEY,
-    databaseURL: process.env.XATA_DATABASE_URL,
-    branch: 'main'
-  });
+// Initialize Xata client from env vars
+const xata = getXataClient({
+  apiKey: process.env.XATA_API_KEY,
+  databaseURL: process.env.XATA_DATABASE_URL,
+  branch: 'main',
+});
 
-// Serve index.html
+// Serve index.html as fallback
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// GET request with query parameters
+// GET query endpoint
 app.get('/api/query', async (req, res) => {
   try {
-    const { Map, Agent, Rank } = req.query;
+    const { Agents, Rating, Teams, Player, KD } = req.query;
 
     const filter = {
-      ...(Map && { Map }),
-      ...(Agent && { Agent }),
-      ...(Rank && { Rank })
+      ...(Agents && { Agents }),
+      ...(Rating && { Rating }),
+      ...(Teams && { Teams }),
+      ...(Player && { Player }),
+      ...(KD && { KD }),
     };
 
-    const results = await xata.db.valorant.filter(filter).getAll();
+    const results = await xata.db.players_stats.filter(filter).getAll();
     res.status(200).json(results);
   } catch (error) {
     console.error('GET query error:', error);
@@ -50,18 +52,20 @@ app.get('/api/query', async (req, res) => {
   }
 });
 
-// POST request with body parameters
+// POST query endpoint
 app.post('/api/query', async (req, res) => {
   try {
-    const { Map, Agent, Rank } = req.body;
+    const { Agents, Rating, Teams, Player, KD } = req.body;
 
     const filter = {
-      ...(Map && { Map }),
-      ...(Agent && { Agent }),
-      ...(Rank && { Rank })
+      ...(Agents && { Agents }),
+      ...(Rating && { Rating }),
+      ...(Teams && { Teams }),
+      ...(Player && { Player }),
+      ...(KD && { KD }),
     };
 
-    const results = await xata.db.valorant.filter(filter).getAll();
+    const results = await xata.db.players_stats.filter(filter).getAll();
     res.status(200).json(results);
   } catch (error) {
     console.error('POST query error:', error);
@@ -69,6 +73,7 @@ app.post('/api/query', async (req, res) => {
   }
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
