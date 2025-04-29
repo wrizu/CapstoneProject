@@ -3,7 +3,7 @@ import { XataApiClient } from '@xata.io/client'
 const xata = new XataApiClient({
   apiKey: process.env.XATA_API_KEY
 ,
-  databaseURL: process.env.DATABASE_URL,
+  databaseURL: process.env.XATA_DATABASE_URL,
 })
 
 export default async function handler(req, res) {
