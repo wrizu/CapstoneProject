@@ -1,12 +1,20 @@
-import { getXataClient } from './src/xata.js';// adjust path if needed
+import { getXataClient } from './src/xata.js'; // adjust path if needed
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-dotenv.config({ path: path.resolve(__dirname, '../process.env') });
+// Define __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const xata = getXataClient({ apiKey: process.env.XATA_API_KEY,
+// Load environment variables from the project root
+dotenv.config({ path: path.resolve(__dirname, '../../process.env') }); // assumes this file is in /api or /api/src
+
+const xata = getXataClient({
+  apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
-  branch: 'main'});
+  branch: 'main'
+});
 
 export default async function handler(req, res) {
   try {
