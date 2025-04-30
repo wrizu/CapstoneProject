@@ -4,24 +4,13 @@
       {
         "src": "api/server.js",
         "use": "@vercel/node"
-      },
-      {
-        "src": "public/**/*",
-        "use": "@vercel/static"
       }
     ],
-    "env": {
-      "PG_CONNECTION_STRING": "@pg_connection_string",
-      "NODE_ENV": "development"
-    },
     "routes": [
       {
-        "src": "/api/(.*)",
-        "dest": "/api/server.js"
-      },
-      {
         "src": "/(.*)",
-        "dest": "/public/$1"
+        "dest": "/api/server.js"
       }
     ]
   }
+  
