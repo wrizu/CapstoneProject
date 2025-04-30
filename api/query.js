@@ -1,5 +1,6 @@
 const { getXataClient } = require('../src/xata.js');
-
+const dotenv = require('dotenv');
+dotenv.config();
 // Initialize Xata client
 const xata = getXataClient({
   apiKey: process.env.XATA_API_KEY,

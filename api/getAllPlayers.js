@@ -1,16 +1,14 @@
-const { Pool } = require('pg');
+const { getXataClient } = require('../src/xata.js'); // Adjust path as needed
 
-const pool = new Pool({
-  connectionString: process.env.PG_CONNECTION_STRING,
-  ssl: { rejectUnauthorized: false }
-});
+const xata = getXataClient();
 
 module.exports = async (req, res) => {
   try {
-    const result = await pool.query('SELECT DISTINCT "Player" FROM players_stats ORDER BY "Player" ASC');
-    res.status(200).json(result.rows);
+    const results = await xata.sql`SELECT DISTINCT "Player" FROM players_stats ORDER BY "Player" ASC`;
+    res.status(200).json(results.rows);
   } catch (error) {
     console.error('❌ getAllPlayers error:', error.message);
     res.status(500).json({ error: 'Failed to fetch players', details: error.message });
   }
 };
+
