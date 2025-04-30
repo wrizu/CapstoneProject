@@ -5,11 +5,9 @@ import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
 
 // Setup __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '../process.env') });
+dotenv.config({ path: path.resolve(__dirname, './.env') });
+app.use(express.static(path.join(__dirname, 'public')));
+res.sendFile(path.join(__dirname, 'public/index.html'));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
