@@ -11,7 +11,8 @@
     "express": "^5.1.0",
     "mysql": "^2.18.1",
     "node-fetch": "^3.3.2",
-    "pg": "^8.15.6"
+    "pg": "^8.15.6",
+    "vercel": "^41.7.0"
   },
   "type": "module",
   "engines": {

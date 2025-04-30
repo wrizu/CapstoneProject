@@ -1,16 +1,16 @@
-import { Pool } from 'pg';
+const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+  connectionString: process.env.PG_CONNECTION_STRING,
   ssl: { rejectUnauthorized: false }
 });
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM players_stats');
-    res.status(200).json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch players' });
+    const result = await pool.query('SELECT DISTINCT "Player" FROM players_stats ORDER BY "Player" ASC');
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('❌ getAllPlayers error:', error.message);
+    res.status(500).json({ error: 'Failed to fetch players', details: error.message });
   }
-}
+};

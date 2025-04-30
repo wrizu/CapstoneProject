@@ -1,11 +1,11 @@
-import { Pool } from 'pg';
+const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.PG_CONNECTION_STRING,
   ssl: { rejectUnauthorized: false }
 });
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -21,17 +21,14 @@ export default async function handler(req, res) {
       baseQuery += ` AND "Tournament" = $${i++}`;
       values.push(tournament);
     }
-
     if (agent) {
       baseQuery += ` AND "Agents" = $${i++}`;
       values.push(agent);
     }
-
     if (player) {
       baseQuery += ` AND "Player" = $${i++}`;
       values.push(player);
     }
-
     if (teams) {
       baseQuery += ` AND "Teams" = $${i++}`;
       values.push(teams);
@@ -40,10 +37,10 @@ export default async function handler(req, res) {
     if (kd !== null && kd !== undefined && kd !== '') {
       const kdString = kd.toString().trim();
       const regex = /^(>=|<=|<>|>|<|=)/;
-      const operatorMatch = kdString.match(regex);
+      const operatorMatch = kdString.match(/^(>=|<=|<>|>|<|=)/);
       const operator = operatorMatch ? operatorMatch[0] : '=';
 
-      const numberPart = kdString.replace(regex, '').trim();
+      const numberPart = kdString.replace(/^(>=|<=|<>|>|<|=)/, '').trim();
       const number = parseFloat(numberPart);
 
       if (!isNaN(number)) {
@@ -57,9 +54,9 @@ export default async function handler(req, res) {
     baseQuery += ` ORDER BY "KD" DESC`;
 
     const result = await pool.query(baseQuery, values);
-    return res.status(200).json(result.rows);
+    res.status(200).json(result.rows);
   } catch (error) {
-    console.error('❌ PostgreSQL query error:', error.message);
-    return res.status(500).json({ error: 'Database query failed', details: error.message });
+    console.error('❌ query error:', error.message);
+    res.status(500).json({ error: 'Database query failed', details: error.message });
   }
-}
+};

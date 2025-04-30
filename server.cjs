@@ -21,6 +21,7 @@ const pool = new Pool({
 });
 
 // Middleware
+// Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -29,6 +30,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
+// API route: /api/query
+app.post('/api/query', async (req, res) => {
+  // ... your existing logic (no changes needed here)
+});
+
+// Safe catch-all for unknown /api routes (replaces /api/*)
+app.use('/api', (req, res, next) => {
+  if (!req.route) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  next();
+});
 // API route: /api/query
 app.post('/api/query', async (req, res) => {
   const { tournament, agent, player, teams, kd } = req.body;
