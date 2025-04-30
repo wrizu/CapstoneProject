@@ -10,6 +10,10 @@
         "use": "@vercel/static"
       }
     ],
+    "env": {
+      "PG_CONNECTION_STRING": "@pg_connection_string",
+      "NODE_ENV": "development"
+    },
     "routes": [
       {
         "src": "/api/(.*)",
@@ -21,4 +25,3 @@
       }
     ]
   }
-  
