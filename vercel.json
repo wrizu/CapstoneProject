@@ -12,17 +12,16 @@
     ],
     "routes": [
       {
-        "src": "/api",
+        "src": "^/api/.*",
         "dest": "api/server.js"
       },
       {
-        "src": "/api/(.*)",
-        "dest": "api/server.js"
-      },
-      {
-        "src": "/(.*)",
+        "src": "^(.*)",
         "dest": "public/$1"
       }
-    ]
+    ],
+    "engines": {
+      "node": "22.x"
+    }
   }
   
