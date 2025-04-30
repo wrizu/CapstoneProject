@@ -1,62 +1,60 @@
-const { Pool } = require('pg');
+const { getXataClient } = require('../src/xata'); // Adjust the path as needed
 
-const pool = new Pool({
-  connectionString: process.env.PG_CONNECTION_STRING,
-  ssl: { rejectUnauthorized: false }
+// Initialize Xata client
+const xata = getXataClient({
+  apiKey: process.env.XATA_API_KEY,
+  databaseURL: process.env.XATA_DATABASE_URL,
+  branch: 'main', // You can modify this if you have different branches
 });
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  const { tournament, agent, player, teams, kd } = req.body;
+module.exports = async function (req, res) {
+  const { tournament, player, teams, kd } = req.body;
 
   try {
-    let baseQuery = `SELECT * FROM players_stats WHERE 1=1`;
-    const values = [];
-    let i = 1;
+    let query = xata.db.players_stats;
 
+    // Filter by tournament if provided
     if (tournament) {
-      baseQuery += ` AND "Tournament" = $${i++}`;
-      values.push(tournament);
-    }
-    if (agent) {
-      baseQuery += ` AND "Agents" = $${i++}`;
-      values.push(agent);
-    }
-    if (player) {
-      baseQuery += ` AND "Player" = $${i++}`;
-      values.push(player);
-    }
-    if (teams) {
-      baseQuery += ` AND "Teams" = $${i++}`;
-      values.push(teams);
+      query = query.filter({ Tournament: tournament });
     }
 
+    // Filter by player if provided
+    if (player) {
+      query = query.filter({ Player: player });
+    }
+
+    // Filter by teams if provided
+    if (teams) {
+      query = query.filter({ Teams: teams });
+    }
+
+    // Handle KD filtering like before
     if (kd !== null && kd !== undefined && kd !== '') {
       const kdString = kd.toString().trim();
       const regex = /^(>=|<=|<>|>|<|=)/;
-      const operatorMatch = kdString.match(/^(>=|<=|<>|>|<|=)/);
+      const operatorMatch = kdString.match(regex);
       const operator = operatorMatch ? operatorMatch[0] : '=';
 
-      const numberPart = kdString.replace(/^(>=|<=|<>|>|<|=)/, '').trim();
+      const numberPart = kdString.replace(regex, '').trim();
       const number = parseFloat(numberPart);
 
       if (!isNaN(number)) {
-        baseQuery += ` AND "KD" ${operator} $${i++}`;
-        values.push(number);
+        query = query.filter({ KD: { [operator]: number } });
       } else {
         return res.status(400).json({ error: 'Invalid KD value' });
       }
     }
 
-    baseQuery += ` ORDER BY "KD" DESC`;
+    // Add ORDER BY "KD" DESC
+    query = query.sort('KD', 'desc');
 
-    const result = await pool.query(baseQuery, values);
-    res.status(200).json(result.rows);
+    // Execute the query and fetch the results
+    const results = await query.getAll();
+
+    // Send the results as the response
+    res.status(200).json(results);
   } catch (error) {
-    console.error('❌ query error:', error.message);
-    res.status(500).json({ error: 'Database query failed', details: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch data' });
   }
 };
