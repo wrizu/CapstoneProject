@@ -1,4 +1,4 @@
-const { getXataClient } = require('../src/.xata.js'); // Adjust the path as needed
+const { getXataClient } = require('../src/xata.js');
 
 // Initialize Xata client
 const xata = getXataClient({
