@@ -1,5 +1,5 @@
 {
-    "name": "capstone-project",
+    "name": "valorant-stats-app",
     "version": 2,
     "builds": [
       {
@@ -10,8 +10,7 @@
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "api/server.js"
+        "dest": "/api/server"
       }
     ]
   }
-  
