@@ -4,7 +4,7 @@ const path = require('path');
 const { Pool } = require('pg');
 
 // Load environment variables
-dotenv.config({ path: path.resolve(__dirname, 'process.env') });
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5432;
