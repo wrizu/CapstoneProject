@@ -1,10 +1,11 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "api/*.js", "use": "@vercel/node" }
-    ],
-    "routes": [
-      { "src": "/api/query", "dest": "/api/query.js" },
-      { "src": "/api/getAllPlayers", "dest": "/api/getAllPlayers.js" }
-    ]
-  }
+  "version": 2,
+  "builds": [
+    { "src": "api/*.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/query", "dest": "/api/query.js" },
+    { "src": "/api/getAllPlayers", "dest": "/api/getAllPlayers.js" },
+    { "src": "/api/getData", "dest": "/api/getData.js" }
+  ]
+}
