@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <title>Database</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
   <style>
     body {
       margin: 0;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Roboto', sans-serif;
     }
 
     .header {
@@ -28,18 +27,19 @@
       margin: 0;
     }
 
-    .header img.left-logo {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      height: 60px;
-    }
-
+    .header img.left-logo,
     .header img.right-logo {
       position: absolute;
       top: 10px;
-      right: 10px;
       height: 60px;
+    }
+
+    .header img.left-logo {
+      left: 10px;
+    }
+
+    .header img.right-logo {
+      right: 10px;
     }
 
     .toolbar {
@@ -74,10 +74,11 @@
 
     .query-section input,
     .query-section button {
-      padding: 10px 20px;
+      padding: 10px;
       font-size: 16px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin: 5px 0;
+      width: 280px;
+      max-width: 90%;
     }
 
     .query-section button {
@@ -93,8 +94,8 @@
 
     .query-results {
       margin: 20px auto;
-      width: 90%;
-      text-align: center;
+      width: 95%;
+      overflow-x: auto;
     }
 
     .query-results table {
@@ -118,12 +119,19 @@
       color: red;
       font-weight: bold;
     }
+
+    @media (max-width: 600px) {
+      .toolbar a {
+        display: block;
+        margin: 5px auto;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" />
-    <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" />
+    <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant Logo" />
+    <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" alt="UW Bothell Logo" />
     <h1>Database</h1>
   </div>
 
@@ -182,8 +190,7 @@
           alert('Invalid KD format. Use operators like >, <, >=, <=, = followed by a number (e.g., > 1.2)');
           return;
         }
-
-        filters.kd = kd; // Send full string (operator + value) to server
+        filters.kd = kd;
       }
 
       try {
@@ -198,9 +205,8 @@
         displayResults(data);
       } catch (err) {
         console.error(err);
-        document.getElementById('query-results').innerHTML = `
-          <p class="error-message"><strong>Error:</strong> ${err.message}</p>
-        `;
+        document.getElementById('query-results').innerHTML =
+          `<p class="error-message"><strong>Error:</strong> ${err.message}</p>`;
       }
     }
 

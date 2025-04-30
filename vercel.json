@@ -1,16 +1,16 @@
 {
     "version": 2,
-    "name": "capstone-project",
+    "name": "valorant-server",
     "builds": [
       {
-        "src": "server.js",
+        "src": "server.cjs",
         "use": "@vercel/node"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "/server.js"
+        "dest": "server.cjs"
       }
     ]
   }
