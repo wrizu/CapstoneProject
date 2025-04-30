@@ -1,6 +1,6 @@
 const path = require('path');
 const dotenv = require('dotenv');
-const { getXataClient } = require('./api/src/xata.js'); // Adjust path as needed
+const { getXataClient } = require('./src/xata.js'); // Adjust path as needed
 
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, 'process.env') });
