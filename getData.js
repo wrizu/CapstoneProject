@@ -1,4 +1,4 @@
-import { getXataClient } from './src/xata.js'; // adjust path if needed
+import { getXataClient } from './api/src/xata.js'; // adjust path if needed
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';

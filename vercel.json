@@ -1,16 +1,16 @@
 {
-    "name": "valorant-stats-app",
     "version": 2,
+    "name": "capstone-project",
     "builds": [
       {
-        "src": "api/server.js",
+        "src": "server.js",
         "use": "@vercel/node"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "/api/server"
+        "dest": "/server.js"
       }
     ]
   }
