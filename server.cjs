@@ -7,7 +7,7 @@ const { Pool } = require('pg');
 dotenv.config({ path: path.resolve(__dirname, 'process.env') });
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5432;
 
 if (!process.env.PG_CONNECTION_STRING) {
   console.error('❌ PG_CONNECTION_STRING is not defined in environment variables.');
