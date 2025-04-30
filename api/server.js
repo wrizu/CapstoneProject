@@ -22,19 +22,18 @@ if (!process.env.PG_CONNECTION_STRING) {
 // PostgreSQL connection pool
 const pool = new Pool({
   connectionString: process.env.PG_CONNECTION_STRING,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
 });
 
-// Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Homepage
+// Serve the homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// API route: /api/query
+// API route: /api/query to filter player stats
 app.post('/api/query', async (req, res) => {
   const { tournament, agent, player, teams, kd } = req.body;
 
@@ -60,11 +59,12 @@ app.post('/api/query', async (req, res) => {
       values.push(teams);
     }
 
+    // Handling KD filter (Greater than, Less than, Equal, etc.)
     if (kd !== null && kd !== undefined && kd !== '') {
       console.log('Raw KD input:', kd);
       const kdString = kd.toString().trim();
       const regex = /^(>=|<=|<>|>|<|=)/;
-      const operatorMatch = kdString.match(regex);
+      const operatorMatch = kdString.match(/^(>=|<=|<>|>|<|=)/);
       const operator = operatorMatch ? operatorMatch[0] : '=';
 
       const numberPart = kdString.replace(regex, '').trim();
@@ -86,7 +86,13 @@ app.post('/api/query', async (req, res) => {
     console.log('values:', values);
     console.log('Final Query:', baseQuery);
 
+    // Execute the query
     const result = await pool.query(baseQuery, values);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'No results found' });
+    }
+
     res.json(result.rows);
   } catch (error) {
     console.error('❌ PostgreSQL query error:', error.message);
@@ -94,12 +100,12 @@ app.post('/api/query', async (req, res) => {
   }
 });
 
-// Catch-all API route
+// Catch-all API route for undefined API endpoints
 app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'API endpoint not found' });
 });
 
-// Start server
+// Start the server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
