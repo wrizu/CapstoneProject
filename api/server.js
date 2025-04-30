@@ -54,14 +54,35 @@ app.post('/api/query', async (req, res) => {
       baseQuery += ` AND "Teams" = $${i++}`;
       values.push(teams);
     }
-    if (kd) {
-      const operator = kd.match(/^[><=]=?|/)[0];
-      const number = parseFloat(kd.replace(/^[><=]=?\s*/, ''));
-      if (operator && !isNaN(number)) {
+
+    // Handle KD filter (Ensure it's not null or undefined)
+    if (kd !== null && kd !== undefined && kd !== '') {
+      console.log('Raw KD input:', kd);
+      const kdString = kd.toString().trim();
+      console.log('kdString:', kdString);
+
+      const regex = /^(>=|<=|<>|>|<|=)/;
+      const operatorMatch = kdString.match(regex);
+      const operator = operatorMatch ? operatorMatch[0] : '=';
+
+      const numberPart = kdString.replace(regex, '').trim(); // remove the operator
+      const number = parseFloat(numberPart);
+
+      console.log('operator:', operator);
+      console.log('KD value:', number);
+
+      if (!isNaN(number)) {
         baseQuery += ` AND "KD" ${operator} $${i++}`;
         values.push(number);
+      } else {
+        return res.status(400).json({ error: 'Invalid KD value' });
       }
     }
+
+    baseQuery += ` ORDER BY "KD" DESC;`;
+
+    console.log('values:', values);
+    console.log('Final Query:', baseQuery);
 
     const result = await pool.query(baseQuery, values);
     res.json(result.rows);

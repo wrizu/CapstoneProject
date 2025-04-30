@@ -9,26 +9,8 @@
     rel="stylesheet"
   />
   <title>Database</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
   <style>
-    .autocomplete-dropdown {
-      position: absolute;
-      background-color: white;
-      border: 1px solid #ccc;
-      width: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-
-    .autocomplete-item {
-      padding: 8px;
-      cursor: pointer;
-    }
-
-    .autocomplete-item:hover {
-      background-color: #f0f0f0;
-    }
-
     body {
       margin: 0;
       font-family: 'Montserrat', sans-serif;
@@ -131,18 +113,17 @@
     .query-results th {
       background-color: #f4f4f4;
     }
+
+    .error-message {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <img
-      class="left-logo"
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png"
-    />
-    <img
-      class="right-logo"
-      src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png"
-    />
+    <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" />
+    <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" />
     <h1>Database</h1>
   </div>
 
@@ -151,99 +132,86 @@
     <a href="index.html">Home</a>
     <a href="dashboard.html">Dashboard</a>
     <a href="database.html">Database</a>
-    <a
-      href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large"
-      target="_blank"
-    >Full Bracket</a>
+    <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
   </div>
 
   <div class="query-section">
     <h2>Filter the Database:</h2>
     <input type="text" id="Tournament" placeholder="Enter Tournament (e.g., VALORANT Champions 2024)">
     <input type="text" id="Agents" placeholder="Enter Agent (e.g., Jett)">
-    <input type="text" id="Player" placeholder="Enter Player Name" oninput="autocomplete(event)">
-    <input type="text" id="Teams" placeholder="Enter Team Name" oninput="autocomplete(event)">
+    <input type="text" id="Player" placeholder="Enter Player Name">
+    <input type="text" id="Teams" placeholder="Enter Team Name">
     <input type="text" id="KD" placeholder="Enter KD comparison (e.g., > 1.5)">
     <button onclick="submitQuery()">Submit Query</button>
   </div>
 
   <div id="query-results" class="query-results"></div>
 
+  <div id="players-stats">
+    <h3>Players Stats</h3>
+    <div id="players-results"></div>
+  </div>
+
+  <div id="maps-scores">
+    <h3>Maps Scores</h3>
+    <div id="maps-results"></div>
+  </div>
+
   <script>
-    function loadCSV(file, targetId) {
-      Papa.parse(file, {
-        download: true,
-        header: true,
-        complete({ data }) {
-          const slice = data.slice(0, 10);
-          if (!slice.length) return;
-          const headers = Object.keys(slice[0]);
-          let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-          slice.forEach(row => {
-            html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
-          });
-          html += '</table>';
-          document.getElementById(targetId).innerHTML = html;
-        }
-      });
-    }
-  
-    loadCSV('players_stats.csv', 'players-table');
-    loadCSV('maps_scores.csv', 'maps-table');
-  
     async function submitQuery() {
-      const tournament = document.getElementById('Tournament')?.value.trim();
-      const agent = document.getElementById('Agents')?.value.trim();
-      const player = document.getElementById('Player')?.value.trim();
-      const teams = document.getElementById('Teams')?.value.trim();
-      const kd = document.getElementById('KD')?.value.trim();
-  
+      const tournament = document.getElementById('Tournament').value.trim();
+      const agent = document.getElementById('Agents').value.trim();
+      const player = document.getElementById('Player').value.trim();
+      const teams = document.getElementById('Teams').value.trim();
+      const kd = document.getElementById('KD').value.trim();
+
       if (!tournament && !agent && !player && !teams && !kd) {
         alert('Please enter at least one filter (Tournament, Agent, Player, Teams, or KD).');
         return;
       }
-  
+
       const filters = {};
       if (tournament) filters.tournament = tournament;
       if (agent) filters.agent = agent;
       if (player) filters.player = player;
       if (teams) filters.teams = teams;
-  
+
       if (kd) {
-        const validPattern = /^([><=]=?|=)?\s*(\d+(\.\d+)?)$/;
-        const match = kd.match(validPattern);
-        if (!match) {
-          alert('Invalid KD format. Use >, <, >=, <=, or = followed by a number (e.g., > 1.5).');
+        const validPattern = /^(>=|<=|<>|>|<|=)?\s*\d+(\.\d+)?$/;
+        if (!validPattern.test(kd)) {
+          alert('Invalid KD format. Use operators like >, <, >=, <=, = followed by a number (e.g., > 1.2)');
           return;
         }
-        filters.kd = match[1] ? match[1] + match[2] : match[2]; // Preserve operator
+
+        filters.kd = kd; // Send full string (operator + value) to server
       }
-  
+
       try {
         const response = await fetch('/api/query', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(filters),
         });
+
         const data = await response.json();
         if (!response.ok) throw new Error(data?.error || 'Unknown error');
         displayResults(data);
       } catch (err) {
         console.error(err);
         document.getElementById('query-results').innerHTML = `
-          <p style="color: red;"><strong>Error:</strong> ${err.message}</p>
+          <p class="error-message"><strong>Error:</strong> ${err.message}</p>
         `;
       }
     }
-  
+
     function displayResults(data) {
       const container = document.getElementById('query-results');
-  
+
       if (!Array.isArray(data) || !data.length) {
         container.innerHTML = '<p>No results found.</p>';
         return;
       }
-  
+
       const headers = Object.keys(data[0]);
       let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
       data.forEach(row => {
@@ -251,6 +219,24 @@
       });
       html += '</table>';
       container.innerHTML = html;
+    }
+
+    function loadCSV(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      Papa.parse(file, {
+        complete: function(results) {
+          const resultsElement = document.getElementById('results');
+          if (resultsElement) {
+            resultsElement.innerHTML = '<pre>' + JSON.stringify(results, null, 2) + '</pre>';
+          } else {
+            console.error('The results element is missing.');
+          }
+        },
+        header: true,
+        skipEmptyLines: true
+      });
     }
   </script>
 </body>
