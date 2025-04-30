@@ -1,16 +1,10 @@
 {
     "version": 2,
-    "name": "capstone-project",
     "builds": [
-      {
-        "src": "server.cjs",
-        "use": "@vercel/node"
-      }
+      { "src": "api/*.js", "use": "@vercel/node" }
     ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "server.cjs"
-      }
+      { "src": "/api/query", "dest": "/api/query.js" },
+      { "src": "/api/getAllPlayers", "dest": "/api/getAllPlayers.js" }
     ]
   }
