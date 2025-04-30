@@ -14,22 +14,27 @@ dotenv.config({ path: path.resolve(__dirname, '../process.env') });
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Set up PostgreSQL connection pool using Xata credentials
+if (!process.env.PG_CONNECTION_STRING) {
+  console.error('❌ PG_CONNECTION_STRING is not defined in environment variables.');
+  process.exit(1);
+}
+
+// PostgreSQL connection pool
 const pool = new Pool({
   connectionString: process.env.PG_CONNECTION_STRING,
-  ssl: { rejectUnauthorized: false }  // Required by Xata
+  ssl: { rejectUnauthorized: false }
 });
 
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Serve index.html
+// Homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// POST /api/query for filtering player stats
+// API route: /api/query
 app.post('/api/query', async (req, res) => {
   const { tournament, agent, player, teams, kd } = req.body;
 
@@ -55,17 +60,14 @@ app.post('/api/query', async (req, res) => {
       values.push(teams);
     }
 
-    // Handle KD filter (Ensure it's not null or undefined)
     if (kd !== null && kd !== undefined && kd !== '') {
       console.log('Raw KD input:', kd);
       const kdString = kd.toString().trim();
-      console.log('kdString:', kdString);
-
       const regex = /^(>=|<=|<>|>|<|=)/;
       const operatorMatch = kdString.match(regex);
       const operator = operatorMatch ? operatorMatch[0] : '=';
 
-      const numberPart = kdString.replace(regex, '').trim(); // remove the operator
+      const numberPart = kdString.replace(regex, '').trim();
       const number = parseFloat(numberPart);
 
       console.log('operator:', operator);
@@ -79,7 +81,7 @@ app.post('/api/query', async (req, res) => {
       }
     }
 
-    baseQuery += ` ORDER BY "KD" DESC;`;
+    baseQuery += ` ORDER BY "KD" DESC`;
 
     console.log('values:', values);
     console.log('Final Query:', baseQuery);
@@ -87,12 +89,17 @@ app.post('/api/query', async (req, res) => {
     const result = await pool.query(baseQuery, values);
     res.json(result.rows);
   } catch (error) {
-    console.error('PostgreSQL query error:', error);
-    res.status(500).json({ error: 'Database query failed' });
+    console.error('❌ PostgreSQL query error:', error.message);
+    res.status(500).json({ error: 'Database query failed', details: error.message });
   }
 });
 
-// Start the server
+// Catch-all API route
+app.use('/api/*', (req, res) => {
+  res.status(404).json({ error: 'API endpoint not found' });
+});
+
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
