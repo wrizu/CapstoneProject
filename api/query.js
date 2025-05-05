@@ -1,61 +1,53 @@
 const { getXataClient } = require('../src/xata.js');
 const dotenv = require('dotenv');
 dotenv.config();
-// Initialize Xata client
+
 const xata = getXataClient({
   apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
-  branch: 'main', // You can modify this if you have different branches
+  branch: 'main',
 });
 
 module.exports = async function (req, res) {
-  const { tournament, player, teams, kd } = req.body;
-
+  const { tournament, player, teams, kd, agent } = req.body;
+  console.log('Request received with body:', req.body);
   try {
-    let query = xata.db.players_stats;
+    const filters = [];
 
-    // Filter by tournament if provided
-    if (tournament) {
-      query = query.filter({ Tournament: tournament });
-    }
+    if (tournament) filters.push({ Tournament: tournament });
+    if (player) filters.push({ Player: player });
+    if (teams) filters.push({ Teams: teams });
+    if (agent) filters.push({ Agents: agent });
 
-    // Filter by player if provided
-    if (player) {
-      query = query.filter({ Player: player });
-    }
-
-    // Filter by teams if provided
-    if (teams) {
-      query = query.filter({ Teams: teams });
-    }
-
-    // Handle KD filtering like before
+    // KD logic with debugging logs
     if (kd !== null && kd !== undefined && kd !== '') {
       const kdString = kd.toString().trim();
       const regex = /^(>=|<=|<>|>|<|=)/;
       const operatorMatch = kdString.match(regex);
       const operator = operatorMatch ? operatorMatch[0] : '=';
-
       const numberPart = kdString.replace(regex, '').trim();
       const number = parseFloat(numberPart);
 
+      console.log('KD input:', kd);
+      console.log('Parsed operator:', operator);
+      console.log('Parsed number:', number);
+
       if (!isNaN(number)) {
-        query = query.filter({ KD: { [operator]: number } });
+        // Log the filter being pushed
+        console.log('Pushing KD filter:', { KD: { [operator]: number } });
+        filters.push({ KD: { [operator]: number } });
       } else {
         return res.status(400).json({ error: 'Invalid KD value' });
       }
     }
 
-    // Add ORDER BY "KD" DESC
-    query = query.sort('KD', 'desc');
+    console.log('Final filters:', filters);
 
-    // Execute the query and fetch the results
+    let query = xata.db.players_stats.filter({ $and: filters }).sort('KD', 'desc');
     const results = await query.getAll();
-
-    // Send the results as the response
     res.status(200).json(results);
   } catch (error) {
-    console.error(error);
+    console.error('Error in query handler:', error);
     res.status(500).json({ error: 'Failed to fetch data' });
   }
 };
