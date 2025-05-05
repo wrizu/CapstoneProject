@@ -1,249 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-  <title>Database</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-    .header {
-      background: linear-gradient(to right, #a1f0ff, #00d4b3);
-      padding: 20px 0;
-      text-align: center;
-      position: relative;
-    }
+    <title>Dashboard</title>
 
-    .header h1 {
-      color: black;
-      margin: 0;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
 
-    .header img.left-logo,
-    .header img.right-logo {
-      position: absolute;
-      top: 10px;
-      height: 60px;
-    }
+        .header {
+            background: linear-gradient(to right, #a1f0ff, #00d4b3);
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+        }
 
-    .header img.left-logo {
-      left: 10px;
-    }
+        .header h1 {
+            color: black;
+            margin: 0;
+        }
 
-    .header img.right-logo {
-      right: 10px;
-    }
+        /* Header Logo Styling */
+        .header img.left-logo,
+        .header img.right-logo {
+            position: absolute;
+            top: 10px;
+            height: 60px;
+        }
 
-    .toolbar {
-      background-color: #333;
-      padding: 10px 0;
-      text-align: center;
-    }
+        .header img.left-logo {
+            left: 10px;
+        }
 
-    .toolbar a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      padding: 8px 16px;
-      font-weight: bold;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
+        .header img.right-logo {
+            right: 10px;
+        }
 
-    .toolbar a:hover {
-      background-color: #00e0e0;
-    }
+        .toolbar {
+            background-color: #333;
+            padding: 10px 0;
+            text-align: center;
+        }
 
-    .query-section {
-      padding: 20px;
-      text-align: center;
-      background-color: #f4f4f4;
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+        .toolbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
 
-    .query-section input,
-    .query-section button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 5px 0;
-      width: 280px;
-      max-width: 90%;
-    }
+        .toolbar a:hover {
+            background-color: #00e0e0;
+        }
 
-    .query-section button {
-      background-color: #333;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
+        /* Main Image Section */
+        .main-image {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
 
-    .query-section button:hover {
-      background-color: #00e0e0;
-    }
+        .main-image img {
+            max-width: 48%; /* Adjust based on image aspect ratio */
+            border-radius: 10px;
+            object-fit: contain;
+        }
 
-    .query-results {
-      margin: 20px auto;
-      width: 95%;
-      overflow-x: auto;
-    }
+        /* Full-Width Image */
+        .full-width-image {
+            width: 100%;
+            margin-bottom: 20px;
+        }
 
-    .query-results table {
-      border-collapse: collapse;
-      margin: auto;
-      width: 100%;
-    }
+        .full-width-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+        }
 
-    .query-results th,
-    .query-results td {
-      border: 1px solid #aaa;
-      padding: 8px;
-      text-align: left;
-    }
+        /* Side-by-Side Image Section */
+        .side-by-side {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-    .query-results th {
-      background-color: #f4f4f4;
-    }
+        .side-by-side img {
+            width: 48%;
+            border-radius: 10px;
+            object-fit: contain;
+        }
 
-    .error-message {
-      color: red;
-      font-weight: bold;
-    }
+        /* Make everything responsive */
+        @media (max-width: 768px) {
+            .main-image, .side-by-side {
+                flex-direction: column;
+                align-items: center;
+            }
 
-    @media (max-width: 600px) {
-      .toolbar a {
-        display: block;
-        margin: 5px auto;
-      }
-    }
-  </style>
+            .main-image img, .side-by-side img {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .full-width-image img {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant Logo" />
-    <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" alt="UW Bothell Logo" />
-    <h1>Database</h1>
-  </div>
+    <div class="header">
+        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant Logo">
+        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" alt="UW Bothell Logo">
+        <h1>Dashboard</h1>
+    </div>
 
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="index.html">Home</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="database.html">Database</a>
-    <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
-  </div>
+    <!-- Updated Toolbar -->
+    <div class="toolbar">
+        <a href="about.html">About</a>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="database.html">Database</a>
+        <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
+    </div>
 
-  <div class="query-section">
-    <h2>Filter the Database:</h2>
-    <input type="text" id="Tournament" placeholder="Enter Tournament (e.g., VALORANT Champions 2024)">
-    <input type="text" id="Agents" placeholder="Enter Agent (e.g., Jett)">
-    <input type="text" id="Player" placeholder="Enter Player Name">
-    <input type="text" id="Teams" placeholder="Enter Team Name">
-    <input type="text" id="KD" placeholder="Enter KD comparison (e.g., > 1.5)">
-    <button onclick="submitQuery()">Submit Query</button>
-  </div>
+    <div class="content">
+        <!-- First row (main image section) -->
+        <div class="main-image">
+            <img src="https://i.ibb.co/bjXdVVtQ/Untitledvideo-Madewith-Clipchamp-ezgif-com-video-to-gif-converter.gif" alt="Main Image 1">
+            <img src="https://i.ibb.co/xKXHt8VX/first-bloods.png" alt="Main Image 2">
+        </div>
 
-  <div id="query-results" class="query-results"></div>
+        <!-- Second row (full width image) -->
+        <div class="full-width-image">
+            <img src="https://i.ibb.co/Q3H5Q0nG/Screenshot-2025-04-23-124105.png" alt="Full Width Image">
+        </div>
 
-  <div id="players-stats">
-    <h3>Players Stats</h3>
-    <div id="players-results"></div>
-  </div>
-
-  <div id="maps-scores">
-    <h3>Maps Scores</h3>
-    <div id="maps-results"></div>
-  </div>
-
-  <script>
-    async function submitQuery() {
-      const tournament = document.getElementById('Tournament').value.trim();
-      const agent = document.getElementById('Agents').value.trim();
-      const player = document.getElementById('Player').value.trim();
-      const teams = document.getElementById('Teams').value.trim();
-      const kd = document.getElementById('KD').value.trim();
-
-      if (!tournament && !agent && !player && !teams && !kd) {
-        alert('Please enter at least one filter (Tournament, Agent, Player, Teams, or KD).');
-        return;
-      }
-
-      const filters = {};
-      if (tournament) filters.tournament = tournament;
-      if (agent) filters.agent = agent;
-      if (player) filters.player = player;
-      if (teams) filters.teams = teams;
-
-      if (kd) {
-        const validPattern = /^(>=|<=|<>|>|<|=)?\s*\d+(\.\d+)?$/;
-        if (!validPattern.test(kd)) {
-          alert('Invalid KD format. Use operators like >, <, >=, <=, = followed by a number (e.g., > 1.2)');
-          return;
-        }
-        filters.kd = kd;
-      }
-
-      try {
-        const response = await fetch('/api/query', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filters),
-        });
-
-        const data = await response.json();
-        if (!response.ok) throw new Error(data?.error || 'Unknown error');
-        displayResults(data);
-      } catch (err) {
-        console.error(err);
-        document.getElementById('query-results').innerHTML =
-          `<p class="error-message"><strong>Error:</strong> ${err.message}</p>`;
-      }
-    }
-
-    function displayResults(data) {
-      const container = document.getElementById('query-results');
-
-      if (!Array.isArray(data) || !data.length) {
-        container.innerHTML = '<p>No results found.</p>';
-        return;
-      }
-
-      const headers = Object.keys(data[0]);
-      let html = '<table><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-      data.forEach(row => {
-        html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
-      });
-      html += '</table>';
-      container.innerHTML = html;
-    }
-
-    function loadCSV(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      Papa.parse(file, {
-        complete: function(results) {
-          const resultsElement = document.getElementById('results');
-          if (resultsElement) {
-            resultsElement.innerHTML = '<pre>' + JSON.stringify(results, null, 2) + '</pre>';
-          } else {
-            console.error('The results element is missing.');
-          }
-        },
-        header: true,
-        skipEmptyLines: true
-      });
-    }
-  </script>
+        <!-- Third row (side-by-side images) -->
+        <div class="side-by-side">
+            <img src="https://i.ibb.co/7xy4YJFf/Screenshot-2025-04-16-192137.png" alt="Left Aligned Image">
+            <img src="https://i.ibb.co/9Hms0mt4/clutches-top10.png" alt="Right Aligned Image">
+        </div>
+    </div>
 </body>
 </html>
