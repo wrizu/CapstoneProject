@@ -1,10 +1,6 @@
 {
   "name": "capstone-project",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
   "dependencies": {
     "@xata.io/client": "^0.0.0-next.v93343b9646f57a1e5c51c35eccf0767c2bb80baa",
     "dotenv": "^16.5.0",
@@ -13,8 +9,5 @@
     "node-fetch": "^3.3.2",
     "pg": "^8.15.6",
     "vercel": "^41.0.2"
-  },
-  "engines": {
-    "node": "22.x"
   }
 }

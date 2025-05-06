@@ -1,3 +1,4 @@
+
 const { getXataClient } = require('../src/xata.js');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -8,9 +9,10 @@ const xata = getXataClient({
   branch: 'main',
 });
 
-module.exports = async function (req, res) {
-  const { tournament, player, teams, kd, agent } = req.body;
+module.exports = async (req, res) => {
+  const { tournament, player, teams, kd, agent } = req.body || {};
   console.log('Request received with body:', req.body);
+
   try {
     const filters = [];
 
@@ -19,7 +21,6 @@ module.exports = async function (req, res) {
     if (teams) filters.push({ Teams: teams });
     if (agent) filters.push({ Agents: agent });
 
-    // KD logic with debugging logs
     if (kd !== null && kd !== undefined && kd !== '') {
       const kdString = kd.toString().trim();
       const regex = /^(>=|<=|<>|>|<|=)/;
@@ -33,8 +34,6 @@ module.exports = async function (req, res) {
       console.log('Parsed number:', number);
 
       if (!isNaN(number)) {
-        // Log the filter being pushed
-        console.log('Pushing KD filter:', { KD: { [operator]: number } });
         filters.push({ KD: { [operator]: number } });
       } else {
         return res.status(400).json({ error: 'Invalid KD value' });
@@ -43,8 +42,9 @@ module.exports = async function (req, res) {
 
     console.log('Final filters:', filters);
 
-    let query = xata.db.players_stats.filter({ $and: filters }).sort('KD', 'desc');
+    const query = xata.db.players_stats.filter({ $and: filters }).sort('KD', 'desc');
     const results = await query.getAll();
+
     res.status(200).json(results);
   } catch (error) {
     console.error('Error in query handler:', error);
