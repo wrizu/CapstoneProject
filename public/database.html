@@ -158,11 +158,58 @@
     <div class="query-section">
         <h2>Filter the Database:</h2>
         <div class="filters">
-            <input id="filter-player" type="text" placeholder="Player (e.g., zekken)">
-            <input id="filter-team" type="text" placeholder="Team (e.g., FNATIC)">
-            <input id="filter-tournament" type="text" placeholder="Tournament (e.g., VCT)">
-            <input id="filter-agent" type="text" placeholder="Agent (e.g., Jett)">
-            <input id="filter-kd" type="text" placeholder="KD (e.g., > 1.2)">
+            <input id="filter-player" type="text" placeholder="Player (e.g., zekken)" list="player-options">
+            <datalist id="player-options">
+            <option value="zekken">
+            <option value="aspas">
+            <option value="Derke">
+            <option value="TenZ">
+             <option value="ZmjjKK">  
+            </datalist>
+            <input id="filter-team" type="text" placeholder="Team (e.g., FNATIC)" list="team-options">
+            <datalist id="team-options">
+            <option value="FNATIC">
+            <option value="EDward Gaming">
+            <option value="Sentinels">
+            <option value="NRG">
+            <option value="Team Heretics">
+    
+            </datalist>
+            <input id="filter-tournament" type="text" placeholder="Tournament" list="tournament-options">
+            <datalist id="tournament-options">
+            <option value="Valorant Champions 2024">
+            <option value="Champions Tour 2024: Masters Shanghai">
+            <option value="Champions Tour 2024: Masters Madrid">
+            
+    
+            </datalist>
+            <input id="filter-agent" type="text" placeholder="Agent (e.g., jett)" list="agent-options">
+            <datalist id="agent-options">
+            <option value="jett">
+            <option value="raze">
+            <option value="sova">
+            <option value="omen">
+            <option value="gekko">
+    
+            </datalist>
+            <input id="filter-kd" type="text" placeholder="KD (e.g., > 1.2)" list="kd-options">
+            <datalist id="kd-options">
+            <option value="> 1.1">
+            <option value="> 2.0">
+            <option value="&lt; 1.0">
+            <option value="3.0">
+            <option value="> 4.0">
+    
+            </datalist>
+            <input id="filter-kills" type="text" placeholder="Kills (e.g., > 25)" list="kills-options">
+            <datalist id="kills-options">
+            <option value="> 10">
+            <option value="> 20">
+            <option value="< 30">
+            <option value="= 25">
+            <option value=">= 40">
+            </datalist>
+
         </div>
         <button onclick="submitFilters()">Submit Filters</button>
     </div>
@@ -224,13 +271,15 @@
             const tournament = document.getElementById('filter-tournament').value.trim();
             const agent = document.getElementById('filter-agent').value.trim();
             const kd = document.getElementById('filter-kd').value.trim();
+            const kills = document.getElementById('filter-kills').value.trim();
 
             const payload = {
                 player: player || undefined,
                 teams: teams || undefined,
                 tournament: tournament || undefined,
                 agent: agent || undefined,
-                kd: kd || undefined
+                kd: kd || undefined,
+                kills: kills || undefined
             };
 
             document.getElementById('query-results').innerHTML = "<p>Loading...</p>"; // Show loading text

@@ -29,6 +29,7 @@ const buildQuery = (filters) => {
     console.log('Filtering by teams:', filters.teams);
     query = query.filter('Teams', filters.teams);
   }
+
   query = query.sort('KD', 'desc');
   return query;
 };
@@ -67,7 +68,7 @@ module.exports = async (req, res) => {
         const op = ops[operatorSymbol];
         if (!op) throw new Error(`Unsupported KD operator "${operatorSymbol}"`);
 
-        results = allResults.filter(row => {
+        results = results.filter(row => {
           const kd = parseFloat(row.KD);
           if (isNaN(kd)) return false;
 
@@ -82,6 +83,47 @@ module.exports = async (req, res) => {
           }
         });
         console.log(`Filtered KD results: ${results.length} entries match KD ${operatorSymbol} ${value}`);
+      }
+
+      // Apply Kills filtering locally if needed
+      if (filters.kills) {
+        const match = filters.kills.match(/^(>=|<=|<>|>|<|=)?\s*(\d+(\.\d+)?)$/);
+        if (!match) throw new Error('Invalid Kills format.');
+
+        const operatorSymbol = match[1] || '=';
+        const value = parseFloat(match[2]);
+        console.log('Kills filter - operator:', operatorSymbol, 'value:', value);
+
+        if (isNaN(value)) throw new Error('Invalid Kills value.');
+
+        const ops = {
+          '>': 'gt',
+          '>=': 'gte',
+          '<': 'lt',
+          '<=': 'lte',
+          '=': 'eq',
+          '<>': 'ne',
+        };
+
+        const op = ops[operatorSymbol];
+        if (!op) throw new Error(`Unsupported Kills operator "${operatorSymbol}"`);
+
+        results = results.filter(row => {
+          const kills = parseFloat(row.Kills);
+          if (isNaN(kills)) return false;
+
+          switch (op) {
+            case 'gt': return kills > value;
+            case 'gte': return kills >= value;
+            case 'lt': return kills < value;
+            case 'lte': return kills <= value;
+            case 'eq': return kills === value;
+            case 'ne': return kills !== value;
+            default: return true;
+          }
+        });
+
+        console.log(`Filtered Kills results: ${results.length} entries match Kills ${operatorSymbol} ${value}`);
       }
 
       return res.status(200).json(results);
