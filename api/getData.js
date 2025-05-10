@@ -1,12 +1,16 @@
-const { getXataClient } = require('../src/xata'); // Correct import for the client factory
-const xata = getXataClient(); // Instantiate the client
+const { XataClient } = require('@xata.io/client');
 
-module.exports = async function handler(req, res) {
+const xata = new XataClient({
+  apiKey: process.env.XATA_API_KEY,
+  databaseURL: process.env.XATA_DATABASE_URL,
+  branch: process.env.XATA_BRANCH || 'main',
+});
+
+module.exports = async (req, res) => {
   try {
-    const results = await xata.db.players_stats.getAll(); // Fetch all data
+    const results = await xata.db.tableName.getAll();
     res.status(200).json(results);
   } catch (error) {
-    console.error('❌ Error fetching data:', error.message);
-    res.status(500).json({ error: 'Failed to fetch data' });
+    res.status(500).json({ error: error.message });
   }
 };

@@ -1,0 +1,25 @@
+{
+  "name": "capstone-project",
+  "version": "1.0.0",
+  "description": "Capstone project",
+  "scripts": {
+    "start": "node api/getData.js",
+    "build": "echo 'No build step needed'",
+    "vercel-build": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@xata.io/client": "^0.28.3",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "glob": "^10.3.10",
+    "mysql": "^2.18.1",
+    "pg": "^8.11.3",
+    "uuid": "^9.0.1",
+    "vercel": "^33.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}

@@ -186,37 +186,37 @@
 
     <script>
        function loadCSV(file, targetId) {
-    Papa.parse(file, {
-        download: true,
-        header: true,
-        complete: function(results) {
-            // Get all the rows
-            const data = results.data;
+            Papa.parse(file, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    // Get all the rows
+                    const data = results.data;
 
-            // Filter out rows where 'KD' is null, undefined, or an empty string
-            const filteredData = data.filter(row => row.KD && row.KD !== '' && row.KD !== null && row.KD !== undefined);
+                    // Filter out rows where 'KD' is null, undefined, or an empty string
+                    const filteredData = data.filter(row => row.KD && row.KD !== '' && row.KD !== null && row.KD !== undefined);
 
-            // Sort the filtered data by 'KD' in descending order
-            filteredData.sort((a, b) => parseFloat(b.KD) - parseFloat(a.KD));
+                    // Sort the filtered data by 'KD' in descending order
+                    filteredData.sort((a, b) => parseFloat(b.KD) - parseFloat(a.KD));
 
-            // Slice only the first 10 rows after filtering and sorting
-            const slicedData = filteredData.slice(0, 10);
+                    // Slice only the first 10 rows after filtering and sorting
+                    const slicedData = filteredData.slice(0, 10);
 
-            const headers = Object.keys(slicedData[0]);
+                    const headers = Object.keys(slicedData[0]);
 
-            let html = '<table>';
-            html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-            slicedData.forEach(row => {
-                html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+                    let html = '<table>';
+                    html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+                    slicedData.forEach(row => {
+                        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+                    });
+                    html += '</table>';
+
+                    document.getElementById(targetId).innerHTML = html;
+                }
             });
-            html += '</table>';
-
-            document.getElementById(targetId).innerHTML = html;
         }
-    });
-}
 
-loadCSV('players_stats.csv', 'players-table');
+        loadCSV('players_stats.csv', 'players-table');
 
         function submitFilters() {
             const player = document.getElementById('filter-player').value.trim();
@@ -252,35 +252,35 @@ loadCSV('players_stats.csv', 'players-table');
             });
         }
 
-       function displayResults(data) {
-    const resultContainer = document.getElementById('query-results');
+        function displayResults(data) {
+            const resultContainer = document.getElementById('query-results');
 
-    if (data.error) {
-        resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
-        return;
-    }
+            if (data.error) {
+                resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
+                return;
+            }
 
-    if (data.length === 0) {
-        resultContainer.innerHTML = "<p>No results found.</p>";
-        return;
-    }
+            if (data.length === 0) {
+                resultContainer.innerHTML = "<p>No results found.</p>";
+                return;
+            }
 
-    const headers = [
-        'Tournament', 'Stage', 'Match_Type', 'Player', 'Teams', 'Agents', 'Rounds_Played', 'Rating',
-        'Average_Combat_Score', 'KD', 'Average_Damage_Per_Round', 'Kills_Per_Round', 'Assists_Per_Round',
-        'First_Kills_Per_Round', 'First_Deaths_Per_Round', 'Headshot_Percentage', 'Clutch_Success',
-        'Clutches_won_played', 'Kills', 'Deaths', 'Assists', 'First_Kills', 'First_Deaths'
-    ];
-    let html = '<h3>Query Results:</h3>';
-    html += '<table><thead><tr>' + headers.map(h => `<th>${h.replace(/_/g, ' ')}</th>`).join('') + '</tr></thead><tbody>';
+            const headers = [
+                'Tournament', 'Stage', 'Match_Type', 'Player', 'Teams', 'Agents', 'Rounds_Played', 'Rating',
+                'Average_Combat_Score', 'KD', 'Average_Damage_Per_Round', 'Kills_Per_Round', 'Assists_Per_Round',
+                'First_Kills_Per_Round', 'First_Deaths_Per_Round', 'Headshot_Percentage', 'Clutch_Success',
+                'Clutches_won_played', 'Kills', 'Deaths', 'Assists', 'First_Kills', 'First_Deaths'
+            ];
+            let html = '<h3>Query Results:</h3>';
+            html += '<table><thead><tr>' + headers.map(h => `<th>${h.replace(/_/g, ' ')}</th>`).join('') + '</tr></thead><tbody>';
 
-    data.forEach(row => {
-        html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
-    });
+            data.forEach(row => {
+                html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
+            });
 
-    html += '</tbody></table>';
-    resultContainer.innerHTML = html;
-}
+            html += '</tbody></table>';
+            resultContainer.innerHTML = html;
+        }
 
     </script>
 </body>

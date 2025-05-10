@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
     <title>Dashboard</title>
 
     <style>
         body {
             margin: 0;
-            font-family: 'Roboto';
+            font-family: 'Roboto', sans-serif;
         }
 
         .header img.left-logo,
@@ -128,6 +129,23 @@
 
         .side-by-side-5 img:last-child {
             width: 38%;
+        }
+
+        /* Adjust side-by-side-4 to reduce height of right image */
+        .side-by-side-4 img:first-child {
+            width: 49%;
+            height: auto;
+        }
+
+        .side-by-side-4 img:last-child {
+            width: 49%;
+            height: 50%; /* Reduce the height of the second image */
+            object-fit: contain;
+        }
+
+        /* Move rows below side-by-side-4 upwards */
+        .side-by-side-5, .side-by-side-6 {
+            margin-top: -15px; /* Move the next rows up */
         }
 
         @media (max-width: 768px) {

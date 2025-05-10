@@ -1,15 +1,6 @@
 {
-  "name": "capstone-project",
-  "version": "1.0.0",
   "dependencies": {
-    "@xata.io/client": "^0.0.0-next.v93343b9646f57a1e5c51c35eccf0767c2bb80baa",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "glob": "^11.0.2",
-    "mysql": "^2.18.1",
-    "node-fetch": "^3.3.2",
-    "pg": "^8.15.6",
-    "uuid": "^11.1.0",
-    "vercel": "^41.7.0"
+    "@xata.io/client": "^0.30.1",
+    "dotenv": "^16.5.0"
   }
 }
