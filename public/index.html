@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="How EDward Gaming won Champions 2024 in Valorant. A detailed look at their players and coach.">
+    <meta name="keywords" content="EDward Gaming, Valorant, Champions 2024, players, coach">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>My Website</title>
 
     <style>
         body {
             margin: 0;
-            font-family: 'Roboto';
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .header {
@@ -17,6 +25,7 @@
             padding: 20px 0;
             text-align: center;
             position: relative;
+            width: 100%;
         }
 
         .header h1 {
@@ -47,6 +56,7 @@
             background-color: #333;
             padding: 10px 0;
             text-align: center;
+            width: 100%;
         }
 
         .toolbar a {
@@ -64,13 +74,24 @@
         }
 
         .section-wrapper {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
             margin-top: 40px;
         }
 
-        .players-section,
+        .players-section {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .coach-section {
-            margin-bottom: 60px;
+            width: 35%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .players-section h2,
@@ -79,44 +100,43 @@
             margin-bottom: 20px;
         }
 
-        .players-container,
-        .coach-container {
+        .players-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            flex-direction: column;
-            align-items: center;
+            gap: 16px;
         }
 
-        .player,
-        .coach-container {
+        .player {
+            flex: 0 1 calc(30% - 10px);
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            text-align: center;
         }
 
         .player img,
         .coach-container img {
-            height: 80px;
-            width: 80px;
-            margin-bottom: 10px;
+            height: 70px;
+            width: 70px;
+            margin-bottom: 6px;
         }
 
         .player-name,
         .coach-name {
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: bold;
         }
 
         .player-role,
         .coach-role {
-            font-size: 1em;
+            font-size: 0.95em;
             font-weight: normal;
         }
 
         .player-role div,
         .coach-role div {
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .player-role a,
@@ -130,20 +150,38 @@
             text-decoration: underline;
         }
 
-        /* Adjust the coach section to move items up */
-        .coach-section {
-            margin-top: -65px;  /* Reduce top margin to move it up */
+        .coach-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
         }
 
-        .coach-container {
-            margin-top: -10px;  /* Reduce space between coach image and text */
+        .coach-text {
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .section-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .players-section,
+            .coach-section {
+                width: 100%;
+            }
+
+            .player {
+                flex: 0 1 40%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png">
-        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png">
+        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant Logo">
+        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" alt="UW Bothell Logo">
         <h1>How EDward Gaming Won Champions 2024</h1>
         <p>By: Jack Burkhalter</p>
     </div>
@@ -161,7 +199,7 @@
             <h2>Players</h2>
             <div class="players-container">
                 <div class="player">
-                    <img src="https://owcdn.net/img/677fe435edc57.png" alt="Smoggy">
+                    <img src="https://owcdn.net/img/677fe435edc57.png" alt="Zhang Smoggy Zhao">
                     <div class="player-name">Zhang "Smoggy" Zhao</div>
                     <div class="player-role">
                         <div>Role: Controller</div>
@@ -170,7 +208,7 @@
                 </div>
 
                 <div class="player">
-                    <img src="https://owcdn.net/img/677fe4289bb34.png" alt="CHICHOO">
+                    <img src="https://owcdn.net/img/677fe4289bb34.png" alt="Wan CHICHOO Shunzhi">
                     <div class="player-name">Wan "CHICHOO" Shunzhi</div>
                     <div class="player-role">
                         <div>Role: Sentinel/Controller</div>
@@ -179,7 +217,7 @@
                 </div>
 
                 <div class="player">
-                    <img src="https://owcdn.net/img/677fe418eaaf8.png" alt="S1Mon">
+                    <img src="https://owcdn.net/img/677fe418eaaf8.png" alt="Hsien S1Mon Meng-Hsun">
                     <div class="player-name">Hsien "S1Mon" Meng-Hsun</div>
                     <div class="player-role">
                         <div>Role: Initiator</div>
@@ -188,7 +226,7 @@
                 </div>
 
                 <div class="player">
-                    <img src="https://owcdn.net/img/677fe4210de6e.png" alt="nobody">
+                    <img src="https://owcdn.net/img/677fe4210de6e.png" alt="Wang nobody Senxu">
                     <div class="player-name">Wang "nobody" Senxu</div>
                     <div class="player-role">
                         <div>Role: In Game Lead/Initiator</div>
@@ -197,7 +235,7 @@
                 </div>
 
                 <div class="player">
-                    <img src="https://owcdn.net/img/677fe40edf9da.png" alt="KANG KANG">
+                    <img src="https://owcdn.net/img/677fe40edf9da.png" alt="Zheng KANG KANG Yongkang">
                     <div class="player-name">Zheng "KANG KANG" Yongkang</div>
                     <div class="player-role">
                         <div>Role: Duelist</div>
@@ -211,8 +249,8 @@
         <div class="coach-section">
             <h2>Coach</h2>
             <div class="coach-container">
-                <img src="https://owcdn.net/img/677fe44baa46b.png" alt="Coach Image">
-                <div>
+                <img src="https://owcdn.net/img/677fe44baa46b.png" alt="Tang Muggle Shijun">
+                <div class="coach-text">
                     <div class="coach-name">Tang "Muggle" Shijun</div>
                     <div class="coach-role">
                         <div>Role: Head Coach</div>

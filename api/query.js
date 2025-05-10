@@ -1,53 +1,65 @@
-
-const { getXataClient } = require('../src/xata.js');
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
+const { getXataClient } = require('../src/xata');
 
 const xata = getXataClient({
-  apiKey: process.env.XATA_API_KEY,
   databaseURL: process.env.XATA_DATABASE_URL,
-  branch: 'main',
+  apiKey: process.env.XATA_API_KEY,
+  branch: process.env.XATA_BRANCH || 'main',
 });
 
+const buildQuery = (filters) => {
+  let query = xata.db.players_stats.select();
+
+  if (filters.tournament) query = query.filter('Tournament', filters.tournament);
+  if (filters.agent) query = query.filter('Agents', filters.agent);
+  if (filters.player) query = query.filter('Player', filters.player);
+  if (filters.teams) query = query.filter('Teams', filters.teams);
+
+  if (filters.kd) {
+    const match = filters.kd.match(/^(>=|<=|<>|>|<|=)?\s*(\d+(\.\d+)?)$/);
+    if (!match) throw new Error('Invalid KD format.');
+
+    const operator = match[1] || '=';
+    const value = parseFloat(match[2]);
+
+    if (isNaN(value)) throw new Error('Invalid KD value.');
+
+    const ops = {
+      '>': 'gt',
+      '>=': 'gte',
+      '<': 'lt',
+      '<=': 'lte',
+      '=': 'eq',
+      '<>': 'ne',
+    };
+
+    const op = ops[operator];
+    if (!op) throw new Error('Unsupported KD operator.');
+
+    query = query.filter('KD', op, value);
+  }
+
+  return query;
+};
+
 module.exports = async (req, res) => {
-  const { tournament, player, teams, kd, agent } = req.body || {};
-  console.log('Request received with body:', req.body);
-
   try {
-    const filters = [];
-
-    if (tournament) filters.push({ Tournament: tournament });
-    if (player) filters.push({ Player: player });
-    if (teams) filters.push({ Teams: teams });
-    if (agent) filters.push({ Agents: agent });
-
-    if (kd !== null && kd !== undefined && kd !== '') {
-      const kdString = kd.toString().trim();
-      const regex = /^(>=|<=|<>|>|<|=)/;
-      const operatorMatch = kdString.match(regex);
-      const operator = operatorMatch ? operatorMatch[0] : '=';
-      const numberPart = kdString.replace(regex, '').trim();
-      const number = parseFloat(numberPart);
-
-      console.log('KD input:', kd);
-      console.log('Parsed operator:', operator);
-      console.log('Parsed number:', number);
-
-      if (!isNaN(number)) {
-        filters.push({ KD: { [operator]: number } });
-      } else {
-        return res.status(400).json({ error: 'Invalid KD value' });
-      }
+    if (req.method === 'POST') {
+      const filters = req.body || {};
+      const query = buildQuery(filters);
+      const results = await query.getAll();
+      return res.status(200).json(results);
     }
 
-    console.log('Final filters:', filters);
+    if (req.method === 'GET') {
+      const results = await xata.db.players_stats.select().getAll();
+      return res.status(200).json(results);
+    }
 
-    const query = xata.db.players_stats.filter({ $and: filters }).sort('KD', 'desc');
-    const results = await query.getAll();
+    return res.status(405).json({ error: 'Method Not Allowed' });
 
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('Error in query handler:', error);
-    res.status(500).json({ error: 'Failed to fetch data' });
+  } catch (err) {
+    console.error('Error in query handler:', err);
+    return res.status(500).json({ error: err.message || 'Internal Server Error' });
   }
 };

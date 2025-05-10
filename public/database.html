@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <title>Database</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
-    <title>Dashboard</title>
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .header {
@@ -25,20 +23,18 @@
             margin: 0;
         }
 
-        /* Header Logo Styling */
-        .header img.left-logo,
-        .header img.right-logo {
+        .header img.left-logo {
             position: absolute;
             top: 10px;
+            left: 10px;
             height: 60px;
         }
 
-        .header img.left-logo {
-            left: 10px;
-        }
-
         .header img.right-logo {
+            position: absolute;
+            top: 10px;
             right: 10px;
+            height: 60px;
         }
 
         .toolbar {
@@ -61,96 +57,221 @@
             background-color: #00e0e0;
         }
 
-        /* Main Image Section */
-        .main-image {
+        .query-section {
+            padding: 20px;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin-top: 20px;
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .main-image img {
-            max-width: 48%; /* Adjust based on image aspect ratio */
-            border-radius: 10px;
-            object-fit: contain;
+        .query-section h2 {
+            margin-bottom: 10px;
         }
 
-        /* Full-Width Image */
-        .full-width-image {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .full-width-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 10px;
-        }
-
-        /* Side-by-Side Image Section */
-        .side-by-side {
+        .query-section .filters {
             display: flex;
-            justify-content: space-between;
-            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        .side-by-side img {
-            width: 48%;
-            border-radius: 10px;
-            object-fit: contain;
+        .query-section input {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            min-width: 150px;
         }
 
-        /* Make everything responsive */
-        @media (max-width: 768px) {
-            .main-image, .side-by-side {
-                flex-direction: column;
-                align-items: center;
-            }
+        .query-section button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
-            .main-image img, .side-by-side img {
-                width: 100%;
-                margin-bottom: 10px;
-            }
+        .query-section button:hover {
+            background-color: #00e0e0;
+        }
 
-            .full-width-image img {
-                width: 100%;
-            }
+        .query-results {
+            margin: 30px auto;
+            width: 90%;
+            text-align: center;
+        }
+
+        .query-results table,
+        .players_stats table,
+        .maps_scores table {
+            border-collapse: collapse;
+            margin: auto;
+            width: 100%;
+        }
+
+        .query-results th, .query-results td,
+        .players_stats th, .players_stats td,
+        .maps_scores th, .maps_scores td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .query-results th, .players_stats th, .maps_scores th {
+            background-color: #f4f4f4;
+        }
+
+        .players_stats, .maps_scores {
+            text-align: center;
+            margin-top: -20px;
+            padding-bottom: 20px;
+        }
+
+        .players_stats h2, .maps_scores h2 {
+            margin-bottom: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant Logo">
-        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" alt="UW Bothell Logo">
-        <h1>Dashboard</h1>
+        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png">
+        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png">
+        <h1>Database</h1>
     </div>
 
-    <!-- Updated Toolbar -->
     <div class="toolbar">
         <a href="about.html">About</a>
-        <a href="index.html">Home</a>
+        <a href="website.html">Home</a>
         <a href="dashboard.html">Dashboard</a>
         <a href="database.html">Database</a>
         <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
     </div>
 
-    <div class="content">
-        <!-- First row (main image section) -->
-        <div class="main-image">
-            <img src="https://i.ibb.co/bjXdVVtQ/Untitledvideo-Madewith-Clipchamp-ezgif-com-video-to-gif-converter.gif" alt="Main Image 1">
-            <img src="https://i.ibb.co/xKXHt8VX/first-bloods.png" alt="Main Image 2">
+    <!-- Query Section -->
+    <div class="query-section">
+        <h2>Filter the Database:</h2>
+        <div class="filters">
+            <input id="filter-player" type="text" placeholder="Player (e.g., zekken)">
+            <input id="filter-team" type="text" placeholder="Team (e.g., FNATIC)">
+            <input id="filter-tournament" type="text" placeholder="Tournament (e.g., VCT)">
+            <input id="filter-agent" type="text" placeholder="Agent (e.g., Jett)">
+            <input id="filter-kd" type="text" placeholder="KD (e.g., > 1.2)">
         </div>
-
-        <!-- Second row (full width image) -->
-        <div class="full-width-image">
-            <img src="https://i.ibb.co/Q3H5Q0nG/Screenshot-2025-04-23-124105.png" alt="Full Width Image">
-        </div>
-
-        <!-- Third row (side-by-side images) -->
-        <div class="side-by-side">
-            <img src="https://i.ibb.co/7xy4YJFf/Screenshot-2025-04-16-192137.png" alt="Left Aligned Image">
-            <img src="https://i.ibb.co/9Hms0mt4/clutches-top10.png" alt="Right Aligned Image">
-        </div>
+        <button onclick="submitFilters()">Submit Filters</button>
     </div>
+
+    <!-- Query Results -->
+    <div id="query-results" class="query-results"></div>
+
+    <!-- CSV Tables -->
+    <div class="players_stats">
+        <h2>players_stats.csv</h2>
+        <div id="players-table"></div>
+    </div>
+
+    <div class="maps_scores">
+        <h2>maps_scores.csv</h2>
+        <div id="maps-table"></div>
+    </div>
+
+    <!-- Load PapaParse -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <script>
+        function loadCSV(file, targetId) {
+            Papa.parse(file, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const data = results.data.slice(0, 10);
+                    const headers = Object.keys(data[0]);
+
+                    let html = '<table>';
+                    html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+                    data.forEach(row => {
+                        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
+                    });
+                    html += '</table>';
+
+                    document.getElementById(targetId).innerHTML = html;
+                }
+            });
+        }
+
+        loadCSV('players_stats.csv', 'players-table');
+        loadCSV('maps_scores.csv', 'maps-table');
+
+        function submitFilters() {
+            const player = document.getElementById('filter-player').value.trim();
+            const teams = document.getElementById('filter-team').value.trim();
+            const tournament = document.getElementById('filter-tournament').value.trim();
+            const agent = document.getElementById('filter-agent').value.trim();
+            const kd = document.getElementById('filter-kd').value.trim();
+
+            const payload = {
+                player: player || undefined,
+                teams: teams || undefined,
+                tournament: tournament || undefined,
+                agent: agent || undefined,
+                kd: kd || undefined
+            };
+
+            document.getElementById('query-results').innerHTML = "<p>Loading...</p>"; // Show loading text
+
+            fetch('/api/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Error connecting to the server or database.");
+            });
+        }
+
+       function displayResults(data) {
+    const resultContainer = document.getElementById('query-results');
+
+    if (data.error) {
+        resultContainer.innerHTML = `<p style="color: red;"><strong>Error:</strong> ${data.error}</p>`;
+        return;
+    }
+
+    if (data.length === 0) {
+        resultContainer.innerHTML = "<p>No results found.</p>";
+        return;
+    }
+
+    const headers = [
+        'Tournament', 'Stage', 'Match_Type', 'Player', 'Teams', 'Agents', 'Rounds_Played', 'Rating',
+        'Average_Combat_Score', 'KD', 'Average_Damage_Per_Round', 'Kills_Per_Round', 'Assists_Per_Round',
+        'First_Kills_Per_Round', 'First_Deaths_Per_Round', 'Headshot_Percentage', 'Clutch_Success',
+        'Clutches_won_played', 'Kills', 'Deaths', 'Assists', 'First_Kills', 'First_Deaths'
+    ];
+
+    let html = '<table><thead><tr>' + headers.map(h => `<th>${h.replace(/_/g, ' ')}</th>`).join('') + '</tr></thead><tbody>';
+
+    data.forEach(row => {
+        html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
+    });
+
+    html += '</tbody></table>';
+    resultContainer.innerHTML = html;
+}
+
+    </script>
 </body>
 </html>

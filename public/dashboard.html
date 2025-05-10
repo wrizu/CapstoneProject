@@ -62,90 +62,95 @@
 
         .content {
             padding: 20px;
+            max-width: 100%;
         }
 
-        .main-image {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            align-items: flex-start;
-        }
-
-        .main-image img {
-            border-radius: 10px;
-            object-fit: contain;
-        }
-
-        .win-loss {
-            width: 60%;
-            height: auto;
-        }
-
-        .first-bloods {
-            width: 38%;
-            height: auto;
-        }
-
-        .full-width-image {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .full-width-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 10px;
-        }
-
-        .side-by-side,
+        .main-image,
+        .side-by-side-1,
         .side-by-side-2,
         .side-by-side-3,
         .side-by-side-4,
-        .side-by-side-5 {
+        .side-by-side-5,
+        .side-by-side-6 {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             gap: 20px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
-        .side-by-side img,
+        .main-image img,
+        .side-by-side-1 img,
         .side-by-side-2 img,
         .side-by-side-3 img,
-        .side-by-side-4 img {
-            width: 48%;
+        .side-by-side-4 img,
+        .side-by-side-5 img,
+        .side-by-side-6 img {
             border-radius: 10px;
             object-fit: contain;
         }
 
-        .side-by-side-5 img {
-            border-radius: 10px;
-            object-fit: cover;
+        /* Custom sizing for specific rows */
+        .main-image img.win-loss {
+            width: 60%;
+        }
+
+        .main-image img.first-bloods {
+            width: 38%;
+        }
+
+        .side-by-side-1 img:first-child {
+            width: 60%;
+        }
+
+        .side-by-side-1 img:last-child {
+            width: 38%;
+        }
+
+        .side-by-side-2 img,
+        .side-by-side-4 img,
+        .side-by-side-6 img {
+            width: 49%;
+        }
+
+        .side-by-side-3 img:first-child {
+            width: 60%;
+        }
+
+        .side-by-side-3 img:last-child {
+            width: 38%;
+        }
+
+        .side-by-side-5 img:first-child {
+            width: 60%;
+        }
+
+        .side-by-side-5 img:last-child {
+            width: 38%;
         }
 
         @media (max-width: 768px) {
             .main-image,
-            .side-by-side,
+            .side-by-side-1,
             .side-by-side-2,
             .side-by-side-3,
             .side-by-side-4,
-            .side-by-side-5 {
+            .side-by-side-5,
+            .side-by-side-6 {
                 flex-direction: column;
                 align-items: center;
             }
 
             .main-image img,
-            .side-by-side img,
+            .side-by-side-1 img,
             .side-by-side-2 img,
             .side-by-side-3 img,
             .side-by-side-4 img,
-            .side-by-side-5 img {
-                width: 100%;
+            .side-by-side-5 img,
+            .side-by-side-6 img {
+                width: 100% !important;
                 margin-bottom: 10px;
-            }
-
-            .full-width-image img {
-                width: 100%;
             }
         }
     </style>
@@ -166,43 +171,44 @@
     </div>
 
     <div class="content">
-        <!-- First row (main image section) -->
+        <!-- Main images row -->
         <div class="main-image">
-            <img class="win-loss" src="https://i.ibb.co/7dZzNDzn/download.gif" alt="Main Image 1">
+            <img class="win-loss" src="https://i.ibb.co/vg6DjJP/download.gif" alt="Main Image 1">
             <img class="first-bloods" src="https://i.ibb.co/93p3Nbcg/Screenshot-2025-05-05-145054.png" alt="Main Image 2">
         </div>
 
-        <!-- Second row (full width image) -->
-        <div class="full-width-image">
-            <img src="https://i.ibb.co/Q3H5Q0nG/Screenshot-2025-04-23-124105.png" alt="Full Width Image">
+        <!-- Row 1 -->
+        <div class="side-by-side-1">
+            <img src="https://i.ibb.co/Kp6jHtYr/Dashboard-1.png" alt="Dashboard Image">
+            <img src="https://i.ibb.co/whg4phmb/Screenshot-2025-05-09-224625.png" alt="Dashboard Image Duplicate">
         </div>
-        <div class="side-by-side-5">
-            <img style="width: 65%;" src="https://i.ibb.co/0yJ3BTcD/Screenshot-2025-05-05-164205.png" alt="Filler Wide Image">
-            <img style="width: 30%;" src="https://i.ibb.co/BXSpjYs/Screenshot-2025-05-05-162557.png" alt="Skinny Right Image">
-        </div>
-        <!-- Third row (side-by-side images) -->
-        <div class="side-by-side">
+
+        <!-- Row 2 -->
+        <div class="side-by-side-2">
             <img src="https://i.ibb.co/B5wDTrtN/Screenshot-2025-05-05-150836.png" alt="Left Aligned Image">
             <img src="https://i.ibb.co/cSvFC5j5/Screenshot-2025-05-05-151603.png" alt="Right Aligned Image">
         </div>
 
-        <!-- New row with wide left and skinny right -->
-       
+        <!-- Row 3 -->
+        <div class="side-by-side-3">
+            <img src="https://i.ibb.co/XZ58LTPn/Sheet-7-1.png" alt="Filler Wide Image">
+            <img src="https://i.ibb.co/BXSpjYs/Screenshot-2025-05-05-162557.png" alt="Skinny Right Image">
+        </div>
 
-        <!-- Fourth row -->
-        <div class="side-by-side-2">
+        <!-- Row 4 -->
+        <div class="side-by-side-4">
             <img src="https://i.ibb.co/Z1MMkLjV/Screenshot-2025-05-05-153523.png" alt="Additional Left Image">
             <img src="https://i.ibb.co/jPhD4fCf/Screenshot-2025-05-05-154351.png" alt="Additional Right Image">
         </div>
 
-        <!-- Fifth row -->
-        <div class="side-by-side-3">
-            <img src="https://i.ibb.co/Vcj5sYts/Screenshot-2025-05-05-155233.png" alt="Additional Left Image">
+        <!-- Row 5 -->
+        <div class="side-by-side-5">
+            <img src="https://i.ibb.co/DPRdJcJg/Sheet-8.png" alt="Additional Left Image">
             <img src="https://i.ibb.co/jPhD4fCf/Screenshot-2025-05-05-154351.png" alt="Additional Right Image">
         </div>
 
-        <!-- Moved to bottom -->
-        <div class="side-by-side-4">
+        <!-- Row 6 -->
+        <div class="side-by-side-6">
             <img src="https://i.ibb.co/Jwx8FwSd/Screenshot-2025-05-05-161101.png" alt="Additional Left Image">
             <img src="https://i.ibb.co/jPhD4fCf/Screenshot-2025-05-05-154351.png" alt="Additional Right Image">
         </div>
