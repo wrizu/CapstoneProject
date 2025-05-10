@@ -185,28 +185,38 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <script>
-        function loadCSV(file, targetId) {
-            Papa.parse(file, {
-                download: true,
-                header: true,
-                complete: function(results) {
-                    const data = results.data.slice(0, 10);
-                    const headers = Object.keys(data[0]);
+       function loadCSV(file, targetId) {
+    Papa.parse(file, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            // Get all the rows
+            const data = results.data;
 
-                    let html = '<table>';
-                    html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-                    data.forEach(row => {
-                        html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
-                    });
-                    html += '</table>';
+            // Filter out rows where 'KD' is null, undefined, or an empty string
+            const filteredData = data.filter(row => row.KD && row.KD !== '' && row.KD !== null && row.KD !== undefined);
 
-                    document.getElementById(targetId).innerHTML = html;
-                }
+            // Sort the filtered data by 'KD' in descending order
+            filteredData.sort((a, b) => parseFloat(b.KD) - parseFloat(a.KD));
+
+            // Slice only the first 10 rows after filtering and sorting
+            const slicedData = filteredData.slice(0, 10);
+
+            const headers = Object.keys(slicedData[0]);
+
+            let html = '<table>';
+            html += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+            slicedData.forEach(row => {
+                html += '<tr>' + headers.map(h => `<td>${row[h]}</td>`).join('') + '</tr>';
             });
-        }
+            html += '</table>';
 
-        loadCSV('players_stats.csv', 'players-table');
-        loadCSV('maps_scores.csv', 'maps-table');
+            document.getElementById(targetId).innerHTML = html;
+        }
+    });
+}
+
+loadCSV('players_stats.csv', 'players-table');
 
         function submitFilters() {
             const player = document.getElementById('filter-player').value.trim();
@@ -261,8 +271,8 @@
         'First_Kills_Per_Round', 'First_Deaths_Per_Round', 'Headshot_Percentage', 'Clutch_Success',
         'Clutches_won_played', 'Kills', 'Deaths', 'Assists', 'First_Kills', 'First_Deaths'
     ];
-
-    let html = '<table><thead><tr>' + headers.map(h => `<th>${h.replace(/_/g, ' ')}</th>`).join('') + '</tr></thead><tbody>';
+    let html = '<h3>Query Results:</h3>';
+    html += '<table><thead><tr>' + headers.map(h => `<th>${h.replace(/_/g, ' ')}</th>`).join('') + '</tr></thead><tbody>';
 
     data.forEach(row => {
         html += '<tr>' + headers.map(h => `<td>${row[h] ?? ''}</td>`).join('') + '</tr>';
