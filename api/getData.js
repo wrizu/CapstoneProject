@@ -8,7 +8,7 @@ const xata = new XataClient({
 
 module.exports = async (req, res) => {
   try {
-    const results = await xata.db.tableName.getAll();
+    const results = await xata.db.players_stats.getAll();
     res.status(200).json(results);
   } catch (error) {
     res.status(500).json({ error: error.message });

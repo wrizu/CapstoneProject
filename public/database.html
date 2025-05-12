@@ -209,6 +209,17 @@
             <option value="= 25">
             <option value=">= 40">
             </datalist>
+            <input id="filter-first_kills" type="text" placeholder="First_Kills (e.g., > 3)" list="first_kills-options">
+            <datalist id="first_kills-options">
+            <option value="> 3">
+            <option value="< 5">
+            <option value=">= 7">
+            <option value="= 1">
+            <option value="<= 2">
+            </datalist>
+                <input id="filter-match_type" type="text" placeholder="First_Kills (e.g., > 3)" list="match_type-options" style="display: none;">
+                <input id="filter-stage" type="text" placeholder="First_Kills (e.g., > 3)" list="stage-options" style="display: none;">
+
 
         </div>
         <button onclick="submitFilters()">Submit Filters</button>
@@ -272,6 +283,9 @@
             const agent = document.getElementById('filter-agent').value.trim();
             const kd = document.getElementById('filter-kd').value.trim();
             const kills = document.getElementById('filter-kills').value.trim();
+            const first_kills = document.getElementById('filter-first_kills').value.trim();
+            const stage = 'All Stages';
+            const match_type = 'All Match Types';
 
             const payload = {
                 player: player || undefined,
@@ -279,7 +293,8 @@
                 tournament: tournament || undefined,
                 agent: agent || undefined,
                 kd: kd || undefined,
-                kills: kills || undefined
+                kills: kills || undefined,
+                first_kills: first_kills || undefined
             };
 
             document.getElementById('query-results').innerHTML = "<p>Loading...</p>"; // Show loading text
@@ -315,10 +330,10 @@
             }
 
             const headers = [
-                'Tournament', 'Stage', 'Match_Type', 'Player', 'Teams', 'Agents', 'Rounds_Played', 'Rating',
-                'Average_Combat_Score', 'KD', 'Average_Damage_Per_Round', 'Kills_Per_Round', 'Assists_Per_Round',
+                'Tournament', 'Stage', 'Match_Type', 'Player', 'Teams', 'Agents', 'KD', 'Kills', 'First_Kills', 'Deaths', 'Assists', 'First_Deaths', 'Rounds_Played', 'Rating',
+                'Average_Combat_Score', 'Average_Damage_Per_Round', 'Kills_Per_Round', 'Assists_Per_Round',
                 'First_Kills_Per_Round', 'First_Deaths_Per_Round', 'Headshot_Percentage', 'Clutch_Success',
-                'Clutches_won_played', 'Kills', 'Deaths', 'Assists', 'First_Kills', 'First_Deaths'
+                'Clutches_won_played'
             ];
             let html = '<h3>Query Results:</h3>';
             html += '<table><thead><tr>' + headers.map(h => `<th>${h.replace(/_/g, ' ')}</th>`).join('') + '</tr></thead><tbody>';
