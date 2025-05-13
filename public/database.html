@@ -44,7 +44,8 @@
       background: #f9f9f9;
       text-align: center;
     }
-    .query-section input[type="text"] {
+    .query-section input[type="text"],
+    .query-section input[type="number"] {
       margin: 5px;
       padding: 8px;
       min-width: 150px;
@@ -94,6 +95,7 @@
     #loading-spinner {
       display: none;
       text-align: center;
+      margin-top: 30px;
       margin-bottom: 20px;
     }
     .spinner {
@@ -130,13 +132,12 @@
 
 <div class="query-section">
   <h2>Filter the Database:</h2>
-  <!-- Filter inputs omitted for brevity (same as before)... -->
+
   <input id="filter-player" type="text" placeholder="Player (e.g., zekken)" list="player-options">
   <datalist id="player-options">
     <option value="zekken"><option value="aspas"><option value="Derke"><option value="TenZ"><option value="ZmjjKK">
   </datalist>
 
-  <!-- Other filters same as before -->
   <input id="filter-team" type="text" placeholder="Team (e.g., FNATIC)" list="team-options">
   <datalist id="team-options">
     <option value="FNATIC"><option value="EDward Gaming"><option value="Sentinels"><option value="NRG"><option value="Team Heretics">
@@ -167,12 +168,15 @@
     <option value="> 3"><option value="< 5"><option value=">= 7"><option value="= 1"><option value="<= 2">
   </datalist>
 
+  <input id="filter-limit" type="number" min="1" max="5000" placeholder="# of rows (e.g., 25)" list="filter-limit-options">
+  <datalist id="filter-limit-options">
+    <option value="25"><option value="100"><option value="50"><option value="200"><option value="1000">
+  </datalist>
   <br>
   <button onclick="submitFilters()">Submit Filters</button>
-</div>
 
-<!-- Shared Loading Spinner -->
-<div id="loading-spinner"><div class="spinner"></div></div>
+  <div id="loading-spinner"><div class="spinner"></div></div>
+</div>
 
 <div id="query-results-section">
   <h2>Query Results</h2>
@@ -199,19 +203,7 @@
     return val === "" ? undefined : val;
   }
 
-  function moveSpinnerBefore(elementId) {
-    const spinner = document.getElementById("loading-spinner");
-    const referenceNode = document.getElementById(elementId);
-    referenceNode.parentNode.insertBefore(spinner, referenceNode);
-  }
-
   function submitFilters() {
-    if (querySubmittedOnce) {
-      moveSpinnerBefore("query-results-section");
-    } else {
-      moveSpinnerBefore("players-section");
-    }
-
     document.getElementById("loading-spinner").style.display = "block";
 
     const filters = {
@@ -224,6 +216,9 @@
       first_kills: getInputValue("filter-first_kills"),
     };
 
+    const limitVal = parseInt(getInputValue("filter-limit"));
+    const limit = !isNaN(limitVal) && limitVal > 0 ? limitVal : 10;
+
     fetch("/api/query", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -232,7 +227,7 @@
     .then(res => res.json())
     .then(data => {
       document.getElementById("query-results-section").style.display = "block";
-      displayQueryResults(data);
+      displayQueryResults(data, limit);
       querySubmittedOnce = true;
     })
     .catch(err => {
@@ -253,23 +248,38 @@
     return typeof value === "string" ? value.trim() : value;
   }
 
-  function displayQueryResults(data) {
-    const container = document.getElementById("query-results");
-    const filtered = data.filter(row =>
-      row.Stage !== "All Stages" && row.Match_Type !== "All Match Types"
-    );
-    if (!filtered.length) {
-      container.innerHTML = "<p>No results to display (excluded 'All Stages' / 'All Match Types').</p>";
-      return;
-    }
-    const top10 = filtered.slice(0, 10);
-    let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
-    top10.forEach(row => {
-      html += "<tr>" + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
-    });
-    html += "</table>";
-    container.innerHTML = html;
+  function displayQueryResults(data, limit = 10) {
+  const container = document.getElementById("query-results");
+
+  // Filter out rows with 'All Stages' and 'All Match Types'
+  const filtered = data.filter(row =>
+    row.Stage !== "All Stages" && row.Match_Type !== "All Match Types"
+  );
+
+  // Exclude rows where 'Agents' contains a comma
+  const filteredAgents = filtered.filter(row => 
+    !(row.Agents && row.Agents.includes(','))
+  );
+
+  if (!filteredAgents.length) {
+    container.innerHTML = "<p>No results to display (excluded 'All Stages' / 'All Match Types' or rows with commas in Agents).</p>";
+    return;
   }
+
+  // Slice based on the limit
+  const topN = filteredAgents.slice(0, limit);
+
+  // Build the table HTML
+  let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+  topN.forEach(row => {
+    html += "<tr>" + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
+  });
+  html += "</table>";
+
+  // Insert the HTML into the container
+  container.innerHTML = html;
+}
+
 
   function displayResultsCSV(data) {
     const container = document.getElementById("players-results");

@@ -42,7 +42,7 @@ const buildQuery = (filters) => {
   }
 
   // We'll handle numeric filters after fetching the data
-  sqlQuery += " ORDER BY KD DESC";
+  sqlQuery += " ORDER BY KD DESC, Kills DESC"; // Ensure the results are ordered by KD and Kills in descending order
 
   return query;
 };
@@ -101,8 +101,12 @@ module.exports = async (req, res) => {
       if (filters.kills) localNumberFilter('Kills', filters.kills, 'Kills');
       if (filters.first_kills) localNumberFilter('First_Kills', filters.first_kills, 'First Kills');
 
-      // Sort descending by KD
-      results.sort((a, b) => parseFloat(b.KD) - parseFloat(a.KD));
+      // Sort the results by KD and Kills locally as a backup
+      results.sort((a, b) => {
+        const kdCompare = parseFloat(b.KD) - parseFloat(a.KD);
+        if (kdCompare !== 0) return kdCompare;
+        return parseInt(b.Kills) - parseInt(a.Kills); // If KD is the same, sort by Kills
+      });
 
       const formattedResults = results.map(formatRow);
       return res.status(200).json(formattedResults);
