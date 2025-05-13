@@ -208,6 +208,8 @@
   <datalist id="filter-limit-options">
     <option value="25"><option value="100"><option value="50"><option value="200"><option value="1000">
   </datalist>
+  <input id="filter-columns" type="text" placeholder="Columns (e.g., Teams, Player, KD)">
+  
   <br>
   <button onclick="submitFilters()">Submit Filters</button>
   <div id="loading-spinner"><div class="spinner"></div></div>
@@ -250,15 +252,18 @@
     const limitVal = parseInt(getInputValue("filter-limit"));
     const limit = !isNaN(limitVal) && limitVal > 0 ? limitVal : 10;
 
+    const columnsInput = getInputValue("filter-columns");
+    const columns = columnsInput ? columnsInput.split(",").map(col => col.trim()) : headers;
+
     fetch("/api/query", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filters }),
+      body: JSON.stringify({ filters, columns }),
     })
     .then(res => res.json())
     .then(data => {
       document.getElementById("query-results-section").style.display = "block";
-      displayQueryResults(data, limit);
+      displayQueryResults(data, columns, limit);
     })
     .catch(err => {
       console.error("Fetch error:", err);
@@ -278,12 +283,12 @@
     return typeof value === "string" ? value.trim() : value;
   }
 
-  function displayQueryResults(data, limit = 10) {
+  function displayQueryResults(data, columns, limit = 10) {
     const container = document.getElementById("query-results");
     const filtered = data.filter(row =>
       row.Side === "both" && row.Map !== "All Maps"
     ).filter(row =>
-      !(row.Agents && row.Agents.includes(','))
+      !(row.Agents && row.Agents.includes(',')) // Ignore rows with multiple agents
     );
 
     if (!filtered.length) {
@@ -292,9 +297,9 @@
     }
 
     const topN = filtered.slice(0, limit);
-    let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+    let html = "<table><tr>" + columns.map(col => `<th>${col}</th>`).join("") + "</tr>";
     topN.forEach(row => {
-      html += "<tr>" + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
+      html += "<tr>" + columns.map(col => `<td>${formatValue(row[col])}</td>`).join("") + "</tr>";
     });
     html += "</table>";
 
