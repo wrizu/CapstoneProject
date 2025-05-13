@@ -249,7 +249,7 @@
     const container = document.getElementById("query-results");
 
     const filtered = data.filter(row =>
-      row.Side === "both"
+      row.Side === "both" && row.Map !== "All Maps"
     ).filter(row =>
       !(row.Agents && row.Agents.includes(','))
     );
