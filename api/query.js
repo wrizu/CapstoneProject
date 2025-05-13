@@ -8,17 +8,13 @@ const xata = getXataClient({
 });
 
 const buildQuery = (filters) => {
-  let query = xata.db.players_stats.select();
-  let sqlQuery = "SELECT * FROM players_stats";
+  let query = xata.db.overview.select();
+  let sqlQuery = "SELECT * FROM overview";
   let whereAdded = false;
 
   const appendCondition = (condition) => {
-    if (!whereAdded) {
-      sqlQuery += ` WHERE ${condition}`;
-      whereAdded = true;
-    } else {
-      sqlQuery += ` AND ${condition}`;
-    }
+    sqlQuery += whereAdded ? ` AND ${condition}` : ` WHERE ${condition}`;
+    whereAdded = true;
   };
 
   if (filters.tournament) {
@@ -41,8 +37,13 @@ const buildQuery = (filters) => {
     appendCondition(`Teams = '${filters.teams}'`);
   }
 
-  // We'll handle numeric filters after fetching the data
-  sqlQuery += " ORDER BY KD DESC, Kills DESC"; // Ensure the results are ordered by KD and Kills in descending order
+  if (filters.map) {
+    query = query.filter('Map', filters.map);
+    appendCondition(`Map = '${filters.map}'`);
+  }
+
+  sqlQuery += " ORDER BY KD DESC, Kills DESC";
+  console.log("Built SQL-like query:", sqlQuery);
 
   return query;
 };
@@ -63,6 +64,23 @@ const formatRow = (row) => {
   return formatted;
 };
 
+const parseNumericFilter = (rawInput, keyName) => {
+  const match = rawInput.match(/^(>=|<=|<>|>|<|=)?\s*(\d+(\.\d+)?)$/);
+  if (!match) throw new Error(`Invalid ${keyName} format: ${rawInput}`);
+  const operator = match[1] || '=';
+  const value = parseFloat(match[2]);
+  return { operator, value };
+};
+
+const compare = {
+  '>': (a, b) => a > b,
+  '>=': (a, b) => a >= b,
+  '<': (a, b) => a < b,
+  '<=': (a, b) => a <= b,
+  '=': (a, b) => a === b,
+  '<>': (a, b) => a !== b,
+};
+
 module.exports = async (req, res) => {
   try {
     if (req.method === 'POST') {
@@ -72,40 +90,28 @@ module.exports = async (req, res) => {
       const query = buildQuery(filters);
       let results = await query.getAll();
 
-      // Local filtering for numeric inputs
-      const localNumberFilter = (field, rawValue, key = field) => {
-        const match = rawValue.match(/^(>=|<=|<>|>|<|=)?\s*(\d+(\.\d+)?)$/);
-        if (!match) throw new Error(`Invalid ${key} format.`);
+      // Apply local numeric filters
+      const numericFilters = [
+        { field: 'KD', raw: filters.kd },
+        { field: 'Kills', raw: filters.kills },
+        { field: 'First_Kills', raw: filters.first_kills },
+      ];
 
-        const operatorSymbol = match[1] || '=';
-        const value = parseFloat(match[2]);
+      for (const { field, raw } of numericFilters) {
+        if (raw) {
+          const { operator, value } = parseNumericFilter(raw, field);
+          results = results.filter(row => {
+            const val = parseFloat(row[field]);
+            return !isNaN(val) && compare[operator](val, value);
+          });
+          console.log(`Filtered ${field}: ${results.length} match ${operator} ${value}`);
+        }
+      }
 
-        const ops = {
-          '>': (a, b) => a > b,
-          '>=': (a, b) => a >= b,
-          '<': (a, b) => a < b,
-          '<=': (a, b) => a <= b,
-          '=': (a, b) => a === b,
-          '<>': (a, b) => a !== b,
-        };
-
-        results = results.filter(row => {
-          const val = parseFloat(row[field]);
-          return !isNaN(val) && ops[operatorSymbol](val, value);
-        });
-
-        console.log(`Filtered ${key}: ${results.length} match ${key} ${operatorSymbol} ${value}`);
-      };
-
-      if (filters.kd) localNumberFilter('KD', filters.kd, 'KD');
-      if (filters.kills) localNumberFilter('Kills', filters.kills, 'Kills');
-      if (filters.first_kills) localNumberFilter('First_Kills', filters.first_kills, 'First Kills');
-
-      // Sort the results by KD and Kills locally as a backup
+      // Sort fallback
       results.sort((a, b) => {
-        const kdCompare = parseFloat(b.KD) - parseFloat(a.KD);
-        if (kdCompare !== 0) return kdCompare;
-        return parseInt(b.Kills) - parseInt(a.Kills); // If KD is the same, sort by Kills
+        const kdDiff = parseFloat(b.KD) - parseFloat(a.KD);
+        return kdDiff !== 0 ? kdDiff : parseFloat(b.Kills) - parseFloat(a.Kills);
       });
 
       const formattedResults = results.map(formatRow);
@@ -113,13 +119,12 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'GET') {
-      const results = await xata.db.players_stats.select().getAll();
+      const results = await xata.db.overview.select().getAll();
       const formattedResults = results.map(formatRow);
       return res.status(200).json(formattedResults);
     }
 
     return res.status(405).json({ error: 'Method Not Allowed' });
-
   } catch (err) {
     console.error('Error in query handler:', err);
     return res.status(500).json({ error: err.message || 'Internal Server Error' });

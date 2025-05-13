@@ -44,8 +44,7 @@
       background: #f9f9f9;
       text-align: center;
     }
-    .query-section input[type="text"],
-    .query-section input[type="number"] {
+    .query-section input[type="text"] {
       margin: 5px;
       padding: 8px;
       min-width: 150px;
@@ -69,7 +68,7 @@
     #query-results-section h2 {
       color: #333;
     }
-    #players-section {
+    #overview-section {
       padding: 20px;
       text-align: center;
     }
@@ -90,8 +89,6 @@
       text-align: center;
       color: #333;
     }
-
-    /* Loading Spinner */
     #loading-spinner {
       display: none;
       text-align: center;
@@ -107,7 +104,6 @@
       animation: spin 1s linear infinite;
       margin: 0 auto;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -132,7 +128,6 @@
 
 <div class="query-section">
   <h2>Filter the Database:</h2>
-
   <input id="filter-player" type="text" placeholder="Player (e.g., zekken)" list="player-options">
   <datalist id="player-options">
     <option value="zekken"><option value="aspas"><option value="Derke"><option value="TenZ"><option value="ZmjjKK">
@@ -146,6 +141,11 @@
   <input id="filter-tournament" type="text" placeholder="Tournament" list="tournament-options">
   <datalist id="tournament-options">
     <option value="Valorant Champions 2024"><option value="Champions Tour 2024: Masters Shanghai"><option value="Champions Tour 2024: Masters Madrid">
+  </datalist>
+
+  <input id="filter-map" type="text" placeholder="Map (e.g., Ascent)" list="map-options">
+  <datalist id="map-options">
+    <option value="Ascent"><option value="Bind"><option value="Lotus"><option value="Split"><option value="Sunset">
   </datalist>
 
   <input id="filter-agent" type="text" placeholder="Agent (e.g., jett)" list="agent-options">
@@ -168,7 +168,7 @@
     <option value="> 3"><option value="< 5"><option value=">= 7"><option value="= 1"><option value="<= 2">
   </datalist>
 
-  <input id="filter-limit" type="number" min="1" max="5000" placeholder="# of rows (e.g., 25)" list="filter-limit-options">
+  <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options">
   <datalist id="filter-limit-options">
     <option value="25"><option value="100"><option value="50"><option value="200"><option value="1000">
   </datalist>
@@ -183,20 +183,17 @@
   <div id="query-results"></div>
 </div>
 
-<div id="players-section">
-  <h2 class="section-title">Players Stats Table</h2>
-  <div id="players-results"></div>
+<div id="overview-section">
+  <h2 class="section-title">Overview Table</h2>
+  <div id="overview-results"></div>
 </div>
 
 <script>
   const headers = [
-    'Tournament', 'Stage', 'Match_Type', 'Player', 'Teams', 'Agents', 'KD', 'Kills', 'First_Kills', 'Deaths', 'Assists',
-    'First_Deaths', 'Rounds_Played', 'Rating', 'Average_Combat_Score', 'Average_Damage_Per_Round',
-    'Kills_Per_Round', 'Assists_Per_Round', 'First_Kills_Per_Round', 'First_Deaths_Per_Round',
-    'Headshot_Percentage', 'Clutch_Success'
+    'Tournament', 'Stage', 'Match_Type', 'Map', 'Player', 'Teams', 'Agents', 'KD', 'Kills', 'First_Kills', 'Deaths', 'Assists',
+    'First_Deaths', 'Rating', 'Average_Combat_Score', 'Average_Damage_Per_Round',
+    'Headshot_Percentage', 'Side'
   ];
-
-  let querySubmittedOnce = false;
 
   function getInputValue(id) {
     const val = document.getElementById(id)?.value?.trim();
@@ -210,6 +207,7 @@
       player: getInputValue("filter-player"),
       teams: getInputValue("filter-team"),
       tournament: getInputValue("filter-tournament"),
+      map: getInputValue("filter-map"),
       agent: getInputValue("filter-agent"),
       kd: getInputValue("filter-kd"),
       kills: getInputValue("filter-kills"),
@@ -228,7 +226,6 @@
     .then(data => {
       document.getElementById("query-results-section").style.display = "block";
       displayQueryResults(data, limit);
-      querySubmittedOnce = true;
     })
     .catch(err => {
       console.error("Fetch error:", err);
@@ -249,42 +246,33 @@
   }
 
   function displayQueryResults(data, limit = 10) {
-  const container = document.getElementById("query-results");
+    const container = document.getElementById("query-results");
 
-  // Filter out rows with 'All Stages' and 'All Match Types'
-  const filtered = data.filter(row =>
-    row.Stage !== "All Stages" && row.Match_Type !== "All Match Types"
-  );
+    const filtered = data.filter(row =>
+      row.Side === "both"
+    ).filter(row =>
+      !(row.Agents && row.Agents.includes(','))
+    );
 
-  // Exclude rows where 'Agents' contains a comma
-  const filteredAgents = filtered.filter(row => 
-    !(row.Agents && row.Agents.includes(','))
-  );
+    if (!filtered.length) {
+      container.innerHTML = "<p>No results to display.</p>";
+      return;
+    }
 
-  if (!filteredAgents.length) {
-    container.innerHTML = "<p>No results to display (excluded 'All Stages' / 'All Match Types' or rows with commas in Agents).</p>";
-    return;
+    const topN = filtered.slice(0, limit);
+    let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+    topN.forEach(row => {
+      html += "<tr>" + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
+    });
+    html += "</table>";
+
+    container.innerHTML = html;
   }
 
-  // Slice based on the limit
-  const topN = filteredAgents.slice(0, limit);
-
-  // Build the table HTML
-  let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
-  topN.forEach(row => {
-    html += "<tr>" + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
-  });
-  html += "</table>";
-
-  // Insert the HTML into the container
-  container.innerHTML = html;
-}
-
-
   function displayResultsCSV(data) {
-    const container = document.getElementById("players-results");
+    const container = document.getElementById("overview-results");
     const filtered = data.filter(row =>
-      row.Stage !== "All Stages" && row.Match_Type !== "All Match Types"
+      row.Side === "both"
     );
     const sorted = filtered.sort((a, b) => (parseFloat(b.KD) || 0) - (parseFloat(a.KD) || 0));
     const top10 = sorted.slice(0, 10);
@@ -297,14 +285,14 @@
   }
 
   function loadCSV() {
-    Papa.parse("players_stats.csv", {
+    Papa.parse("overview.csv", {
       download: true,
       header: true,
       skipEmptyLines: true,
       complete: results => displayResultsCSV(results.data),
       error: error => {
         console.error("PapaParse error:", error);
-        document.getElementById("players-results").innerHTML = "<p>Error loading CSV data.</p>";
+        document.getElementById("overview-results").innerHTML = "<p>Error loading CSV data.</p>";
       }
     });
   }
