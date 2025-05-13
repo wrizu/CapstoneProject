@@ -9,26 +9,45 @@
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
+      background: #fff;
     }
+
     .header {
       background: #111;
       color: white;
-      padding: 20px;
+      padding: 20px 20px 40px;
       text-align: center;
       position: relative;
     }
-    .header img {
-      height: 60px;
-      position: absolute;
-      top: 10px;
+
+    .header h1 {
+      margin: 0;
+      margin-top: 20px;
+      font-size: 2rem; /* Updated to match dashboard */
     }
-    .left-logo { left: 10px; }
-    .right-logo { right: 10px; }
+
+    .header img {
+      height: auto;
+      max-height: 60px;
+      max-width: 120px;
+      position: absolute;
+      top: 20px;
+    }
+
+    .left-logo {
+      left: 20px;
+    }
+
+    .right-logo {
+      right: 20px;
+    }
+
     .toolbar {
       background-color: #333;
       padding: 10px;
       text-align: center;
     }
+
     .toolbar a {
       color: white;
       margin: 0 10px;
@@ -36,19 +55,23 @@
       padding: 8px 16px;
       border-radius: 5px;
     }
+
     .toolbar a:hover {
       background-color: #FF4655;
     }
+
     .query-section {
       padding: 20px;
       background: #f9f9f9;
       text-align: center;
     }
+
     .query-section input[type="text"] {
       margin: 5px;
       padding: 8px;
       min-width: 150px;
     }
+
     .query-section button {
       margin-top: 10px;
       padding: 10px 20px;
@@ -57,44 +80,54 @@
       border: none;
       cursor: pointer;
     }
+
     .query-section button:hover {
       background: #FF4655;
     }
+
     #query-results-section {
       padding: 20px;
       text-align: center;
       display: none;
     }
+
     #query-results-section h2 {
       color: #333;
     }
+
     #overview-section {
       padding: 20px;
       text-align: center;
     }
+
     table {
       width: 90%;
       margin: auto;
       border-collapse: collapse;
     }
+
     th, td {
       border: 1px solid #ccc;
       padding: 8px;
     }
+
     th {
       background: #eee;
     }
+
     h2.section-title {
       margin-top: 40px;
       text-align: center;
       color: #333;
     }
+
     #loading-spinner {
       display: none;
       text-align: center;
       margin-top: 30px;
       margin-bottom: 20px;
     }
+
     .spinner {
       border: 8px solid #f3f3f3;
       border-top: 8px solid #FF4655;
@@ -104,23 +137,34 @@
       animation: spin 1s linear infinite;
       margin: 0 auto;
     }
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      .header img {
+        max-width: 80px;
+        max-height: 40px;
+      }
+      .header h1 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" class="left-logo">
-  <img src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" class="right-logo">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" class="left-logo" alt="Valorant logo">
+  <img src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" class="right-logo" alt="UW Bothell logo">
   <h1>Database</h1>
 </div>
 
 <div class="toolbar">
   <a href="about.html">About</a>
-  <a href="website.html">Home</a>
+  <a href="index.html">Home</a>
   <a href="dashboard.html">Dashboard</a>
   <a href="database.html">Database</a>
   <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
@@ -132,54 +176,45 @@
   <datalist id="player-options">
     <option value="zekken"><option value="aspas"><option value="Derke"><option value="TenZ"><option value="ZmjjKK">
   </datalist>
-
   <input id="filter-team" type="text" placeholder="Team (e.g., FNATIC)" list="team-options">
   <datalist id="team-options">
     <option value="FNATIC"><option value="EDward Gaming"><option value="Sentinels"><option value="NRG"><option value="Team Heretics">
   </datalist>
-
   <input id="filter-tournament" type="text" placeholder="Tournament" list="tournament-options">
   <datalist id="tournament-options">
     <option value="Valorant Champions 2024"><option value="Champions Tour 2024: Masters Shanghai"><option value="Champions Tour 2024: Masters Madrid">
   </datalist>
-
   <input id="filter-map" type="text" placeholder="Map (e.g., Ascent)" list="map-options">
   <datalist id="map-options">
     <option value="Ascent"><option value="Bind"><option value="Lotus"><option value="Split"><option value="Sunset">
   </datalist>
-
   <input id="filter-agent" type="text" placeholder="Agent (e.g., jett)" list="agent-options">
   <datalist id="agent-options">
     <option value="jett"><option value="raze"><option value="sova"><option value="omen"><option value="gekko">
   </datalist>
-
   <input id="filter-kd" type="text" placeholder="KD (e.g., > 1.2)" list="kd-options">
   <datalist id="kd-options">
     <option value="> 1.1"><option value="> 2.0"><option value="< 1.0"><option value="3.0"><option value="> 4.0">
   </datalist>
-
   <input id="filter-kills" type="text" placeholder="Kills (e.g., > 25)" list="kills-options">
   <datalist id="kills-options">
     <option value="> 10"><option value="> 20"><option value="< 30"><option value="= 25"><option value=">= 40">
   </datalist>
-
   <input id="filter-first_kills" type="text" placeholder="First Kills (e.g., > 3)" list="first_kills-options">
   <datalist id="first_kills-options">
     <option value="> 3"><option value="< 5"><option value=">= 7"><option value="= 1"><option value="<= 2">
   </datalist>
-
   <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options">
   <datalist id="filter-limit-options">
     <option value="25"><option value="100"><option value="50"><option value="200"><option value="1000">
   </datalist>
   <br>
   <button onclick="submitFilters()">Submit Filters</button>
-
   <div id="loading-spinner"><div class="spinner"></div></div>
 </div>
 
 <div id="query-results-section">
-  <h2>Query Results</h2>
+  <h2>Filtered Results</h2>
   <div id="query-results"></div>
 </div>
 
@@ -190,8 +225,8 @@
 
 <script>
   const headers = [
-    'Tournament', 'Stage', 'Match_Type', 'Match_Name', 'Map', 'Player', 'Teams', 'Agents', 'KD', 'Kills',  'Deaths', 'Assists',
-    'Team_A','Team_A_Score', 'Team_B',  'Team_B_Score','First_Kills','First_Deaths', 'Average_Combat_Score', 'Average_Damage_Per_Round',
+    'Tournament', 'Stage', 'Match_Type', 'Match_Name', 'Map', 'Player', 'Teams', 'Agents', 'KD', 'Kills', 'Deaths', 'Assists',
+    'Team_A','Team_A_Score', 'Team_B', 'Team_B_Score','First_Kills','First_Deaths', 'Average_Combat_Score', 'Average_Damage_Per_Round',
     'Headshot_Percentage', 'Side'
   ];
 
@@ -202,7 +237,6 @@
 
   function submitFilters() {
     document.getElementById("loading-spinner").style.display = "block";
-
     const filters = {
       player: getInputValue("filter-player"),
       teams: getInputValue("filter-team"),
@@ -213,7 +247,6 @@
       kills: getInputValue("filter-kills"),
       first_kills: getInputValue("filter-first_kills"),
     };
-
     const limitVal = parseInt(getInputValue("filter-limit"));
     const limit = !isNaN(limitVal) && limitVal > 0 ? limitVal : 10;
 
@@ -247,7 +280,6 @@
 
   function displayQueryResults(data, limit = 10) {
     const container = document.getElementById("query-results");
-
     const filtered = data.filter(row =>
       row.Side === "both" && row.Map !== "All Maps"
     ).filter(row =>
@@ -271,9 +303,7 @@
 
   function displayResultsCSV(data) {
     const container = document.getElementById("overview-results");
-    const filtered = data.filter(row =>
-      row.Side === "both"
-    );
+    const filtered = data.filter(row => row.Side === "both");
     const sorted = filtered.sort((a, b) => (parseFloat(b.KD) || 0) - (parseFloat(a.KD) || 0));
     const top10 = sorted.slice(0, 10);
     let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
