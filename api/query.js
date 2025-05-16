@@ -7,7 +7,7 @@ const xata = getXataClient({
   branch: process.env.XATA_BRANCH || 'main',
 });
 
-const buildQuery = (filters) => {
+const buildQuery = (filters, orderBy) => {
   let query = xata.db.overview.select();
   let sqlQuery = "SELECT * FROM overview";
   let whereAdded = false;
@@ -42,7 +42,16 @@ const buildQuery = (filters) => {
     appendCondition(`Map = '${filters.map}'`);
   }
 
-  sqlQuery += " ORDER BY KD DESC, Kills DESC";
+  // Handle order by descending on orderBy column or default to KD DESC, Kills DESC
+  if (orderBy && typeof orderBy === 'string' && orderBy.trim() !== '') {
+    const col = orderBy.trim();
+    query = query.sort(col, 'desc');
+    sqlQuery += ` ORDER BY ${col} DESC`;
+  } else {
+    query = query.sort('KD', 'desc').sort('Kills', 'desc');
+    sqlQuery += " ORDER BY KD DESC, Kills DESC";
+  }
+
   console.log("Built SQL-like query:", sqlQuery);
 
   return query;
@@ -85,9 +94,11 @@ module.exports = async (req, res) => {
   try {
     if (req.method === 'POST') {
       const filters = req.body.filters || {};
+      const orderBy = req.body.orderBy; // get orderBy from request body
       console.log('Received filters:', filters);
+      console.log('Order by:', orderBy);
 
-      const query = buildQuery(filters);
+      const query = buildQuery(filters, orderBy);
       let results = await query.getAll();
 
       // Apply local numeric filters
@@ -108,11 +119,13 @@ module.exports = async (req, res) => {
         }
       }
 
-      // Sort fallback
-      results.sort((a, b) => {
-        const kdDiff = parseFloat(b.KD) - parseFloat(a.KD);
-        return kdDiff !== 0 ? kdDiff : parseFloat(b.Kills) - parseFloat(a.Kills);
-      });
+      // Sort fallback only if orderBy is missing, already sorted by buildQuery otherwise
+      if (!orderBy || orderBy.trim() === '') {
+        results.sort((a, b) => {
+          const kdDiff = parseFloat(b.KD) - parseFloat(a.KD);
+          return kdDiff !== 0 ? kdDiff : parseFloat(b.Kills) - parseFloat(a.Kills);
+        });
+      }
 
       const formattedResults = results.map(formatRow);
       return res.status(200).json(formattedResults);

@@ -1,3 +1,7 @@
+<!-- CHANGES:
+1. Added "filter-orderby" input for descending order column selection.
+2. Included this value in the `submitFilters()` fetch call.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +9,7 @@
   <title>Database</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-   <style>
+  <style>
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -16,7 +20,6 @@
       padding: 20px 0;
       text-align: center;
       position: relative;
-      
     }
     .header h1 {
       color: #fff;
@@ -28,18 +31,17 @@
       font-size: 1rem;
     }
     .header img.left-logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            height: 80px;
-        }
-
-        .header img.right-logo {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            height: 80px;
-        }
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      height: 80px;
+    }
+    .header img.right-logo {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      height: 80px;
+    }
     .toolbar {
       background-color: #333;
       padding: 10px;
@@ -100,6 +102,12 @@
     th {
       background: #eee;
     }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
     h2.section-title {
       margin-top: 40px;
       text-align: center;
@@ -158,7 +166,7 @@
   <datalist id="player-options">
     <option value="zekken"><option value="aspas"><option value="Derke"><option value="TenZ"><option value="ZmjjKK">
   </datalist>
-  <input id="filter-team" type="text" placeholder="Team (e.g., FNATIC)" list="team-options">
+  <input id="filter-team" type="text" placeholder="Teams (e.g., FNATIC)" list="team-options">
   <datalist id="team-options">
     <option value="FNATIC"><option value="EDward Gaming"><option value="Sentinels"><option value="NRG"><option value="Team Heretics">
   </datalist>
@@ -170,7 +178,7 @@
   <datalist id="map-options">
     <option value="Ascent"><option value="Bind"><option value="Lotus"><option value="Split"><option value="Sunset">
   </datalist>
-  <input id="filter-agent" type="text" placeholder="Agent (e.g., jett)" list="agent-options">
+  <input id="filter-agent" type="text" placeholder="Agents (e.g., jett)" list="agent-options">
   <datalist id="agent-options">
     <option value="jett"><option value="raze"><option value="sova"><option value="omen"><option value="gekko">
   </datalist>
@@ -191,6 +199,7 @@
     <option value="25"><option value="100"><option value="50"><option value="200"><option value="1000">
   </datalist>
   <input id="filter-columns" type="text" placeholder="Columns (e.g., Teams, Player, KD)">
+  <input id="filter-orderby" type="text" placeholder="Order By (DESC) (e.g., KD)">
   
   <br>
   <button onclick="submitFilters()">Submit Filters</button>
@@ -221,6 +230,7 @@
 
   function submitFilters() {
     document.getElementById("loading-spinner").style.display = "block";
+
     const filters = {
       player: getInputValue("filter-player"),
       teams: getInputValue("filter-team"),
@@ -231,16 +241,19 @@
       kills: getInputValue("filter-kills"),
       first_kills: getInputValue("filter-first_kills"),
     };
+
     const limitVal = parseInt(getInputValue("filter-limit"));
     const limit = !isNaN(limitVal) && limitVal > 0 ? limitVal : 10;
 
     const columnsInput = getInputValue("filter-columns");
     const columns = columnsInput ? columnsInput.split(",").map(col => col.trim()) : headers;
 
+    const orderBy = getInputValue("filter-orderby");
+
     fetch("/api/query", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filters, columns }),
+      body: JSON.stringify({ filters, columns, orderBy, limit }),
     })
     .then(res => res.json())
     .then(data => {
@@ -270,7 +283,7 @@
     const filtered = data.filter(row =>
       row.Side === "both" && row.Map !== "All Maps"
     ).filter(row =>
-      !(row.Agents && row.Agents.includes(',')) // Ignore rows with multiple agents
+      !(row.Agents && row.Agents.includes(','))
     );
 
     if (!filtered.length) {
@@ -280,8 +293,9 @@
 
     const topN = filtered.slice(0, limit);
     let html = "<table><tr>" + columns.map(col => `<th>${col}</th>`).join("") + "</tr>";
-    topN.forEach(row => {
-      html += "<tr>" + columns.map(col => `<td>${formatValue(row[col])}</td>`).join("") + "</tr>";
+    topN.forEach((row, i) => {
+      const bgColor = i % 2 === 0 ? "#ffffff" : "#f0f0f0";
+      html += `<tr style="background-color: ${bgColor}">` + columns.map(col => `<td>${formatValue(row[col])}</td>`).join("") + "</tr>";
     });
     html += "</table>";
 
@@ -293,11 +307,14 @@
     const filtered = data.filter(row => row.Side === "both");
     const sorted = filtered.sort((a, b) => (parseFloat(b.KD) || 0) - (parseFloat(a.KD) || 0));
     const top10 = sorted.slice(0, 10);
+
     let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
-    top10.forEach(row => {
-      html += "<tr>" + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
+    top10.forEach((row, i) => {
+      const bgColor = i % 2 === 0 ? "#ffffff" : "#f0f0f0";
+      html += `<tr style="background-color: ${bgColor}">` + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
     });
     html += "</table>";
+
     container.innerHTML = html;
   }
 
