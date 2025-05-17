@@ -1,0 +1,183 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0jrulqdo80pli9qol9g",
+    "operations": [
+      {
+        "create_table": {
+          "name": "overview",
+          "columns": [
+            {
+              "name": "Tournament",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Stage",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Match_Type",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Match_Name",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Map",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Player",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Teams",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Agents",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Rating",
+              "type": "real",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Average_Combat_Score",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Kills",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Deaths",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Assists",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "KD",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Kill, Assist, Trade, Survive %",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Average_Damage_Per_Round",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Headshot_Percentage",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "First_Kills",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "First_Deaths",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Kills - Deaths (FKD)",
+              "type": "integer",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "Side",
+              "type": "text",
+              "comment": "{}",
+              "nullable": true
+            },
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+                "name": "overview_xata_id_length_xata_id",
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()"
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0"
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()"
+            },
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()"
+            }
+          ]
+        }
+      },
+      {
+        "sql": {
+          "up": "ALTER TABLE \"overview\" REPLICA IDENTITY FULL",
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"overview\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0jrulqdo80pli9qol9g",
+  "parent": "mig_d0jrtpaunsp1bris7ac0",
+  "schema": "public",
+  "startedAt": "2025-05-16T22:42:32.186643Z"
+}

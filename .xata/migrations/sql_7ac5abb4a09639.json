@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_7ac5abb4a09639",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE INDEX idx_overview_kd ON overview USING btree (\"KD\")"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_7ac5abb4a09639",
+  "parent": "mig_d0k0maar9e9qaqkp24dg",
+  "schema": "public",
+  "startedAt": "2025-05-17T04:09:36.499745Z"
+}

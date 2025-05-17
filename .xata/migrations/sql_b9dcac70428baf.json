@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_b9dcac70428baf",
+    "operations": [
+      {
+        "sql": {
+          "up": "ALTER TABLE overview ADD COLUMN \"Result\" text"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_b9dcac70428baf",
+  "parent": "sql_d84961a120696d",
+  "schema": "public",
+  "startedAt": "2025-05-17T03:34:19.063156Z"
+}

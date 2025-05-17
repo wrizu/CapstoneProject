@@ -1,15 +1,12 @@
-<!-- CHANGES:
-1. Added "filter-orderby" input for descending order column selection.
-2. Included this value in the `submitFilters()` fetch call.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Database</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
+    
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -146,8 +143,8 @@
 <body>
 
 <div class="header">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" class="left-logo" alt="Valorant logo">
-  <img src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" class="right-logo" alt="UW Bothell logo">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" class="left-logo" alt="Valorant logo" />
+  <img src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" class="right-logo" alt="UW Bothell logo" />
   <h1>Database</h1>
   <p class="subtitle">How EDward Gaming Won Champions 2024</p>
 </div>
@@ -162,56 +159,111 @@
 
 <div class="query-section">
   <h2>Filter the Database:</h2>
-  <input id="filter-player" type="text" placeholder="Player (e.g., zekken)" list="player-options">
+  <input id="filter-player" type="text" placeholder="Player (e.g., zekken)" list="player-options" />
   <datalist id="player-options">
-    <option value="zekken"><option value="aspas"><option value="Derke"><option value="TenZ"><option value="ZmjjKK">
+    <option value="zekken"></option>
+    <option value="aspas"></option>
+    <option value="Derke"></option>
+    <option value="TenZ"></option>
+    <option value="ZmjjKK"></option>
   </datalist>
-  <input id="filter-team" type="text" placeholder="Teams (e.g., FNATIC)" list="team-options">
+
+  <input id="filter-team" type="text" placeholder="Teams (e.g., FNATIC)" list="team-options" />
   <datalist id="team-options">
-    <option value="FNATIC"><option value="EDward Gaming"><option value="Sentinels"><option value="NRG"><option value="Team Heretics">
+    <option value="FNATIC"></option>
+    <option value="EDward Gaming"></option>
+    <option value="Sentinels"></option>
+    <option value="NRG"></option>
+    <option value="Team Heretics"></option>
   </datalist>
-  <input id="filter-tournament" type="text" placeholder="Tournament" list="tournament-options">
+
+  <input id="filter-tournament" type="text" placeholder="Tournament" list="tournament-options" />
   <datalist id="tournament-options">
-    <option value="Valorant Champions 2024"><option value="Champions Tour 2024: Masters Shanghai"><option value="Champions Tour 2024: Masters Madrid">
+    <option value="Valorant Champions 2024"></option>
+    <option value="Champions Tour 2024: Masters Shanghai"></option>
+    <option value="Champions Tour 2024: Masters Madrid"></option>
   </datalist>
-  <input id="filter-map" type="text" placeholder="Map (e.g., Ascent)" list="map-options">
+
+  <input id="filter-map" type="text" placeholder="Map (e.g., Ascent)" list="map-options" />
   <datalist id="map-options">
-    <option value="Ascent"><option value="Bind"><option value="Lotus"><option value="Split"><option value="Sunset">
+    <option value="Ascent"></option>
+    <option value="Bind"></option>
+    <option value="Lotus"></option>
+    <option value="Split"></option>
+    <option value="Sunset"></option>
   </datalist>
-  <input id="filter-agent" type="text" placeholder="Agents (e.g., jett)" list="agent-options">
+
+  <input id="filter-agent" type="text" placeholder="Agents (e.g., jett)" list="agent-options" />
   <datalist id="agent-options">
-    <option value="jett"><option value="raze"><option value="sova"><option value="omen"><option value="gekko">
+    <option value="jett"></option>
+    <option value="raze"></option>
+    <option value="sova"></option>
+    <option value="omen"></option>
+    <option value="gekko"></option>
   </datalist>
-  <input id="filter-kd" type="text" placeholder="KD (e.g., > 1.2)" list="kd-options">
+
+  <input id="filter-kd" type="text" placeholder="KD (e.g., > 1.2)" list="kd-options" />
   <datalist id="kd-options">
-    <option value="> 1.1"><option value="> 2.0"><option value="< 1.0"><option value="3.0"><option value="> 4.0">
+    <option value="> 1.1"></option>
+    <option value="> 2.0"></option>
+    <option value="< 1.0"></option>
+    <option value="3.0"></option>
+    <option value="> 4.0"></option>
   </datalist>
-  <input id="filter-kills" type="text" placeholder="Kills (e.g., > 25)" list="kills-options">
+
+  <input id="filter-kills" type="text" placeholder="Kills (e.g., > 25)" list="kills-options" />
   <datalist id="kills-options">
-    <option value="> 10"><option value="> 20"><option value="< 30"><option value="= 25"><option value=">= 40">
+    <option value="> 10"></option>
+    <option value="> 20"></option>
+    <option value="< 30"></option>
+    <option value="= 25"></option>
+    <option value=">= 40"></option>
   </datalist>
-  <input id="filter-first_kills" type="text" placeholder="First Kills (e.g., > 3)" list="first_kills-options">
+
+  <input id="filter-first_kills" type="text" placeholder="First Kills (e.g., > 3)" list="first_kills-options" />
   <datalist id="first_kills-options">
-    <option value="> 3"><option value="< 5"><option value=">= 7"><option value="= 1"><option value="<= 2">
+    <option value="> 3"></option>
+    <option value="< 5"></option>
+    <option value=">= 7"></option>
+    <option value="= 1"></option>
+    <option value="<= 2"></option>
   </datalist>
-  <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options">
+
+  <input id="filter-winner" type="text" placeholder="Winner (e.g. EDward Gaming)" list="winner-options" />
+  <datalist id="winner-options">
+    <option value="EDward Gaming"></option>
+    <option value="FNATIC"></option>
+    <option value="Sentinels"></option>
+    <option value="NRG"></option>
+    <option value="Team Heretics"></option>
+  </datalist>
+
+  <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options" />
   <datalist id="filter-limit-options">
-    <option value="25"><option value="100"><option value="50"><option value="200"><option value="1000">
+    <option value="25"></option>
+    <option value="100"></option>
+    <option value="50"></option>
+    <option value="200"></option>
+    <option value="1000"></option>
   </datalist>
-  <input id="filter-columns" type="text" placeholder="Columns (e.g., Teams, Player, KD)">
-  <input id="filter-orderby" type="text" placeholder="Order By (DESC) (e.g., KD)">
-  
-  <br>
+
+  <input id="filter-columns" type="text" placeholder="Columns (e.g., Teams, Player, KD)" />
+  <input id="filter-orderby" type="text" placeholder="Order By (DESC) (e.g., KD)" />
+
+  <br />
   <button onclick="submitFilters()">Submit Filters</button>
   <div id="loading-spinner"><div class="spinner"></div></div>
 </div>
 
 <div id="query-results-section">
-  <h2>Filtered Results</h2>
+  <h2>Query Results</h2>
   <div id="query-results"></div>
 </div>
+  <div id="loading-spinner" style="display:none; text-align:center; margin: 20px 0;">
+  <div class="spinner"></div>
+</div>
 
-<div id="overview-section">
+<div id="overview-section" style="display:none;">
   <h2 class="section-title">Overview Table</h2>
   <div id="overview-results"></div>
 </div>
@@ -219,120 +271,194 @@
 <script>
   const headers = [
     'Tournament', 'Stage', 'Match_Type', 'Match_Name', 'Map', 'Player', 'Teams', 'Agents', 'KD', 'Kills', 'Deaths', 'Assists',
-    'Team_A','Team_A_Score', 'Team_B', 'Team_B_Score','First_Kills','First_Deaths', 'Average_Combat_Score', 'Average_Damage_Per_Round',
-    'Headshot_Percentage', 'Side'
+    'Team_A','Team_A_Score', 'Team_B', 'Team_B_Score', 'Winner','First_Kills','First_Deaths'
   ];
+  
+  window.addEventListener("DOMContentLoaded", function() {
+  document.getElementById('loading-spinner').style.display = 'block';
+  document.getElementById('overview-section').style.display = 'none';
 
-  function getInputValue(id) {
-    const val = document.getElementById(id)?.value?.trim();
-    return val === "" ? undefined : val;
-  }
+  Papa.parse("overview.csv", {
+    download: true,
+    header: true,
+    complete: function(results) {
+      // Your existing filtering and display code
+      const filtered = results.data.filter(row =>
+        row.Side === "both" && row.Map !== "All Maps"
+      ).filter(row =>
+        !(row.Agents && row.Agents.includes(','))
+      );
 
+      displayCSV(filtered, headers, "overview-results");
+
+      // Hide spinner and show overview AFTER displayCSV finishes
+      document.getElementById('loading-spinner').style.display = 'none';
+      document.getElementById('overview-section').style.display = 'block';
+    },
+    error: function(err) {
+      document.getElementById('loading-spinner').style.display = 'none';  // Hide spinner on error
+      alert("Failed to load CSV: " + err.message);
+    }
+  });
+});
+
+  // Submit filter values and fetch query results from server
   function submitFilters() {
-    document.getElementById("loading-spinner").style.display = "block";
-
-    const filters = {
-      player: getInputValue("filter-player"),
-      teams: getInputValue("filter-team"),
-      tournament: getInputValue("filter-tournament"),
-      map: getInputValue("filter-map"),
-      agent: getInputValue("filter-agent"),
-      kd: getInputValue("filter-kd"),
-      kills: getInputValue("filter-kills"),
-      first_kills: getInputValue("filter-first_kills"),
+    var filters = {
+      player: document.getElementById("filter-player").value.trim(),
+      teams: document.getElementById("filter-team").value.trim(),
+      tournament: document.getElementById("filter-tournament").value.trim(),
+      map: document.getElementById("filter-map").value.trim(),
+      agent: document.getElementById("filter-agent").value.trim(),
+      kd: document.getElementById("filter-kd").value.trim(),
+      kills: document.getElementById("filter-kills").value.trim(),
+      first_kills: document.getElementById("filter-first_kills").value.trim(),
+      winner: document.getElementById("filter-winner").value.trim()
     };
 
-    const limitVal = parseInt(getInputValue("filter-limit"));
-    const limit = !isNaN(limitVal) && limitVal > 0 ? limitVal : 10;
-
-    const columnsInput = getInputValue("filter-columns");
-    const columns = columnsInput ? columnsInput.split(",").map(col => col.trim()) : headers;
-
-    const orderBy = getInputValue("filter-orderby");
+    document.getElementById("loading-spinner").style.display = "block";
 
     fetch("/api/query", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filters, columns, orderBy, limit }),
+      body: JSON.stringify({ filters: filters })
     })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("query-results-section").style.display = "block";
-      displayQueryResults(data, columns, limit);
-    })
-    .catch(err => {
-      console.error("Fetch error:", err);
-      document.getElementById("query-results").innerHTML = "<p>Error fetching data.</p>";
-    })
-    .finally(() => {
+    .then(response => response.json())
+    .then(results => {
       document.getElementById("loading-spinner").style.display = "none";
+
+      if (!results || results.length === 0) {
+        displayQueryResults([], []);
+        return;
+      }
+
+      // Apply filtering logic on frontend before displaying
+      let filtered = results.filter(row =>
+        row.Side === "both" && row.Map !== "All Maps"
+      ).filter(row =>
+        !(row.Agents && row.Agents.includes(','))
+      );
+
+      // Read columns, limit, orderBy from inputs
+      const columnsInput = document.getElementById("filter-columns").value.trim();
+      const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
+
+      const limitStr = document.getElementById("filter-limit").value.trim();
+      const limit = limitStr ? parseInt(limitStr, 10) : 10;
+
+      // Parse orderBy as comma-separated list of columns for multi-column sorting
+      const orderByInput = document.getElementById("filter-orderby").value.trim();
+      const orderByColumns = orderByInput ? orderByInput.split(",").map(c => c.trim()).filter(c => columns.includes(c)) : [];
+
+      // Multi-column descending sort
+      if (orderByColumns.length > 0) {
+        filtered.sort((a, b) => {
+          for (const col of orderByColumns) {
+            const aVal = a[col];
+            const bVal = b[col];
+            if (!aVal && !bVal) continue;
+            if (!aVal) return 1;
+            if (!bVal) return -1;
+
+            const aNum = parseFloat(aVal);
+            const bNum = parseFloat(bVal);
+
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+              if (bNum !== aNum) return bNum - aNum; // Descending numeric
+            } else {
+              const cmp = bVal.toString().localeCompare(aVal.toString());
+              if (cmp !== 0) return cmp; // Descending string
+            }
+          }
+          return 0; // all equal
+        });
+      }
+
+      // Limit the results to the specified number
+      filtered = filtered.slice(0, limit);
+
+      // Display with selected columns
+      displayQueryResults(filtered, columns);
+    })
+    .catch(error => {
+      document.getElementById("loading-spinner").style.display = "none";
+      alert("Error querying database: " + error.message);
     });
   }
 
-  function formatValue(value) {
-    if (value === null || value === undefined) return "";
-    if (!isNaN(value) && value !== "") {
-      const num = parseFloat(value);
-      return Number.isFinite(num) && !Number.isInteger(num) ? num.toFixed(2) : value;
+  // Display query results in a table with selected columns
+  function displayQueryResults(results, columns) {
+    const container = document.getElementById("query-results");
+
+    if (!results || results.length === 0) {
+      container.innerHTML = "<p>No results found.</p>";
+      document.getElementById("query-results-section").style.display = "block";
+      return;
     }
-    return typeof value === "string" ? value.trim() : value;
+
+    let html = "<table><thead><tr>";
+
+    columns.forEach(header => {
+      html += `<th>${header}</th>`;
+    });
+    html += "</tr></thead><tbody>";
+
+    results.forEach(row => {
+      html += "<tr>";
+      columns.forEach(header => {
+        html += `<td>${row[header] || ""}</td>`;
+      });
+      html += "</tr>";
+    });
+
+    html += "</tbody></table>";
+    container.innerHTML = html;
+    document.getElementById("query-results-section").style.display = "block";
   }
 
-  function displayQueryResults(data, columns, limit = 10) {
-    const container = document.getElementById("query-results");
+  // Display CSV overview table
+  function displayCSV(data, headers, containerId) {
+    var container = document.getElementById(containerId);
+    document.getElementById('loading-spinner').style.display = 'none';
+    document.getElementById('overview-section').style.display = 'block';
+    if (!data || data.length === 0) {
+      container.innerHTML = "<p>No data available.</p>";
+      return;
+    }
+
+    // Filter data again just in case
     const filtered = data.filter(row =>
       row.Side === "both" && row.Map !== "All Maps"
     ).filter(row =>
       !(row.Agents && row.Agents.includes(','))
     );
 
-    if (!filtered.length) {
-      container.innerHTML = "<p>No results to display.</p>";
-      return;
-    }
+    // Sort by KD descending (parse as float)
+    filtered.sort((a, b) => parseFloat(b.KD) - parseFloat(a.KD));
 
-    const topN = filtered.slice(0, limit);
-    let html = "<table><tr>" + columns.map(col => `<th>${col}</th>`).join("") + "</tr>";
-    topN.forEach((row, i) => {
-      const bgColor = i % 2 === 0 ? "#ffffff" : "#f0f0f0";
-      html += `<tr style="background-color: ${bgColor}">` + columns.map(col => `<td>${formatValue(row[col])}</td>`).join("") + "</tr>";
+    // Take top 10 rows
+    const topTen = filtered.slice(0, 10);
+
+    var html = "<table><thead><tr>";
+    headers.forEach(function(header) {
+      html += "<th>" + header + "</th>";
     });
-    html += "</table>";
+    html += "</tr></thead><tbody>";
 
+    topTen.forEach(function(row) {
+      html += "<tr>";
+      headers.forEach(function(header) {
+        html += "<td>" + (row[header] || "") + "</td>";
+      });
+      html += "</tr>";
+    });
+
+    html += "</tbody></table>";
     container.innerHTML = html;
   }
-
-  function displayResultsCSV(data) {
-    const container = document.getElementById("overview-results");
-    const filtered = data.filter(row => row.Side === "both");
-    const sorted = filtered.sort((a, b) => (parseFloat(b.KD) || 0) - (parseFloat(a.KD) || 0));
-    const top10 = sorted.slice(0, 10);
-
-    let html = "<table><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
-    top10.forEach((row, i) => {
-      const bgColor = i % 2 === 0 ? "#ffffff" : "#f0f0f0";
-      html += `<tr style="background-color: ${bgColor}">` + headers.map(h => `<td>${formatValue(row[h])}</td>`).join("") + "</tr>";
-    });
-    html += "</table>";
-
-    container.innerHTML = html;
-  }
-
-  function loadCSV() {
-    Papa.parse("overview.csv", {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: results => displayResultsCSV(results.data),
-      error: error => {
-        console.error("PapaParse error:", error);
-        document.getElementById("overview-results").innerHTML = "<p>Error loading CSV data.</p>";
-      }
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", loadCSV);
 </script>
+
+
 
 </body>
 </html>

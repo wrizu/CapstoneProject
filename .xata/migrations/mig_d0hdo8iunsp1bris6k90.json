@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0hdo8iunsp1bris6k90",
+    "operations": [
+      {
+        "drop_table": {
+          "name": "players_stats"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0hdo8iunsp1bris6k90",
+  "parent": "mig_d0hdo6aunsp1bris6k80",
+  "schema": "public",
+  "startedAt": "2025-05-13T05:44:02.735772Z"
+}

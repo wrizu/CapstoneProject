@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_4626e1fee5f444",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE INDEX idx_overview_kills ON overview USING btree (\"Kills\")"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_4626e1fee5f444",
+  "parent": "sql_7ac5abb4a09639",
+  "schema": "public",
+  "startedAt": "2025-05-17T04:09:36.778945Z"
+}

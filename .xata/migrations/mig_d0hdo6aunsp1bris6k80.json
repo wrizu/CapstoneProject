@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0hdo6aunsp1bris6k80",
+    "operations": [
+      {
+        "drop_table": {
+          "name": "maps_scores"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0hdo6aunsp1bris6k80",
+  "parent": "mig_d0hdcsado80pli9qo010",
+  "schema": "public",
+  "startedAt": "2025-05-13T05:43:54.529999Z"
+}

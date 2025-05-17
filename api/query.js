@@ -9,50 +9,59 @@ const xata = getXataClient({
 
 const buildQuery = (filters, orderBy) => {
   let query = xata.db.overview.select();
-  let sqlQuery = "SELECT * FROM overview";
-  let whereAdded = false;
 
-  const appendCondition = (condition) => {
-    sqlQuery += whereAdded ? ` AND ${condition}` : ` WHERE ${condition}`;
-    whereAdded = true;
-  };
+  // String filters
+  if (filters.tournament) query = query.filter('Tournament', filters.tournament);
+  if (filters.agent) query = query.filter('Agents', filters.agent);
+  if (filters.player) query = query.filter('Player', filters.player);
+  if (filters.teams) query = query.filter('Teams', filters.teams);
+  if (filters.map) query = query.filter('Map', filters.map);
 
-  if (filters.tournament) {
-    query = query.filter('Tournament', filters.tournament);
-    appendCondition(`Tournament = '${filters.tournament}'`);
+  // Filter by winning team
+  if (filters.winner) {
+    query = query.filter('Winner', filters.winner);
   }
 
-  if (filters.agent) {
-    query = query.filter('Agents', filters.agent);
-    appendCondition(`Agents = '${filters.agent}'`);
-  }
+  // Numeric filters
+  const numericFields = ['KD', 'Kills', 'First_Kills'];
+  numericFields.forEach(field => {
+    const input = filters[field.toLowerCase()];
+    if (input) {
+      const { operator, value } = parseNumericFilter(input, field);
+      switch (operator) {
+        case '=':
+          query = query.filter(field, value);
+          break;
+        case '>':
+          query = query.filter(field, v => v > value);
+          break;
+        case '>=':
+          query = query.filter(field, v => v >= value);
+          break;
+        case '<':
+          query = query.filter(field, v => v < value);
+          break;
+        case '<=':
+          query = query.filter(field, v => v <= value);
+          break;
+        case '<>':
+          query = query.filter(field, v => v !== value);
+          break;
+      }
+    }
+  });
 
-  if (filters.player) {
-    query = query.filter('Player', filters.player);
-    appendCondition(`Player = '${filters.player}'`);
-  }
-
-  if (filters.teams) {
-    query = query.filter('Teams', filters.teams);
-    appendCondition(`Teams = '${filters.teams}'`);
-  }
-
-  if (filters.map) {
-    query = query.filter('Map', filters.map);
-    appendCondition(`Map = '${filters.map}'`);
-  }
-
-  // Handle order by descending on orderBy column or default to KD DESC, Kills DESC
+  // Sorting
   if (orderBy && typeof orderBy === 'string' && orderBy.trim() !== '') {
-    const col = orderBy.trim();
-    query = query.sort(col, 'desc');
-    sqlQuery += ` ORDER BY ${col} DESC`;
+    const columns = orderBy.split(',').map(c => c.trim()).filter(c => c !== '');
+    columns.forEach(col => {
+      query = query.sort(col, 'desc');
+    });
+    console.log('Sorting by:', columns.join(', ') + ' descending');
   } else {
     query = query.sort('KD', 'desc').sort('Kills', 'desc');
-    sqlQuery += " ORDER BY KD DESC, Kills DESC";
+    console.log('Sorting by: KD desc, Kills desc');
   }
-
-  console.log("Built SQL-like query:", sqlQuery);
 
   return query;
 };
@@ -81,58 +90,23 @@ const parseNumericFilter = (rawInput, keyName) => {
   return { operator, value };
 };
 
-const compare = {
-  '>': (a, b) => a > b,
-  '>=': (a, b) => a >= b,
-  '<': (a, b) => a < b,
-  '<=': (a, b) => a <= b,
-  '=': (a, b) => a === b,
-  '<>': (a, b) => a !== b,
-};
-
 module.exports = async (req, res) => {
   try {
     if (req.method === 'POST') {
       const filters = req.body.filters || {};
-      const orderBy = req.body.orderBy; // get orderBy from request body
+      const orderBy = req.body.orderBy;
       console.log('Received filters:', filters);
       console.log('Order by:', orderBy);
 
       const query = buildQuery(filters, orderBy);
-      let results = await query.getAll();
-
-      // Apply local numeric filters
-      const numericFilters = [
-        { field: 'KD', raw: filters.kd },
-        { field: 'Kills', raw: filters.kills },
-        { field: 'First_Kills', raw: filters.first_kills },
-      ];
-
-      for (const { field, raw } of numericFilters) {
-        if (raw) {
-          const { operator, value } = parseNumericFilter(raw, field);
-          results = results.filter(row => {
-            const val = parseFloat(row[field]);
-            return !isNaN(val) && compare[operator](val, value);
-          });
-          console.log(`Filtered ${field}: ${results.length} match ${operator} ${value}`);
-        }
-      }
-
-      // Sort fallback only if orderBy is missing, already sorted by buildQuery otherwise
-      if (!orderBy || orderBy.trim() === '') {
-        results.sort((a, b) => {
-          const kdDiff = parseFloat(b.KD) - parseFloat(a.KD);
-          return kdDiff !== 0 ? kdDiff : parseFloat(b.Kills) - parseFloat(a.Kills);
-        });
-      }
+      const results = await query.getAll();
 
       const formattedResults = results.map(formatRow);
       return res.status(200).json(formattedResults);
     }
 
     if (req.method === 'GET') {
-      const results = await xata.db.overview.select().getAll();
+      const results = await xata.db.overview.select().limit(100).getAll();
       const formattedResults = results.map(formatRow);
       return res.status(200).json(formattedResults);
     }

@@ -1,0 +1,20 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0k1i32do80pli9qomk0",
+    "operations": [
+      {
+        "alter_column": {
+          "name": "Winner",
+          "table": "overview",
+          "column": "Result"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0k1i32do80pli9qomk0",
+  "parent": "sql_f5d7cd281a083a",
+  "schema": "public",
+  "startedAt": "2025-05-17T05:05:17.197107Z"
+}

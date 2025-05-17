@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_e0c5de430d4a73",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE INDEX idx_overview_player ON overview USING btree (\"Player\")"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_e0c5de430d4a73",
+  "parent": "sql_25a152738d63c8",
+  "schema": "public",
+  "startedAt": "2025-05-17T04:09:37.24937Z"
+}

@@ -1,0 +1,22 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0jvdjiunsp1bris7ar0",
+    "operations": [
+      {
+        "alter_column": {
+          "up": "(SELECT CASE WHEN \"KD\" IS NULL THEN 0 ELSE \"KD\" END)",
+          "down": "(SELECT CASE WHEN \"KD\" IS NULL THEN 0 ELSE \"KD\" END)",
+          "table": "overview",
+          "column": "KD",
+          "nullable": false
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0jvdjiunsp1bris7ar0",
+  "parent": "mig_d0jvdgado80pli9qolt0",
+  "schema": "public",
+  "startedAt": "2025-05-17T02:39:10.659555Z"
+}

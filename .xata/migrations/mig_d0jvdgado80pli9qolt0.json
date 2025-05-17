@@ -1,0 +1,22 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0jvdgado80pli9qolt0",
+    "operations": [
+      {
+        "alter_column": {
+          "up": "(SELECT CASE WHEN \"Kills\" IS NULL THEN 0 ELSE \"Kills\" END)",
+          "down": "(SELECT CASE WHEN \"Kills\" IS NULL THEN 0 ELSE \"Kills\" END)",
+          "table": "overview",
+          "column": "Kills",
+          "nullable": false
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0jvdgado80pli9qolt0",
+  "parent": "mig_d0jvd4ado80pli9qols0",
+  "schema": "public",
+  "startedAt": "2025-05-17T02:38:58.132499Z"
+}

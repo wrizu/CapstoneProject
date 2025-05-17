@@ -1,0 +1,19 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0k0maar9e9qaqkp24dg",
+    "operations": [
+      {
+        "drop_column": {
+          "table": "overview",
+          "column": "result"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0k0maar9e9qaqkp24dg",
+  "parent": "sql_b9dcac70428baf",
+  "schema": "public",
+  "startedAt": "2025-05-17T04:06:02.379582Z"
+}

@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_96a004a87fdb36",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE INDEX idx_overview_agents ON overview USING btree (\"Agents\")"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_96a004a87fdb36",
+  "parent": "sql_e0c5de430d4a73",
+  "schema": "public",
+  "startedAt": "2025-05-17T04:09:37.417819Z"
+}
