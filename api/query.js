@@ -16,7 +16,8 @@ const buildQuery = (filters, orderBy) => {
   if (filters.player) query = query.filter('Player', filters.player);
   if (filters.teams) query = query.filter('Teams', filters.teams);
   if (filters.map) query = query.filter('Map', filters.map);
-
+  if (filters.stage) query = query.filter('Stage', filters.stage);
+  if (filters.match_type) query = query.filter('Match_Type', filters.match_type);
   // Filter by winning team
   if (filters.winner) {
     query = query.filter('Winner', filters.winner);

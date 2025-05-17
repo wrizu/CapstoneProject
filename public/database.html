@@ -237,6 +237,22 @@
     <option value="NRG"></option>
     <option value="Team Heretics"></option>
   </datalist>
+  <input id="filter-stage" type="text" placeholder="Stage (e.g., Playoffs)" list="stage-options" />
+<datalist id="stage-options">
+  <option value="Playoffs"></option>
+  <option value="Group Stage"></option>
+  <option value="Regular Season"></option>
+  <option value="Swiss Stage"></option>
+  <option value="Play-In Stage"></option>
+</datalist>
+<input id="filter-match_type" type="text" placeholder="Match Type (e.g., Upper Final)" list="match-type-options" />
+<datalist id="match-type-options">
+  <option value="Grand Final"></option>
+  <option value="Upper Semifinals"></option>
+  <option value="Lower Round 3"></option>
+  <option value="Upper Final"></option>
+  <option value="Elimination (B)"></option>
+</datalist>
 
   <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options" />
   <datalist id="filter-limit-options">
@@ -313,7 +329,10 @@
       kd: document.getElementById("filter-kd").value.trim(),
       kills: document.getElementById("filter-kills").value.trim(),
       first_kills: document.getElementById("filter-first_kills").value.trim(),
-      winner: document.getElementById("filter-winner").value.trim()
+      winner: document.getElementById("filter-winner").value.trim(),
+      stage: document.getElementById("filter-stage").value.trim(),
+      match_type: document.getElementById("filter-match_type").value.trim(),
+
     };
 
     document.getElementById("loading-spinner").style.display = "block";
