@@ -253,6 +253,23 @@
   <option value="Upper Final"></option>
   <option value="Elimination (B)"></option>
 </datalist>
+  <input id="filter-team_a" type="text" placeholder="Team A" list="team-a-options" />
+<datalist id="team-a-options">
+  <option value="Sentinels"></option>
+  <option value="LOUD"></option>
+  <option value="Fnatic"></option>
+  <option value="Paper Rex"></option>
+  <option value="G2 Esports"></option>
+</datalist>
+
+<input id="filter-team_b" type="text" placeholder="Team B" list="team-b-options" />
+<datalist id="team-b-options">
+  <option value="Sentinels"></option>
+  <option value="LOUD"></option>
+  <option value="Fnatic"></option>
+  <option value="Paper Rex"></option>
+  <option value="G2 Esports"></option>
+</datalist>
 
   <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options" />
   <datalist id="filter-limit-options">
@@ -263,9 +280,22 @@
     <option value="1000"></option>
   </datalist>
 
-  <input id="filter-columns" type="text" placeholder="Columns (e.g., Teams, Player, KD)" />
-  <input id="filter-orderby" type="text" placeholder="Order By (DESC) (e.g., KD)" />
-
+  <input id="filter-columns" type="text" placeholder="Columns (e.g., Teams, Player, KD)" list="filter-columns-options"/>
+  <datalist id="filter-columns-options">
+    <option value="Tournament, Teams, Map, Player, Agents, KD, Kills, Deaths, Team_A, Team_A_Score, Team_B, Team_B_Score, Winner"></option>
+    <option value="Player, Agents, KD, Kills, Deaths, First_Kills, First_Deaths"></option>
+    <option value="Tournament, Stage, Match_Name,	Map, Team_A, Team_A_Score, Team_B, Team_B_Score, Winner"></option>
+    <option value="Team_A, Team_B, Winner"></option>
+    <option value="Tournament, Stage, Match_Type, Match_Name, Map, Winner"></option>
+  </datalist>
+  <input id="filter-orderby" type="text" placeholder="Order By (DESC) (e.g., KD)" list="filter-orderby-options" />
+    <datalist id="filter-orderby-options">
+  <option value="KD, Kills, Deaths"></option>
+  <option value="Kills, Assists, First_Kills"></option>
+  <option value="Player, Agents, KD"></option>
+  <option value="Team_B_Score, Team_A_Score"></option>
+  <option value="Team_A_Score, Team_B_Score"></option>
+</datalist>
   <br />
   <button onclick="submitFilters()">Submit Filters</button>
   <div id="loading-spinner"><div class="spinner"></div></div>
@@ -291,56 +321,57 @@
   ];
   
   window.addEventListener("DOMContentLoaded", function() {
-  document.getElementById('loading-spinner').style.display = 'block';
-  document.getElementById('overview-section').style.display = 'none';
+    document.getElementById('loading-spinner').style.display = 'block';
+    document.getElementById('overview-section').style.display = 'none';
 
-  Papa.parse("overview.csv", {
-    download: true,
-    header: true,
-    complete: function(results) {
-      // Your existing filtering and display code
-      const filtered = results.data.filter(row =>
-        row.Side === "both" && row.Map !== "All Maps"
-      ).filter(row =>
-        !(row.Agents && row.Agents.includes(','))
-      );
+    Papa.parse("overview.csv", {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const filtered = results.data.filter(row =>
+          row.Side === "both" && row.Map !== "All Maps"
+        ).filter(row =>
+          !(row.Agents && row.Agents.includes(','))
+        );
 
-      displayCSV(filtered, headers, "overview-results");
+        displayCSV(filtered, headers, "overview-results");
 
-      // Hide spinner and show overview AFTER displayCSV finishes
-      document.getElementById('loading-spinner').style.display = 'none';
-      document.getElementById('overview-section').style.display = 'block';
-    },
-    error: function(err) {
-      document.getElementById('loading-spinner').style.display = 'none';  // Hide spinner on error
-      alert("Failed to load CSV: " + err.message);
-    }
+        document.getElementById('loading-spinner').style.display = 'none';
+        document.getElementById('overview-section').style.display = 'block';
+      },
+      error: function(err) {
+        document.getElementById('loading-spinner').style.display = 'none';
+        alert("Failed to load CSV: " + err.message);
+      }
+    });
   });
-});
 
-  // Submit filter values and fetch query results from server
   function submitFilters() {
     var filters = {
-      player: document.getElementById("filter-player").value.trim(),
-      teams: document.getElementById("filter-team").value.trim(),
-      tournament: document.getElementById("filter-tournament").value.trim(),
-      map: document.getElementById("filter-map").value.trim(),
-      agent: document.getElementById("filter-agent").value.trim(),
-      kd: document.getElementById("filter-kd").value.trim(),
-      kills: document.getElementById("filter-kills").value.trim(),
-      first_kills: document.getElementById("filter-first_kills").value.trim(),
-      winner: document.getElementById("filter-winner").value.trim(),
-      stage: document.getElementById("filter-stage").value.trim(),
-      match_type: document.getElementById("filter-match_type").value.trim(),
-
+    player: document.getElementById("filter-player")?.value.trim() || '',
+    teams: document.getElementById("filter-team")?.value.trim() || '',
+    tournament: document.getElementById("filter-tournament")?.value.trim() || '',
+    map: document.getElementById("filter-map")?.value.trim() || '',
+    agent: document.getElementById("filter-agent")?.value.trim() || '',
+    kd: document.getElementById("filter-kd")?.value.trim() || '',
+    kills: document.getElementById("filter-kills")?.value.trim() || '',
+    first_kills: document.getElementById("filter-first_kills")?.value.trim() || '',
+    winner: document.getElementById("filter-winner")?.value.trim() || '',
+    stage: document.getElementById("filter-stage")?.value.trim() || '',
+    match_type: document.getElementById("filter-match_type")?.value.trim() || '',
+    team_a: document.getElementById("filter-team_a")?.value.trim() || '',
+    team_b: document.getElementById("filter-team_b")?.value.trim() || ''
     };
+
+    const orderByInput = document.getElementById("filter-orderby").value.trim();
+    const orderBy = orderByInput || '';
 
     document.getElementById("loading-spinner").style.display = "block";
 
     fetch("/api/query", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filters: filters })
+      body: JSON.stringify({ filters: filters, orderBy: orderBy })
     })
     .then(response => response.json())
     .then(results => {
@@ -351,53 +382,19 @@
         return;
       }
 
-      // Apply filtering logic on frontend before displaying
       let filtered = results.filter(row =>
         row.Side === "both" && row.Map !== "All Maps"
       ).filter(row =>
         !(row.Agents && row.Agents.includes(','))
       );
 
-      // Read columns, limit, orderBy from inputs
       const columnsInput = document.getElementById("filter-columns").value.trim();
       const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
 
       const limitStr = document.getElementById("filter-limit").value.trim();
       const limit = limitStr ? parseInt(limitStr, 10) : 10;
 
-      // Parse orderBy as comma-separated list of columns for multi-column sorting
-      const orderByInput = document.getElementById("filter-orderby").value.trim();
-      const orderByColumns = orderByInput ? orderByInput.split(",").map(c => c.trim()).filter(c => columns.includes(c)) : [];
-
-      // Multi-column descending sort
-      if (orderByColumns.length > 0) {
-        filtered.sort((a, b) => {
-          for (const col of orderByColumns) {
-            const aVal = a[col];
-            const bVal = b[col];
-            if (!aVal && !bVal) continue;
-            if (!aVal) return 1;
-            if (!bVal) return -1;
-
-            const aNum = parseFloat(aVal);
-            const bNum = parseFloat(bVal);
-
-            if (!isNaN(aNum) && !isNaN(bNum)) {
-              if (bNum !== aNum) return bNum - aNum; // Descending numeric
-            } else {
-              const cmp = bVal.toString().localeCompare(aVal.toString());
-              if (cmp !== 0) return cmp; // Descending string
-            }
-          }
-          return 0; // all equal
-        });
-      }
-
-      // Limit the results to the specified number
-      filtered = filtered.slice(0, limit);
-
-      // Display with selected columns
-      displayQueryResults(filtered, columns);
+      displayQueryResults(filtered.slice(0, limit), columns);
     })
     .catch(error => {
       document.getElementById("loading-spinner").style.display = "none";
@@ -405,7 +402,6 @@
     });
   }
 
-  // Display query results in a table with selected columns
   function displayQueryResults(results, columns) {
     const container = document.getElementById("query-results");
 
@@ -416,7 +412,6 @@
     }
 
     let html = "<table><thead><tr>";
-
     columns.forEach(header => {
       html += `<th>${header}</th>`;
     });
@@ -435,7 +430,6 @@
     document.getElementById("query-results-section").style.display = "block";
   }
 
-  // Display CSV overview table
   function displayCSV(data, headers, containerId) {
     var container = document.getElementById(containerId);
     document.getElementById('loading-spinner').style.display = 'none';
@@ -445,17 +439,13 @@
       return;
     }
 
-    // Filter data again just in case
     const filtered = data.filter(row =>
       row.Side === "both" && row.Map !== "All Maps"
     ).filter(row =>
       !(row.Agents && row.Agents.includes(','))
     );
 
-    // Sort by KD descending (parse as float)
     filtered.sort((a, b) => parseFloat(b.KD) - parseFloat(a.KD));
-
-    // Take top 10 rows
     const topTen = filtered.slice(0, 10);
 
     var html = "<table><thead><tr>";
@@ -476,7 +466,6 @@
     container.innerHTML = html;
   }
 </script>
-
 
 
 </body>
