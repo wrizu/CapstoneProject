@@ -287,7 +287,7 @@
   <option value="<= 6"></option>
 </datalist>
 
-  <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options" />
+  <input id="filter-limit" type="text" placeholder="# of rows (e.g., 25)" list="filter-limit-options" />
   <datalist id="filter-limit-options">
     <option value="25"></option>
     <option value="100"></option>
@@ -383,7 +383,7 @@
       teamBScore: document.getElementById("filter-team_b_score")?.value.trim() || undefined,
       team_a: document.getElementById("filter-team_a")?.value.trim() || undefined,
       team_b: document.getElementById("filter-team_b")?.value.trim() || undefined,
-      limit: limit
+      
     };
 
     const orderByInput = document.getElementById("filter-orderby").value.trim() || undefined;
@@ -398,26 +398,28 @@
 })
   .then(response => response.json())
   .then(results => {
-    document.getElementById("loading-spinner").style.display = "none";
+  document.getElementById("loading-spinner").style.display = "none";
 
-    if (!results || results.length === 0) {
-      displayQueryResults([], []);
-      return;
-    }
+  if (!results || results.length === 0) {
+    displayQueryResults([], []);
+    return;
+  }
 
-    // Set First_Kills and First_Deaths to 0 if undefined or null
-    
+  // Filter out unwanted rows
+  let filtered = results.filter(row =>
+    row.Side === "both" && row.Map !== "All Maps"
+  ).filter(row =>
+    !(row.Agents && row.Agents.includes(','))
+  );
 
-    let filtered = results.filter(row =>
-      row.Side === "both" && row.Map !== "All Maps"
-    ).filter(row =>
-      !(row.Agents && row.Agents.includes(','))
-    );
+  // ✅ Limit rows shown by slicing the filtered array
+  filtered = filtered.slice(0, limit);
 
-    const columnsInput = document.getElementById("filter-columns").value.trim();
-    const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
+  const columnsInput = document.getElementById("filter-columns").value.trim();
+  const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
 
-    displayQueryResults(filtered, columns);
+  // Display the filtered and sliced results
+  displayQueryResults(filtered, columns);
   })
   .catch(error => {
     document.getElementById("loading-spinner").style.display = "none";

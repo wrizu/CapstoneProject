@@ -112,35 +112,42 @@ const parseNumericFilter = (rawInput, keyName) => {
   const match = rawInput.match(/^(>=|<=|<>|>|<|=)?\s*(\d+(\.\d+)?)$/);
   if (!match) throw new Error(`Invalid ${keyName} format: ${rawInput}`);
   const operator = match[1] || '=';
-  const value = parseInt(match[2]);
+  const value = parseFloat(match[2]);
+
   return { operator, value };
 };
 
 module.exports = async (req, res) => {
   try {
     if (req.method === 'POST') {
-      const filters = req.body.filters || {};
-      const orderBy = req.body.orderBy;
+     const filters = req.body.filters || {};
+const orderBy = req.body.orderBy;
 
-      console.log('Received filters:', filters);
-      console.log('Order by:', orderBy);
 
-      const query = buildQuery(filters, orderBy);
-      const results = await query.getAll();
+console.log('Received filters:', filters);
+console.log('Order by:', orderBy);
+console.log('Limit:', limit);
 
-      const formattedResults = results.map(row => {
-        if (row.First_Deaths == null) {
-          row.First_Deaths = 0;
-        }
-        if (row.First_Kills == null) {
-          row.First_Kills = 0;
-        }
-        return formatRow(row);
-      });
+let query = buildQuery(filters, orderBy);
 
-      
+const results = await query.getAll();
 
-      return res.status(200).json(formattedResults);
+
+
+
+
+const formattedResults = results.map(row => {
+  if (row.First_Deaths == null) {
+    row.First_Deaths = 0;
+  }
+  if (row.First_Kills == null) {
+    row.First_Kills = 0;
+  }
+  return formatRow(row);
+});
+
+
+return res.status(200).json(formattedResults);
     }
 
     if (req.method === 'GET') {
