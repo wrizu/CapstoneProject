@@ -396,34 +396,55 @@
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ filters: filters, orderBy: orderBy })
 })
-  .then(response => response.json())
-  .then(results => {
-  document.getElementById("loading-spinner").style.display = "none";
-
-  if (!results || results.length === 0) {
-    displayQueryResults([], []);
-    return;
-  }
-
-  // Filter out unwanted rows
-  let filtered = results.filter(row =>
-    row.Side === "both" && row.Map !== "All Maps"
-  ).filter(row =>
-    !(row.Agents && row.Agents.includes(','))
-  );
-
-  // ✅ Limit rows shown by slicing the filtered array
-  filtered = filtered.slice(0, limit);
-
-  const columnsInput = document.getElementById("filter-columns").value.trim();
-  const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
-
-  // Display the filtered and sliced results
-  displayQueryResults(filtered, columns);
-  })
-  .catch(error => {
+  .then(async response => {
     document.getElementById("loading-spinner").style.display = "none";
-    alert("Error querying database: " + error.message);
+
+    if (!response.ok) {
+      // Try to parse error message from response JSON
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { error: 'Unknown error' };
+      }
+      alert("Error: " + (errorData.error || "Unknown error"));
+      throw new Error(errorData.error);
+    }
+    return response.json();
+  })
+  .then(results => {
+    if (!Array.isArray(results)) {
+      alert("Unexpected response format from server.");
+      console.error("Unexpected response:", results);
+      displayQueryResults([], []);
+      return;
+    }
+
+    if (results.length === 0) {
+      displayQueryResults([], []);
+      return;
+    }
+
+    // Filter out unwanted rows
+    let filtered = results.filter(row =>
+      row.Side === "both" && row.Map !== "All Maps"
+    ).filter(row =>
+      !(row.Agents && row.Agents.includes(','))
+    );
+
+    // Limit rows shown by slicing the filtered array
+    filtered = filtered.slice(0, limit);
+
+    const columnsInput = document.getElementById("filter-columns").value.trim();
+    const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
+
+    // Display the filtered and sliced results
+    displayQueryResults(filtered, columns);
+  })
+  .catch(err => {
+    console.error("Fetch error:", err);
+    document.getElementById("loading-spinner").style.display = "none";
+    displayQueryResults([], []);
   });
   }
 
