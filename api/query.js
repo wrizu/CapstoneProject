@@ -126,7 +126,7 @@ const orderBy = req.body.orderBy;
 
 console.log('Received filters:', filters);
 console.log('Order by:', orderBy);
-console.log('Limit:', limit);
+
 
 let query = buildQuery(filters, orderBy);
 
