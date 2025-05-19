@@ -270,6 +270,22 @@
   <option value="Paper Rex"></option>
   <option value="G2 Esports"></option>
 </datalist>
+<input id="filter-team_a_score" type="text" placeholder="Team A Score (e.g., > 10)" list="team_a_score-options" />
+<datalist id="team_a_score-options">
+  <option value="> 10"></option>
+  <option value="< 13"></option>
+  <option value=">= 8"></option>
+  <option value="= 5"></option>
+  <option value="<= 6"></option>
+</datalist>
+<input id="filter-team_b_score" type="text" placeholder="Team B Score (e.g., > 10)" list="team_b_score-options" />
+<datalist id="team_b_score-options">
+  <option value="> 10"></option>
+  <option value="< 13"></option>
+  <option value=">= 8"></option>
+  <option value="= 5"></option>
+  <option value="<= 6"></option>
+</datalist>
 
   <input id="filter-limit" type="text" pattern="\d*" placeholder="# of rows (e.g., 25)" list="filter-limit-options" />
   <datalist id="filter-limit-options">
@@ -319,15 +335,15 @@
     'Tournament', 'Stage', 'Match_Type', 'Match_Name', 'Map', 'Player', 'Teams', 'Agents', 'KD', 'Kills', 'Deaths', 'Assists',
     'Team_A','Team_A_Score', 'Team_B', 'Team_B_Score', 'Winner','First_Kills','First_Deaths'
   ];
-  
-  window.addEventListener("DOMContentLoaded", function() {
+
+  window.addEventListener("DOMContentLoaded", function () {
     document.getElementById('loading-spinner').style.display = 'block';
     document.getElementById('overview-section').style.display = 'none';
 
     Papa.parse("overview.csv", {
       download: true,
       header: true,
-      complete: function(results) {
+      complete: function (results) {
         const filtered = results.data.filter(row =>
           row.Side === "both" && row.Map !== "All Maps"
         ).filter(row =>
@@ -339,7 +355,7 @@
         document.getElementById('loading-spinner').style.display = 'none';
         document.getElementById('overview-section').style.display = 'block';
       },
-      error: function(err) {
+      error: function (err) {
         document.getElementById('loading-spinner').style.display = 'none';
         alert("Failed to load CSV: " + err.message);
       }
@@ -347,59 +363,66 @@
   });
 
   function submitFilters() {
+    const limitStr = document.getElementById("filter-limit")?.value.trim();
+    const parsed = parseInt(limitStr, 10);
+    const limit = (parsed > 0) ? parsed : 10;
+
     var filters = {
-    player: document.getElementById("filter-player")?.value.trim() || '',
-    teams: document.getElementById("filter-team")?.value.trim() || '',
-    tournament: document.getElementById("filter-tournament")?.value.trim() || '',
-    map: document.getElementById("filter-map")?.value.trim() || '',
-    agent: document.getElementById("filter-agent")?.value.trim() || '',
-    kd: document.getElementById("filter-kd")?.value.trim() || '',
-    kills: document.getElementById("filter-kills")?.value.trim() || '',
-    first_kills: document.getElementById("filter-first_kills")?.value.trim() || '',
-    winner: document.getElementById("filter-winner")?.value.trim() || '',
-    stage: document.getElementById("filter-stage")?.value.trim() || '',
-    match_type: document.getElementById("filter-match_type")?.value.trim() || '',
-    team_a: document.getElementById("filter-team_a")?.value.trim() || '',
-    team_b: document.getElementById("filter-team_b")?.value.trim() || ''
+      player: document.getElementById("filter-player")?.value.trim() || undefined,
+      teams: document.getElementById("filter-team")?.value.trim() || undefined,
+      tournament: document.getElementById("filter-tournament")?.value.trim() || undefined,
+      map: document.getElementById("filter-map")?.value.trim() || undefined,
+      agent: document.getElementById("filter-agent")?.value.trim() || undefined,
+      kd: document.getElementById("filter-kd")?.value.trim() || undefined,
+      kills: document.getElementById("filter-kills")?.value.trim() || undefined,
+      first_kills: document.getElementById("filter-first_kills")?.value.trim() || undefined,
+      winner: document.getElementById("filter-winner")?.value.trim() || undefined,
+      stage: document.getElementById("filter-stage")?.value.trim() || undefined,
+      match_type: document.getElementById("filter-match_type")?.value.trim() || undefined,
+      teamAScore: document.getElementById("filter-team_a_score")?.value.trim() || undefined,
+      teamBScore: document.getElementById("filter-team_b_score")?.value.trim() || undefined,
+      team_a: document.getElementById("filter-team_a")?.value.trim() || undefined,
+      team_b: document.getElementById("filter-team_b")?.value.trim() || undefined,
+      limit: limit
     };
 
-    const orderByInput = document.getElementById("filter-orderby").value.trim();
-    const orderBy = orderByInput || '';
+    const orderByInput = document.getElementById("filter-orderby").value.trim() || undefined;
+    const orderBy = orderByInput || undefined;
 
     document.getElementById("loading-spinner").style.display = "block";
 
-    fetch("/api/query", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filters: filters, orderBy: orderBy })
-    })
-    .then(response => response.json())
-    .then(results => {
-      document.getElementById("loading-spinner").style.display = "none";
+   fetch("/api/query", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ filters: filters, orderBy: orderBy })
+})
+  .then(response => response.json())
+  .then(results => {
+    document.getElementById("loading-spinner").style.display = "none";
 
-      if (!results || results.length === 0) {
-        displayQueryResults([], []);
-        return;
-      }
+    if (!results || results.length === 0) {
+      displayQueryResults([], []);
+      return;
+    }
 
-      let filtered = results.filter(row =>
-        row.Side === "both" && row.Map !== "All Maps"
-      ).filter(row =>
-        !(row.Agents && row.Agents.includes(','))
-      );
+    // Set First_Kills and First_Deaths to 0 if undefined or null
+    
 
-      const columnsInput = document.getElementById("filter-columns").value.trim();
-      const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
+    let filtered = results.filter(row =>
+      row.Side === "both" && row.Map !== "All Maps"
+    ).filter(row =>
+      !(row.Agents && row.Agents.includes(','))
+    );
 
-      const limitStr = document.getElementById("filter-limit").value.trim();
-      const limit = limitStr ? parseInt(limitStr, 10) : 10;
+    const columnsInput = document.getElementById("filter-columns").value.trim();
+    const columns = columnsInput ? columnsInput.split(",").map(c => c.trim()) : headers;
 
-      displayQueryResults(filtered.slice(0, limit), columns);
-    })
-    .catch(error => {
-      document.getElementById("loading-spinner").style.display = "none";
-      alert("Error querying database: " + error.message);
-    });
+    displayQueryResults(filtered, columns);
+  })
+  .catch(error => {
+    document.getElementById("loading-spinner").style.display = "none";
+    alert("Error querying database: " + error.message);
+  });
   }
 
   function displayQueryResults(results, columns) {
@@ -410,7 +433,7 @@
       document.getElementById("query-results-section").style.display = "block";
       return;
     }
-
+    console.log("Results: ", results);
     let html = "<table><thead><tr>";
     columns.forEach(header => {
       html += `<th>${header}</th>`;
@@ -420,7 +443,7 @@
     results.forEach(row => {
       html += "<tr>";
       columns.forEach(header => {
-        html += `<td>${row[header] || ""}</td>`;
+        html += `<td>${row[header] || ' '}</td>`;
       });
       html += "</tr>";
     });
@@ -449,14 +472,14 @@
     const topTen = filtered.slice(0, 10);
 
     var html = "<table><thead><tr>";
-    headers.forEach(function(header) {
+    headers.forEach(function (header) {
       html += "<th>" + header + "</th>";
     });
     html += "</tr></thead><tbody>";
 
-    topTen.forEach(function(row) {
+    topTen.forEach(function (row) {
       html += "<tr>";
-      headers.forEach(function(header) {
+      headers.forEach(function (header) {
         html += "<td>" + (row[header] || "") + "</td>";
       });
       html += "</tr>";

@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_9880303bf0918b",
+    "operations": [
+      {
+        "sql": {
+          "up": "ALTER TABLE overview RENAME COLUMN _pgroll_new_first_deaths TO \"First_Deaths\""
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_9880303bf0918b",
+  "parent": "mig_d0kn4gir9e9qaqkp28k0",
+  "schema": "public",
+  "startedAt": "2025-05-18T05:38:43.227522Z"
+}

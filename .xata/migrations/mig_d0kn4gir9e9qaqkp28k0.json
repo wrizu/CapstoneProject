@@ -1,0 +1,19 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0kn4gir9e9qaqkp28k0",
+    "operations": [
+      {
+        "drop_column": {
+          "table": "overview",
+          "column": "First_Kills"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0kn4gir9e9qaqkp28k0",
+  "parent": "mig_d0kn4d2do80pli9qos50",
+  "schema": "public",
+  "startedAt": "2025-05-18T05:38:12.048251Z"
+}

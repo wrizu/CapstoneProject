@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_fe4f04ff62af3c",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE INDEX idx_teama_score ON overview USING btree (\"Team_A_Score\")"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_fe4f04ff62af3c",
+  "parent": "sql_06f689a43fea4d",
+  "schema": "public",
+  "startedAt": "2025-05-18T03:37:11.306786Z"
+}

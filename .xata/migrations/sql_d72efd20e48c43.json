@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_d72efd20e48c43",
+    "operations": [
+      {
+        "sql": {
+          "up": "CREATE INDEX idx_teamb_score ON overview USING btree (\"Team_B_Score\")"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_d72efd20e48c43",
+  "parent": "sql_fe4f04ff62af3c",
+  "schema": "public",
+  "startedAt": "2025-05-18T03:37:11.46715Z"
+}

@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_384caf6bad72eb",
+    "operations": [
+      {
+        "sql": {
+          "up": "ALTER TABLE overview ALTER COLUMN \"First_Deaths\" SET DEFAULT 0"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_384caf6bad72eb",
+  "parent": "sql_2cc8f35c55dc56",
+  "schema": "public",
+  "startedAt": "2025-05-18T04:23:55.659378Z"
+}

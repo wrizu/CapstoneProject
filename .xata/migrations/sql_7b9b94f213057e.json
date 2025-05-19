@@ -1,0 +1,18 @@
+{
+  "done": true,
+  "migration": {
+    "name": "sql_7b9b94f213057e",
+    "operations": [
+      {
+        "sql": {
+          "up": "ALTER TABLE overview ADD COLUMN _pgroll_new_first_deaths int DEFAULT 0 NOT NULL, ADD COLUMN _pgroll_new_first_kills int DEFAULT 0 NOT NULL"
+        }
+      }
+    ]
+  },
+  "migrationType": "inferred",
+  "name": "sql_7b9b94f213057e",
+  "parent": "sql_384caf6bad72eb",
+  "schema": "public",
+  "startedAt": "2025-05-18T05:24:12.094421Z"
+}
