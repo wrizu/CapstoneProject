@@ -88,7 +88,7 @@ const buildQuery = (filters, orderBy) => {
 };
 
 const formatValue = (key, value) => {
-  if (value === null || value === undefined) {
+  if (value == null) {
     if (key === 'First_Kills' || key === 'First_Deaths') {
       return 0;
     }
@@ -129,10 +129,10 @@ module.exports = async (req, res) => {
       const results = await query.getAll();
 
       const formattedResults = results.map(row => {
-        if (row.First_Deaths === null || row.First_Deaths === undefined) {
+        if (row.First_Deaths == null) {
           row.First_Deaths = 0;
         }
-        if (row.First_Kills === null || row.First_Kills === undefined) {
+        if (row.First_Kills == null) {
           row.First_Kills = 0;
         }
         return formatRow(row);
@@ -147,10 +147,10 @@ module.exports = async (req, res) => {
       const results = await xata.db.overview.select().getAll();
 
       const formattedResults = results.map(row => {
-        if (row.First_Deaths === null || row.First_Deaths === undefined) {
+        if (row.First_Deaths === null || row.First_Deaths == undefined) {
           row.First_Deaths = 0;
         }
-        if (row.First_Kills === null || row.First_Kills === undefined) {
+        if (row.First_Kills === null || row.First_Kills == undefined) {
           row.First_Kills = 0;
         }
         return formatRow(row);

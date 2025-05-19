@@ -443,7 +443,7 @@
     results.forEach(row => {
       html += "<tr>";
       columns.forEach(header => {
-        html += `<td>${row[header] || ' '}</td>`;
+        html += `<td>${row[header] ?? ' '}</td>`;
       });
       html += "</tr>";
     });
