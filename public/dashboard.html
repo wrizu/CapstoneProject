@@ -224,14 +224,12 @@
         <thead>
           <tr>
             <th>Team</th>
-            <th>4v5s Played</th>
-            <th>5v4s Played</th>
-            <th>Total Advantages</th>
-            <th>Total Disadvantages</th>
+            <th>Total Rounds</th>
             <th>4v5 WR</th>
             <th>5v4 WR</th>
-            <th>Advantages WR</th>
             <th>Disadvantages WR</th>
+            <th>Advantages WR</th>
+            
           </tr>
         </thead>
         <tbody></tbody>
@@ -389,7 +387,7 @@ const tableCSVMapping = {
   'table-map-winrates-stats': 'team_map_winrates_final_table.csv',
   'table-post-plants-stats': 'team-post-plants-final_table.csv',
   'table-round-performance-stats': 'team_round_performance_final_table.csv',
-  'table-xvy-performance-stats': 'team_xvy_performance_final_table.csv'
+  'table-xvy-performance-stats': 'new_xvy_performance.csv'
 };
 
 Object.entries(tableCSVMapping).forEach(([id, path]) => populateTableFromCSV(id, path));
