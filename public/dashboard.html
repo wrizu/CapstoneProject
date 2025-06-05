@@ -103,10 +103,12 @@
     }
 
     .analyst-table table {
-      width: 100%;
-      border-collapse: collapse;
-      flex-grow: 1;
-    }
+  width: 100%;
+  border-collapse: collapse;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+}
     .analyst-table th,
     .analyst-table td {
       border-bottom: 1px solid #ddd;
@@ -183,15 +185,19 @@
     </div>
 
     <div class="analyst-table" id="table-post-plants-stats">
-      <div class="analyst-table-title" contenteditable="true">Team Post Plant Performance</div>
+      <div class="analyst-table-title" contenteditable="true">Team Win Condition Performance</div>
       <table>
         <thead>
           <tr>
             <th>Team</th>
-            <th>Post Plants Played</th>
+            <th>Total Rounds</th>
+            <th>Kills Pre Plant WR</th>
+            <th>Kills Post Plant WR</th>
             <th>Post Plant ATK WR</th>
             <th>Post Plant Retake WR</th>
-            <th>Overall Post Plant WR</th>
+            <th>Bomb WR</th>
+            <th>Defuse WR</th>
+            <th>Time WR</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -342,9 +348,14 @@ async function populateTableFromCSV(id, path) {
 
     const columnColorMaps = {};
 
+    const hasAverageRow = data.some(row => {
+      const team = row['Team'] || '';
+      return team.toLowerCase().includes('average');
+    });
+
     headers.forEach(h => {
       const values = data
-        .filter(row => isPercent(row[h]) && !(row['Team'] || '').toLowerCase().includes('average'))
+        .filter(row => isPercent(row[h]) && (!hasAverageRow || !(row['Team'] || '').toLowerCase().includes('average')))
         .map(row => pctFloat(row[h]));
       if (values.length > 0) {
         columnColorMaps[h] = generateColorMap(values);
@@ -354,7 +365,7 @@ async function populateTableFromCSV(id, path) {
     data.forEach(row => {
       const tr = document.createElement('tr');
       const team = row['Team'] || '';
-      const avgRow = team.toLowerCase().includes('average');
+      const avgRow = hasAverageRow && team.toLowerCase().includes('average');
       if (avgRow) tr.classList.add('average');
 
       headers.forEach(h => {
@@ -368,7 +379,7 @@ async function populateTableFromCSV(id, path) {
         } else if (isPercent(val)) {
           const p = pctFloat(val);
           const colorMap = columnColorMaps[h];
-          td.style.backgroundColor = colorMap[p] || '#ffffff';
+          td.style.backgroundColor = colorMap?.[p] || '#ffffff';
           td.classList.add('percent-cell');
         }
 
@@ -383,9 +394,10 @@ async function populateTableFromCSV(id, path) {
   }
 }
 
+
 const tableCSVMapping = {
   'table-map-winrates-stats': 'team_map_winrates_final_table.csv',
-  'table-post-plants-stats': 'team-post-plants-final_table.csv',
+  'table-post-plants-stats': 'team_win_conditions_final.csv',
   'table-round-performance-stats': 'team_round_performance_final_table.csv',
   'table-xvy-performance-stats': 'new_xvy_performance.csv'
 };

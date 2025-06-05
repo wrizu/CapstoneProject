@@ -1,302 +1,296 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="How EDward Gaming won Champions 2024 in Valorant. A detailed look at their players and coach.">
-    <meta name="keywords" content="EDward Gaming, Valorant, Champions 2024, players, coach">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDG Champions 2024</title>
+  <meta name="description" content="How EDward Gaming won Champions 2024 in Valorant." />
+  <meta name="keywords" content="EDward Gaming, Valorant, Champions 2024" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
+ <style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
     margin: 0;
-    font-family: 'Roboto';
-    background-color: #ffffff;
-    color: #000000;
-}
+    font-family: 'Roboto', sans-serif;
+    background-color: white;
+    color: #000;
+  }
 
-.header {
+  .header {
     background: #111;
     padding: 20px 0;
     text-align: center;
     position: relative;
-}
+  }
 
-.header h1 {
+  .header h1 {
     color: rgb(255, 255, 255);
     margin: 0;
-}
+  }
 
-.header img.left-logo {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    height: 60px;
-}
-
-.header img.right-logo {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    height: 60px;
-}
-
-.header .subtitle {
+  .header .subtitle {
     color: #ccc;
     margin: 5px 0 0;
     font-size: 1rem;
-}
+  }
 
-.toolbar {
+  .header img.left-logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 80px;
+  }
+
+  .header img.right-logo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 80px;
+  }
+
+  .toolbar {
     background-color: #333;
     padding: 10px 0;
     text-align: center;
-    width: 100%;
-}
+  }
 
-.toolbar a {
-    color: white;
+  .toolbar a {
+    color: rgb(255, 255, 255);
     text-decoration: none;
     margin: 0 10px;
     padding: 8px 16px;
     font-weight: bold;
     border-radius: 5px;
     transition: background-color 0.3s;
-}
+  }
 
-.toolbar a:hover {
+  .toolbar a:hover {
     background-color: #FF4655;
+  }
+
+  .section-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 0px 20px 20px; /* valid top padding to move things up */
+  margin-top: 0px;
 }
 
-.section-wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 95%;
-    margin: 40px auto;
-    gap: 20px;
+  .players-section,
+.coach-section, .team-members-section {
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  margin-bottom: -8px; /* same bottom margin to match spacing */
 }
 
-.players-section {
-    width: 51%;  /* smaller width */
-    display: flex;
-    flex-direction: column;
-    align-items: center;   /* center players container and heading */
-    padding-left: 20px;
-}
-
-.coach-section {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: auto;
-}
-.coach-container {
-    display: flex;         
-    justify-content: center;   
-    align-items: center;       
-    gap: 16px;                 
-    width: 100%;               
-    padding-left: 20px;        
-    box-sizing: border-box;   
-}
-.players-section h2,
-.coach-section h2 {
+  .players-section h2,
+  .coach-section h2, 
+  .team-members-section h2 {
     text-align: center;
-    margin-bottom: 20px;
-    width: 100%;
-}
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+  }
 
-/* Players container aligned center to support centered second row */
-.players-container {
+  .players-container,
+  .coach-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* center all player cards */
-    gap: 16px;
+    justify-content: center;
+    column-gap: 12px;
+    row-gap: 12px;
+  }
+ 
+.team-members-section a img {
+  max-width: 150px;           /* fixed size to keep height controlled */
+  height: auto;
+  background: none;  /* remove white background behind PNG */
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+.team-members-section a img:hover {
+  transform: scale(1.03);
 }
 
-/* Player and Coach cards same size and style */
-.player,
-.coach {
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
-    flex: 0 1 calc(30% - 10px); /* exact same width */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+
+  .card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  padding: 10px 20px;
+  width: 250px;
+  height: 180px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.player:hover,
-.coach:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
-
-.player img,
-.coach img {
-    height: 80px;
-    width: 80px;
+  .card img {
+    height: 60px;
+    width: 60px;
     border-radius: 50%;
     border: 2px solid #FF4655;
-    margin-bottom: 10px;
-}
+    margin-bottom: 8px;
+  }
 
-.player-name,
-.coach-name {
-    font-size: 1.1em;
+  .card-name {
+    font-size: 1rem;
     font-weight: bold;
-}
+    margin-bottom: 4px;
+  }
 
-.player-role,
-.coach-role {
-    font-size: 0.95em;
-    font-weight: normal;
-}
+  .card-role {
+    font-size: 0.85rem;
+  }
 
-.player-role div,
-.coach-role div {
-    margin-bottom: 3px;
-}
+  .card-role div {
+    margin-bottom: 2px;
+  }
 
-.player-role a,
-.coach-role a {
+  .card-role a {
     color: #00aaff;
     text-decoration: none;
-}
+  }
 
-.player-role a:hover,
-.coach-role a:hover {
+  .card-role a:hover {
     text-decoration: underline;
-}
+  }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-    .section-wrapper {
-        flex-direction: column;
-        align-items: center;
-        width: 95%;
+  @media (max-width: 480px) {
+    .card {
+      flex: 0 1 100%;
+      max-width: 100%;
     }
 
-    .players-section,
-    .coach-section {
-        width: 100%;
-        padding-left: 0;
-        align-items: center;
+    .header h1 {
+      font-size: 1.2rem;
     }
 
-    .player,
-    .coach {
-        flex: 0 1 45%;
+    .toolbar a {
+      font-size: 0.8rem;
+      padding: 6px 10px;
     }
-}
 
-    </style>
+    .header img.left-logo,
+    .header img.right-logo {
+      height: 30px;
+    }
+  }
+</style>
 </head>
 <body>
-    <div class="header">
-        <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" alt="Valorant Logo">
-        <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" alt="UW Bothell Logo">
-        <h1>How EDward Gaming Won Champions 2024</h1>
-        <p class="subtitle">By: Jack Burkhalter</p>
-    </div>
+  <div class="header">
+    <h1>How EDward Gaming Won Champions 2024</h1>
+    <p class="subtitle">By: Jack Burkhalter</p>
+    <img class="left-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" />
+    <img class="right-logo" src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" />
+  </div>
 
-    <div class="toolbar">
-        <a href="about.html">About</a>
-        <a href="index.html">Home</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="database.html">Database</a>
-        <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
-    </div>
+  <div class="toolbar">
+    <a href="about.html">About</a>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="database.html">Database</a>
+    <a href="https://pbs.twimg.com/media/GV1VL3jbcAAPfGc?format=jpg&name=large" target="_blank">Full Bracket</a>
+  </div>
 
-    <div class="section-wrapper">
+
+  <div class="section-wrapper">
+    <div class="team-members-section">
+  <h2>EDward Gaming Team</h2>
+  <a href='https://en.wikipedia.org/wiki/Edward_Gaming' target='_blank'>
+    <img src="EDG-logo.png" alt="EDG Logo">
+</a>
+</div>
+
   <div class="players-section">
     <h2>Players</h2>
     <div class="players-container">
-
-      <div class="player">
-        <img src="https://owcdn.net/img/677fe435edc57.png" alt="Zhang Smoggy Zhao" />
-        <div class="player-name">Zhang "Smoggy" Zhao</div>
-        <div class="player-role">
+      <div class="card">
+        <img src="https://owcdn.net/img/677fe435edc57.png" alt="Smoggy" />
+        <div class="card-name">Zhang "Smoggy" Zhao</div>
+        <div class="card-role">
           <div>Role: Controller</div>
           <div><a href="https://www.vlr.gg/player/4742/smoggy" target="_blank">Smoggy's VLR</a></div>
         </div>
       </div>
 
-      <div class="player">
-        <img src="https://owcdn.net/img/677fe4289bb34.png" alt="Wan CHICHOO Shunzhi" />
-        <div class="player-name">Wan "CHICHOO" Shunzhi</div>
-        <div class="player-role">
+      <div class="card">
+        <img src="https://owcdn.net/img/677fe4289bb34.png" alt="CHICHOO" />
+        <div class="card-name">Wan "CHICHOO" Shunzhi</div>
+        <div class="card-role">
           <div>Role: Sentinel/Controller</div>
           <div><a href="https://www.vlr.gg/player/15559/chichoo" target="_blank">CHICHOO's VLR</a></div>
         </div>
       </div>
 
-      <div class="player">
-        <img src="https://owcdn.net/img/677fe418eaaf8.png" alt="Hsien S1Mon Meng-Hsun" />
-        <div class="player-name">Hsien "S1Mon" Meng-Hsun</div>
-        <div class="player-role">
+      <div class="card">
+        <img src="https://owcdn.net/img/677fe418eaaf8.png" alt="S1Mon" />
+        <div class="card-name">Hsien "S1Mon" Meng-Hsun</div>
+        <div class="card-role">
           <div>Role: Initiator</div>
           <div><a href="https://www.vlr.gg/player/13768/s1mon" target="_blank">S1Mon's VLR</a></div>
         </div>
       </div>
 
-      <div class="player">
-        <img src="https://owcdn.net/img/677fe4210de6e.png" alt="Wang nobody Senxu" />
-        <div class="player-name">Wang "nobody" Senxu</div>
-        <div class="player-role">
-          <div>Role: In Game Lead / Initiator</div>
+      <div class="card">
+        <img src="https://owcdn.net/img/677fe4210de6e.png" alt="nobody" />
+        <div class="card-name">Wang "nobody" Senxu</div>
+        <div class="card-role">
+          <div>Role: IGL / Initiator</div>
           <div><a href="https://www.vlr.gg/player/3017/nobody" target="_blank">nobody's VLR</a></div>
         </div>
       </div>
 
-      <div class="player">
-        <img src="https://owcdn.net/img/677fe40edf9da.png" alt="Zheng KANG KANG Yongkang" />
-        <div class="player-name">Zheng "KANG KANG" Yongkang</div>
-        <div class="player-role">
+      <div class="card">
+        <img src="https://owcdn.net/img/677fe40edf9da.png" alt="ZmjjKK" />
+        <div class="card-name">Zheng "KANG KANG" Yongkang</div>
+        <div class="card-role">
           <div>Role: Duelist</div>
           <div>Aliases: ZmjjKK, KK</div>
           <div><a href="https://www.vlr.gg/player/3520/zmjjkk" target="_blank">ZmjjKK's VLR</a></div>
         </div>
       </div>
-
     </div>
   </div>
 
   <div class="coach-section">
-  <h2>Coaches</h2>
+    <h2>Coaches</h2>
+    <div class="coach-container">
+      <div class="card">
+        <img src="https://owcdn.net/img/677fe44baa46b.png" alt="Muggle" />
+        <div class="card-name">Tang "Muggle" Shijun</div>
+        <div class="card-role">
+          <div>Role: Head Coach</div>
+          <div><a href="https://liquipedia.net/valorant/Muggle" target="_blank">Muggle's VLR</a></div>
+        </div>
+      </div>
 
-  <div class="coach-container">
-    <div class="coach">
-      <img src="https://owcdn.net/img/677fe44baa46b.png" alt="Tang Muggle Shijun"/>
-                    <div class="coach-name">Tang "Muggle" Shijun</div>
-                    <div class="coach-role">
-                        <div>Role: Head Coach</div>
-                        <div><a href="https://liquipedia.net/valorant/Muggle" target="_blank">Muggle's VLR</a></div>
+      <div class="card">
+        <img src="https://prosettings.net/cdn-cgi/image/dpr=1%2Cf=auto%2Cfit=contain%2Cg=top%2Ch=200%2Cq=99%2Csharpen=1%2Cw=200/wp-content/uploads/haodong.png" alt="Haodong" />
+        <div class="card-name">Guo "Haodong" Haodong</div>
+        <div class="card-role">
+          <div>Role: Assistant Coach</div>
+          <div><a href="https://liquipedia.net/valorant/Haodong" target="_blank">Haodong's VLR</a></div>
+        </div>
+      </div>
     </div>
-    </div>
-
-    <div class="coach">
-      <img src="https://prosettings.net/cdn-cgi/image/dpr=1%2Cf=auto%2Cfit=contain%2Cg=top%2Ch=200%2Cq=99%2Csharpen=1%2Cw=200/wp-content/uploads/haodong.png" alt="Guo Haodong" />
-      <div class="coach-name">Guo "Haodong" Haodong</div>
-      <div class="coach-role">
-        <div>Role: Assistant Coach</div>
-        <div><a href="https://liquipedia.net/valorant/Haodong" target="_blank">Haodong's VLR</a></div>
-    </div>
-    </div>
-  </div> <!-- end coach-container -->
-</div> <!-- end coach-section -->
-
-
+  </div>
 </div>
-
 
 </body>
 </html>
