@@ -81,6 +81,12 @@
       gap: 15px; /* smaller gap between columns */
       margin: 15px 15px 20px; /* only 15px margin left/right */
     }
+    .interesting-stats-header {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 40px 0 20px;
+}
 
     .analyst-table {
       border: 2px solid #ccc;
@@ -137,6 +143,44 @@
       font-weight: 600;
       user-select: none;
     }
+   
+.main-image {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.main-image img {
+  width: 49%;
+  height: auto;
+  object-fit: contain;
+}
+.side-by-side-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.side-by-side-1 img {
+  width: 49%;
+  height: auto;
+  object-fit: contain;
+}
+
+.side-by-side-2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.side-by-side-2 img {
+  width: 49%;
+  height: auto;
+  object-fit: contain;
+}
 
     @media (max-width: 1024px) {
       .analyst-tables {
@@ -149,10 +193,10 @@
   </style>
 </head>
 <body>
-<div class="header">
+  <div class="header">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1280px-Valorant_logo_-_pink_color_version.svg.png" class="left-logo" alt="Valorant logo" />
   <img src="https://www.uwb.edu/wp-content/uploads/2023/06/stacked-w-uw-bothell-10.png" class="right-logo" alt="UW Bothell logo" />
-  <h1>Dashboard</h1>
+  <h1>Database</h1>
   <p class="subtitle">How EDward Gaming Won Champions 2024</p>
 </div>
 
@@ -235,33 +279,28 @@
             <th>5v4 WR</th>
             <th>Disadvantages WR</th>
             <th>Advantages WR</th>
-            
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
   </div>
-</div>
-</body>
 
-
-
-
+  <h2 class="interesting-stats-header">Interesting Statistics</h2>
 
   <div class="main-image">
-    <img class="win-loss" src="https://i.ibb.co/NnxsdL0w/map-ratios.gif" alt="Main Image 1">
-    <img class="first-bloods" src="https://i.ibb.co/93p3Nbcg/Screenshot-2025-05-05-145054.png" alt="Main Image 2">
+    <img class="win-loss" src="https://i.ibb.co/4n7D51KH/Adobe-Express-file-2.png" alt="Main Image 1">
+    <img class="top-10-kds" src="https://i.ibb.co/yckbwNS5/Adobe-Express-file-3.png" alt="Main Image 2">
   </div>
 
   <div class="side-by-side-1">
-    <img src="https://i.ibb.co/Kp6jHtYr/Dashboard-1.png" alt="Dashboard Image">
-    <img src="https://i.ibb.co/whg4phmb/Screenshot-2025-05-09-224625.png" alt="Dashboard Image Duplicate">
+    <img src="https://i.ibb.co/YB4nnpmV/Adobe-Express-file-1.png" alt="Dashboard Image">
+    <img src="https://i.ibb.co/N6DMZYhX/Dashboard-2-7.png" alt="Dashboard Image Duplicate">
   </div>
 
   <div class="side-by-side-2">
-    <img src="https://i.ibb.co/B5wDTrtN/Screenshot-2025-05-05-150836.png" alt="Left Aligned Image">
-    <img src="https://i.ibb.co/cSvFC5j5/Screenshot-2025-05-05-151603.png" alt="Right Aligned Image">
+    <img src="https://i.ibb.co/TML3PvTk/Dashboard-2-5.png" alt="Left Aligned Image">
+    <img src="https://i.ibb.co/N6DMZYhX/Dashboard-2-7.png" alt="Right Aligned Image">
   </div>
 
   <div class="side-by-side-3">
@@ -284,7 +323,7 @@
     <img src="https://i.ibb.co/3cJmwLD/Screenshot-2025-05-05-161658.png" alt="Additional Right Image">
   </div>
 </div>
-</body>
+
 
 
 <script>
